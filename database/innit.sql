@@ -1,0 +1,350 @@
+-- Tables Creation
+CREATE TABLE NGUOIDUNG (
+    id_nguoi_dung INT NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    mat_khau VARCHAR(255) NOT NULL,
+    vai_tro VARCHAR(20) NOT NULL,
+    PRIMARY KEY (id_nguoi_dung),
+    UNIQUE (email)
+) ENGINE=InnoDB;
+
+CREATE TABLE NHACUNGCAP (
+    id_nha_cung_cap INT NOT NULL,
+    ten_ncc VARCHAR(100) NOT NULL,
+    PRIMARY KEY (id_nha_cung_cap)
+) ENGINE=InnoDB;
+
+CREATE TABLE DANHMUC (
+    id_danh_muc INT NOT NULL,
+    ten_danh_muc VARCHAR(100) NOT NULL,
+    PRIMARY KEY (id_danh_muc)
+) ENGINE=InnoDB;
+
+CREATE TABLE SANPHAM (
+    id_san_pham INT NOT NULL,
+    id_danh_muc INT,
+    ten_san_pham VARCHAR(200) NOT NULL,
+    anh_san_pham VARCHAR(255),
+    PRIMARY KEY (id_san_pham)
+) ENGINE=InnoDB;
+
+CREATE TABLE KIEUSANPHAM (
+    id_bien_the INT NOT NULL,
+    id_san_pham INT,
+    `size` VARCHAR(10),
+    mau_sac VARCHAR(20),
+    so_luong_ton INT DEFAULT 0,
+    gia_ban DECIMAL(15,2) NOT NULL,
+    PRIMARY KEY (id_bien_the)
+) ENGINE=InnoDB;
+
+CREATE TABLE CHUONGTRINHGIAMGIA (
+    id_giam_gia INT NOT NULL,
+    id_nguoi_dung INT,
+    ten_chuong_trinh VARCHAR(100),
+    phan_tram_giam DECIMAL(5,2),
+    PRIMARY KEY (id_giam_gia)
+) ENGINE=InnoDB;
+
+CREATE TABLE CHITIETGIAMGIA (
+    id_chi_tiet_km INT NOT NULL,
+    id_giam_gia INT,
+    id_san_pham INT,
+    id_danh_muc INT,
+    PRIMARY KEY (id_chi_tiet_km)
+) ENGINE=InnoDB;
+
+CREATE TABLE DONHANG (
+    id_don_hang INT NOT NULL,
+    id_nguoi_dung INT,
+    loai_don VARCHAR(10),
+    trang_thai VARCHAR(50),
+    ngay_tao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_don_hang)
+) ENGINE=InnoDB;
+
+CREATE TABLE CHITIETDONHANG (
+    id_ct_don INT NOT NULL,
+    id_don_hang INT,
+    id_bien_the INT,
+    so_luong INT NOT NULL,
+    don_gia_thuc DECIMAL(15,2) NOT NULL,
+    PRIMARY KEY (id_ct_don)
+) ENGINE=InnoDB;
+
+CREATE TABLE GIOHANG (
+    id_gio_hang INT NOT NULL,
+    id_nguoi_dung INT,
+    PRIMARY KEY (id_gio_hang)
+) ENGINE=InnoDB;
+
+CREATE TABLE CHITIETGIOHANG (
+    id_ct_gio INT NOT NULL,
+    id_gio_hang INT,
+    id_bien_the INT,
+    so_luong INT,
+    PRIMARY KEY (id_ct_gio)
+) ENGINE=InnoDB;
+
+CREATE TABLE DONNHAPHANG (
+    id_don_nhap INT NOT NULL,
+    id_nha_cung_cap INT,
+    id_nguoi_dung INT,
+    ngay_nhap DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_don_nhap)
+) ENGINE=InnoDB;
+
+CREATE TABLE CHITIETPHIEUNHAP (
+    id_chi_tiet_nhap INT NOT NULL,
+    id_don_nhap INT,
+    id_bien_the INT,
+    so_luong INT NOT NULL,
+    PRIMARY KEY (id_chi_tiet_nhap)
+) ENGINE=InnoDB;
+
+CREATE TABLE TRAHANG (
+    id_phieu_tra INT NOT NULL,
+    id_don_hang INT,
+    ly_do VARCHAR(500),
+    PRIMARY KEY (id_phieu_tra),
+    UNIQUE (id_don_hang)
+) ENGINE=InnoDB;
+
+CREATE TABLE CHITIETTRAHANG (
+    id_chi_tiet_tra INT NOT NULL,
+    id_phieu_tra INT,
+    id_bien_the INT,
+    so_luong INT,
+    PRIMARY KEY (id_chi_tiet_tra)
+) ENGINE=InnoDB;
+
+CREATE TABLE DIACHI (
+    id_dia_chi INT NOT NULL,
+    id_nguoi_dung INT,
+    dia_chi_chi_tiet VARCHAR(255),
+    PRIMARY KEY (id_dia_chi)
+) ENGINE=InnoDB;
+
+CREATE TABLE LICHSUKHO (
+    id_lich_su INT NOT NULL,
+    id_bien_the INT,
+    id_nguoi_dung INT,
+    loai_thao_tac VARCHAR(20),
+    so_luong_thay_doi INT,
+    PRIMARY KEY (id_lich_su)
+) ENGINE=InnoDB;
+
+CREATE TABLE PHIEUGIAOHANG (
+    id_phieu_giao INT NOT NULL,
+    id_don_hang INT,
+    don_vi_van_chuyen VARCHAR(50),
+    trang_thai VARCHAR(50),
+    PRIMARY KEY (id_phieu_giao),
+    UNIQUE (id_don_hang)
+) ENGINE=InnoDB;
+
+CREATE TABLE THANHTOAN (
+    id_thanh_toan INT NOT NULL,
+    id_don_hang INT,
+    phuong_thuc VARCHAR(50),
+    so_tien DECIMAL(15,2),
+    PRIMARY KEY (id_thanh_toan),
+    UNIQUE (id_don_hang)
+) ENGINE=InnoDB;
+
+-- Foreign Keys
+ALTER TABLE SANPHAM ADD CONSTRAINT SANPHAM_DANHMUC_FK FOREIGN KEY (id_danh_muc) REFERENCES DANHMUC (id_danh_muc);
+ALTER TABLE KIEUSANPHAM ADD CONSTRAINT BIENTHESANPHAM_SANPHAM_FK FOREIGN KEY (id_san_pham) REFERENCES SANPHAM (id_san_pham);
+ALTER TABLE CHITIETDONHANG ADD CONSTRAINT CHITIETDONHANG_BIENTHESANPHAM_FK FOREIGN KEY (id_bien_the) REFERENCES KIEUSANPHAM (id_bien_the);
+ALTER TABLE CHITIETDONHANG ADD CONSTRAINT CHITIETDONHANG_DONHANG_FK FOREIGN KEY (id_don_hang) REFERENCES DONHANG (id_don_hang);
+ALTER TABLE CHITIETGIOHANG ADD CONSTRAINT CHITIETGIOHANG_BIENTHESANPHAM_FK FOREIGN KEY (id_bien_the) REFERENCES KIEUSANPHAM (id_bien_the);
+ALTER TABLE CHITIETGIOHANG ADD CONSTRAINT CHITIETGIOHANG_GIOHANG_FK FOREIGN KEY (id_gio_hang) REFERENCES GIOHANG (id_gio_hang);
+ALTER TABLE CHITIETGIAMGIA ADD CONSTRAINT CHITIETKHUYENMAI_CHUONGTRINHGIAMGIA_FK FOREIGN KEY (id_giam_gia) REFERENCES CHUONGTRINHGIAMGIA (id_giam_gia);
+ALTER TABLE CHITIETGIAMGIA ADD CONSTRAINT CHITIETKHUYENMAI_DANHMUC_FK FOREIGN KEY (id_danh_muc) REFERENCES DANHMUC (id_danh_muc);
+ALTER TABLE CHITIETGIAMGIA ADD CONSTRAINT CHITIETKHUYENMAI_SANPHAM_FK FOREIGN KEY (id_san_pham) REFERENCES SANPHAM (id_san_pham);
+ALTER TABLE CHITIETPHIEUNHAP ADD CONSTRAINT CHITIETPHIEUNHAP_BIENTHESANPHAM_FK FOREIGN KEY (id_bien_the) REFERENCES KIEUSANPHAM (id_bien_the);
+ALTER TABLE CHITIETPHIEUNHAP ADD CONSTRAINT CHITIETPHIEUNHAP_DONNHAPHANG_FK FOREIGN KEY (id_don_nhap) REFERENCES DONNHAPHANG (id_don_nhap);
+ALTER TABLE CHITIETTRAHANG ADD CONSTRAINT CHITIETTRAHANG_BIENTHESANPHAM_FK FOREIGN KEY (id_bien_the) REFERENCES KIEUSANPHAM (id_bien_the);
+ALTER TABLE CHITIETTRAHANG ADD CONSTRAINT CHITIETTRAHANG_TRAHANG_FK FOREIGN KEY (id_phieu_tra) REFERENCES TRAHANG (id_phieu_tra);
+ALTER TABLE CHUONGTRINHGIAMGIA ADD CONSTRAINT CHUONGTRINHGIAMGIA_NGUOIDUNG_FK FOREIGN KEY (id_nguoi_dung) REFERENCES NGUOIDUNG (id_nguoi_dung);
+ALTER TABLE DIACHI ADD CONSTRAINT DIACHI_NGUOIDUNG_FK FOREIGN KEY (id_nguoi_dung) REFERENCES NGUOIDUNG (id_nguoi_dung);
+ALTER TABLE DONHANG ADD CONSTRAINT DONHANG_NGUOIDUNG_FK FOREIGN KEY (id_nguoi_dung) REFERENCES NGUOIDUNG (id_nguoi_dung);
+ALTER TABLE DONNHAPHANG ADD CONSTRAINT DONNHAPHANG_NGUOIDUNG_FK FOREIGN KEY (id_nguoi_dung) REFERENCES NGUOIDUNG (id_nguoi_dung);
+ALTER TABLE DONNHAPHANG ADD CONSTRAINT DONNHAPHANG_NHACUNGCAP_FK FOREIGN KEY (id_nha_cung_cap) REFERENCES NHACUNGCAP (id_nha_cung_cap);
+ALTER TABLE GIOHANG ADD CONSTRAINT GIOHANG_NGUOIDUNG_FK FOREIGN KEY (id_nguoi_dung) REFERENCES NGUOIDUNG (id_nguoi_dung);
+ALTER TABLE LICHSUKHO ADD CONSTRAINT LICHSUKHO_BIENTHESANPHAM_FK FOREIGN KEY (id_bien_the) REFERENCES KIEUSANPHAM (id_bien_the);
+ALTER TABLE LICHSUKHO ADD CONSTRAINT LICHSUKHO_NGUOIDUNG_FK FOREIGN KEY (id_nguoi_dung) REFERENCES NGUOIDUNG (id_nguoi_dung);
+ALTER TABLE PHIEUGIAOHANG ADD CONSTRAINT PHIEUGIAOHANG_DONHANG_FK FOREIGN KEY (id_don_hang) REFERENCES DONHANG (id_don_hang);
+ALTER TABLE THANHTOAN ADD CONSTRAINT THANHTOAN_DONHANG_FK FOREIGN KEY (id_don_hang) REFERENCES DONHANG (id_don_hang);
+ALTER TABLE TRAHANG ADD CONSTRAINT TRAHANG_DONHANG_FK FOREIGN KEY (id_don_hang) REFERENCES DONHANG (id_don_hang);
+
+-- CHITIETDONHANG
+CREATE OR REPLACE VIEW V_CHITIETDONHANG AS 
+SELECT id_ct_don, id_don_hang, id_bien_the, so_luong, don_gia_thuc 
+FROM CHITIETDONHANG;
+
+CREATE OR REPLACE VIEW V_CHITIETDONHANGv1 AS 
+SELECT id_ct_don, id_don_hang, id_bien_the, so_luong, don_gia_thuc 
+FROM CHITIETDONHANG;
+
+-- CHITIETGIAMGIA
+CREATE OR REPLACE VIEW V_CHITIETGIAMGIA AS 
+SELECT id_chi_tiet_km, id_giam_gia, id_san_pham, id_danh_muc 
+FROM CHITIETGIAMGIA;
+
+CREATE OR REPLACE VIEW V_CHITIETGIAMGIAv1 AS 
+SELECT id_chi_tiet_km, id_giam_gia, id_san_pham, id_danh_muc 
+FROM CHITIETGIAMGIA;
+
+-- CHITIETGIOHANG
+CREATE OR REPLACE VIEW V_CHITIETGIOHANG AS 
+SELECT id_ct_gio, id_gio_hang, id_bien_the, so_luong 
+FROM CHITIETGIOHANG;
+
+CREATE OR REPLACE VIEW V_CHITIETGIOHANGv1 AS 
+SELECT id_ct_gio, id_gio_hang, id_bien_the, so_luong 
+FROM CHITIETGIOHANG;
+
+-- CHITIETPHIEUNHAP
+CREATE OR REPLACE VIEW V_CHITIETPHIEUNHAP AS 
+SELECT id_chi_tiet_nhap, id_don_nhap, id_bien_the, so_luong 
+FROM CHITIETPHIEUNHAP;
+
+CREATE OR REPLACE VIEW V_CHITIETPHIEUNHAPv1 AS 
+SELECT id_chi_tiet_nhap, id_don_nhap, id_bien_the, so_luong 
+FROM CHITIETPHIEUNHAP;
+
+-- CHITIETTRAHANG
+CREATE OR REPLACE VIEW V_CHITIETTRAHANG AS 
+SELECT id_chi_tiet_tra, id_phieu_tra, id_bien_the, so_luong 
+FROM CHITIETTRAHANG;
+
+CREATE OR REPLACE VIEW V_CHITIETTRAHANGv1 AS 
+SELECT id_chi_tiet_tra, id_phieu_tra, id_bien_the, so_luong 
+FROM CHITIETTRAHANG;
+
+-- CHUONGTRINHGIAMGIA
+CREATE OR REPLACE VIEW V_CHUONGTRINHGIAMGIA AS 
+SELECT id_giam_gia, id_nguoi_dung, ten_chuong_trinh, phan_tram_giam 
+FROM CHUONGTRINHGIAMGIA;
+
+CREATE OR REPLACE VIEW V_CHUONGTRINHGIAMGIAv1 AS 
+SELECT id_giam_gia, id_nguoi_dung, ten_chuong_trinh, phan_tram_giam 
+FROM CHUONGTRINHGIAMGIA;
+
+-- DANHMUC
+CREATE OR REPLACE VIEW V_DANHMUC AS 
+SELECT id_danh_muc, ten_danh_muc 
+FROM DANHMUC;
+
+CREATE OR REPLACE VIEW V_DANHMUCv1 AS 
+SELECT id_danh_muc, ten_danh_muc 
+FROM DANHMUC;
+
+-- DIACHI
+CREATE OR REPLACE VIEW V_DIACHI AS 
+SELECT id_dia_chi, id_nguoi_dung, dia_chi_chi_tiet 
+FROM DIACHI;
+
+CREATE OR REPLACE VIEW V_DIACHIv1 AS 
+SELECT id_dia_chi, id_nguoi_dung, dia_chi_chi_tiet 
+FROM DIACHI;
+
+-- DONHANG
+CREATE OR REPLACE VIEW V_DONHANG AS 
+SELECT id_don_hang, id_nguoi_dung, loai_don, trang_thai, ngay_tao 
+FROM DONHANG;
+
+CREATE OR REPLACE VIEW V_DONHANGv1 AS 
+SELECT id_don_hang, id_nguoi_dung, loai_don, trang_thai, ngay_tao 
+FROM DONHANG;
+
+-- DONNHAPHANG
+CREATE OR REPLACE VIEW V_DONNHAPHANG AS 
+SELECT id_don_nhap, id_nha_cung_cap, id_nguoi_dung, ngay_nhap 
+FROM DONNHAPHANG;
+
+CREATE OR REPLACE VIEW V_DONNHAPHANGv1 AS 
+SELECT id_don_nhap, id_nha_cung_cap, id_nguoi_dung, ngay_nhap 
+FROM DONNHAPHANG;
+
+-- GIOHANG
+CREATE OR REPLACE VIEW V_GIOHANG AS 
+SELECT id_gio_hang, id_nguoi_dung 
+FROM GIOHANG;
+
+CREATE OR REPLACE VIEW V_GIOHANGv1 AS 
+SELECT id_gio_hang, id_nguoi_dung 
+FROM GIOHANG;
+
+-- KIEUSANPHAM
+CREATE OR REPLACE VIEW V_KIEUSANPHAM AS 
+SELECT id_bien_the, id_san_pham, `size`, mau_sac, so_luong_ton, gia_ban 
+FROM KIEUSANPHAM;
+
+CREATE OR REPLACE VIEW V_KIEUSANPHAMv1 AS 
+SELECT id_bien_the, id_san_pham, `size`, mau_sac, so_luong_ton, gia_ban 
+FROM KIEUSANPHAM;
+
+-- LICHSUKHO
+CREATE OR REPLACE VIEW V_LICHSUKHO AS 
+SELECT id_lich_su, id_bien_the, id_nguoi_dung, loai_thao_tac, so_luong_thay_doi 
+FROM LICHSUKHO;
+
+CREATE OR REPLACE VIEW V_LICHSUKHOv1 AS 
+SELECT id_lich_su, id_bien_the, id_nguoi_dung, loai_thao_tac, so_luong_thay_doi 
+FROM LICHSUKHO;
+
+-- NGUOIDUNG
+CREATE OR REPLACE VIEW V_NGUOIDUNG AS 
+SELECT id_nguoi_dung, email, mat_khau, vai_tro 
+FROM NGUOIDUNG;
+
+CREATE OR REPLACE VIEW V_NGUOIDUNGv1 AS 
+SELECT id_nguoi_dung, email, mat_khau, vai_tro 
+FROM NGUOIDUNG;
+
+-- NHACUNGCAP
+CREATE OR REPLACE VIEW V_NHACUNGCAP AS 
+SELECT id_nha_cung_cap, ten_ncc 
+FROM NHACUNGCAP;
+
+CREATE OR REPLACE VIEW V_NHACUNGCAPv1 AS 
+SELECT id_nha_cung_cap, ten_ncc 
+FROM NHACUNGCAP;
+
+-- PHIEUGIAOHANG
+CREATE OR REPLACE VIEW V_PHIEUGIAOHANG AS 
+SELECT id_phieu_giao, id_don_hang, don_vi_van_chuyen, trang_thai 
+FROM PHIEUGIAOHANG;
+
+CREATE OR REPLACE VIEW V_PHIEUGIAOHANGv1 AS 
+SELECT id_phieu_giao, id_don_hang, don_vi_van_chuyen, trang_thai 
+FROM PHIEUGIAOHANG;
+
+-- SANPHAM
+CREATE OR REPLACE VIEW V_SANPHAM AS 
+SELECT id_san_pham, id_danh_muc, ten_san_pham, anh_san_pham 
+FROM SANPHAM;
+
+CREATE OR REPLACE VIEW V_SANPHAMv1 AS 
+SELECT id_san_pham, id_danh_muc, ten_san_pham, anh_san_pham 
+FROM SANPHAM;
+
+-- THANHTOAN
+CREATE OR REPLACE VIEW V_THANHTOAN AS 
+SELECT id_thanh_toan, id_don_hang, phuong_thuc, so_tien 
+FROM THANHTOAN;
+
+CREATE OR REPLACE VIEW V_THANHTOANv1 AS 
+SELECT id_thanh_toan, id_don_hang, phuong_thuc, so_tien 
+FROM THANHTOAN;
+
+-- TRAHANG
+CREATE OR REPLACE VIEW V_TRAHANG AS 
+SELECT id_phieu_tra, id_don_hang, ly_do 
+FROM TRAHANG;
+
+CREATE OR REPLACE VIEW V_TRAHANGv1 AS 
+SELECT id_phieu_tra, id_don_hang, ly_do 
+FROM TRAHANG;
