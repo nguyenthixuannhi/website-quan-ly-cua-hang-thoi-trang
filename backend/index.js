@@ -11,8 +11,26 @@ app.use(express.json());
 // Swagger Route
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
+// Routes
+app.use('/api/users', userRoutes);
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-  console.log(`Swagger available at http://localhost:${port}/api-docs`);
-});
+const { sequelize } = require('./src/models');
+
+
+async function start() {
+  try {
+    await sequelize.authenticate();
+    console.log('[DB] Sequelize connected successfully');
+  } catch (err) {
+    console.error('[DB] Sequelize connection failed:', err.message);
+    // Keep server running to allow swagger/docs; comment out next line if you want hard fail
+  }
+
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+    console.log(`Swagger available at http://localhost:${port}/api-docs`);
+  });
+}
+
+start();
+
