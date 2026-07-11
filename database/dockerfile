@@ -1,0 +1,7 @@
+FROM mysql:8.0
+
+COPY ./sql/01innit.sql /docker-entrypoint-initdb.d/01-init-tables.sql
+COPY ./sql/02view.sql  /docker-entrypoint-initdb.d/02-init-views.sql
+
+# sudo docker build -t mydb:local ./database
+# sudo docker run --rm -e MYSQL_ROOT_PASSWORD=rootpass -e MYSQL_DATABASE=yourdb mydb:local
