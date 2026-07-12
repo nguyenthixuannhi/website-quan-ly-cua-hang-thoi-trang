@@ -1,0 +1,250 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+.header{
+
+    width:100%;
+    height:78px;
+
+    background:#fff;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 60px;
+
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+
+    position:sticky;
+
+    top:0;
+
+    z-index:1000;
+
+}
+
+.logo{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.logo-icon{
+
+    width:34px;
+
+    height:34px;
+
+    background:#111;
+
+    border-radius:10px;
+
+    position:relative;
+
+}
+
+.logo-icon::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:14px;
+
+    height:14px;
+
+    background:#fff;
+
+    left:50%;
+
+    top:50%;
+
+    transform:translate(-50%,-50%) rotate(45deg);
+
+    border-radius:2px;
+
+}
+
+.logo h2{
+    font-size:30px;
+    font-weight:700;
+    color:#111;
+}
+
+.logo span{
+
+    color:#2f6df5;
+
+}
+
+nav ul{
+
+    display:flex;
+
+    list-style:none;
+
+    gap:45px;
+
+}
+
+nav a{
+
+    text-decoration:none;
+
+    color:#555;
+
+    font-size:18px;
+
+    transition:.3s;
+
+}
+
+nav a:hover{
+
+    color:#2f6df5;
+
+}
+
+.active{
+
+    color:#2f6df5;
+
+    font-weight:600;
+
+}
+
+.header-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+}
+
+.icon-btn{
+
+    width:42px;
+
+    height:42px;
+
+    border:none;
+
+    background:white;
+
+    border-radius:50%;
+
+    cursor:pointer;
+
+    font-size:22px;
+
+    position:relative;
+
+    transition:.3s;
+
+}
+
+.icon-btn:hover{
+
+    background:#f2f2f2;
+
+}
+
+.cart{
+
+    position:relative;
+
+}
+
+.cart-count{
+
+    position:absolute;
+
+    top:-4px;
+
+    right:-4px;
+
+    background:#2f6df5;
+
+    color:white;
+
+    width:20px;
+
+    height:20px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:12px;
+
+}
+
+.login-btn{
+
+    text-decoration:none;
+
+    color:#111;
+
+    padding:12px 28px;
+
+    border:1px solid #ddd;
+
+    border-radius:14px;
+
+    transition:.3s;
+
+}
+
+.login-btn:hover{
+
+    background:#f3f3f3;
+
+}
+
+.register-btn{
+
+    text-decoration:none;
+
+    background:#111;
+
+    color:white;
+
+    padding:12px 28px;
+
+    border-radius:14px;
+
+    transition:.3s;
+
+}
+
+.register-btn:hover{
+
+    background:#2f6df5;
+
+}
+
+@media(max-width:1100px){
+
+    nav{
+
+        display:none;
+
+    }
+
+}
