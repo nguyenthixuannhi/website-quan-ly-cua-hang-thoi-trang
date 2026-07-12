@@ -12,6 +12,8 @@
   "type": "commonjs",
   "dependencies": {
     "express": "^5.2.1",
+    "mysql2": "^3.22.6",
+    "sequelize": "^6.37.8",
     "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1"
   }
