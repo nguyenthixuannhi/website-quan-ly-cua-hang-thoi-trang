@@ -23,7 +23,6 @@ async function start() {
     console.log('[DB] Sequelize connected successfully');
   } catch (err) {
     console.error('[DB] Sequelize connection failed:', err.message);
-    // Keep server running to allow swagger/docs; comment out next line if you want hard fail
   }
 
   app.listen(port, () => {
