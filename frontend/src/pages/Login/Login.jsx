@@ -1,10 +1,19 @@
 import "./Login.css";
+
+import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/Footer";
+
+
 import { Link } from "react-router-dom";
 import { FiEye } from "react-icons/fi";
 import loginBanner from "../../assets/login-banner.png";
 
 function Login() {
   return (
+
+    <>
+
+<Header/>
     <main className="login-page">
 
       <div className="login-card">
@@ -110,6 +119,13 @@ function Login() {
       </div>
 
     </main>
+    <Footer/>
+
+</>
+
+
+
+
   );
 }
 
