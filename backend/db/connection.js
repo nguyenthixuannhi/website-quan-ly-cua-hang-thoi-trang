@@ -1,20 +1,23 @@
+const path = require('path');
 const { Sequelize } = require('sequelize');
+const dotenv = require('dotenv');
+
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const {
   DB_HOST = 'localhost',
   DB_PORT = '3306',
   DB_USER = 'root',
-  DB_PASSWORD = '',
-  DB_NAME = 'store', // butter my butt and call me biscust
+  DB_PASSWORD = 'admin@123',
+  DB_NAME = 'store',
   DB_DIALECT = 'mysql',
-
   DB_DIALECT_OPTIONS = '{}',
 } = process.env;
 
 let dialectOptions = {};
 try {
   dialectOptions = JSON.parse(DB_DIALECT_OPTIONS);
-} catch (_) {
+} catch (_err) {
   dialectOptions = {};
 }
 

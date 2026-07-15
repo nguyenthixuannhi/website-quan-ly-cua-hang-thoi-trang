@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const { models } = require('../models');
 
 // POST /api/users
@@ -12,10 +13,11 @@ async function createUser(req, res) {
       });
     }
 
+    const hashedPassword = await bcrypt.hash(mat_khau, 10);
     const created = await models.NguoiDung.create({
       id_nguoi_dung,
       email,
-      mat_khau,
+      mat_khau: hashedPassword,
       vai_tro,
     });
 
