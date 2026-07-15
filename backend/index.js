@@ -1,7 +1,10 @@
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocs = require('./src/config/swagger');
+const swaggerDocs = require('./src/config/swagger-docs');
 const userRoutes = require('./src/routes/userRoutes');
+const authRoutes = require('./src/routes/authRoutes');
+const testRoutes = require('./src/routes/testRoutes');
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -13,8 +16,12 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/test', testRoutes);
+
 
 const { sequelize } = require('./src/models');
+
 
 
 async function start() {
@@ -27,7 +34,6 @@ async function start() {
 
   app.listen(port, () => {
     console.log(`Server running on port ${port}`);
-    console.log(`Swagger available at http://localhost:${port}/api-docs`);
   });
 }
 
