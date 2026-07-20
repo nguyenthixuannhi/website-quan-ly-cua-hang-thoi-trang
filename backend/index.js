@@ -17,7 +17,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/test', testRoutes);
+app.use('/test', testRoutes);
+
+app.use('/img', )
+
+
 
 
 const { sequelize } = require('./src/models');
