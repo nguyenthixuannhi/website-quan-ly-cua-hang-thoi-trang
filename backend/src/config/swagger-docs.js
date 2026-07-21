@@ -46,6 +46,13 @@ const swaggerDocs = {
           mat_khau: { type: 'string', format: 'password' },
         },
       },
+      DanhMuc: {
+        type: 'object',
+        properties: {
+          id_danh_muc: { type: 'integer' },
+          ten_danh_muc: { type: 'string' },
+        },
+      },
       ErrorResponse: {
         type: 'object',
         properties: {
@@ -56,7 +63,7 @@ const swaggerDocs = {
     },
   },
   paths: {
-    '/api/auth/register': {
+    '/auth/register': {
       post: {
         tags: ['Auth'],
         summary: 'Register new user',
@@ -75,7 +82,7 @@ const swaggerDocs = {
         },
       },
     },
-    '/api/auth/login': {
+    '/auth/login': {
       post: {
         tags: ['Auth'],
         summary: 'Login user',
@@ -94,7 +101,7 @@ const swaggerDocs = {
         },
       },
     },
-    '/api/auth/me': {
+    '/auth/me': {
       get: {
         tags: ['Auth'],
         summary: 'Get current authenticated user',
@@ -105,7 +112,7 @@ const swaggerDocs = {
         },
       },
     },
-    '/api/users': {
+    '/users': {
       post: {
         tags: ['Users'],
         summary: 'Create new user',
@@ -124,13 +131,33 @@ const swaggerDocs = {
         },
       },
     },
-    '/api/test/dbconnect': {
+    '/test/dbconnect': {
       get: {
         tags: ['Test'],
         summary: 'Test database connection',
         responses: {
           '200': { description: 'Database connection OK' },
           '500': { description: 'Database connection failed', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } },
+        },
+      },
+    },
+    '/danhmuc': {
+      get: {
+        tags: ['DanhMuc'],
+        summary: 'Get all danh muc categories',
+        responses: {
+          '200': {
+            description: 'List of danh muc categories',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'array',
+                  items: { $ref: '#/components/schemas/DanhMuc' },
+                },
+              },
+            },
+          },
+          '500': { description: 'Server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } },
         },
       },
     },
