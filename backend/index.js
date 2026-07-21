@@ -4,6 +4,7 @@ const swaggerDocs = require('./src/config/swagger-docs');
 const userRoutes = require('./src/routes/userRoutes');
 const authRoutes = require('./src/routes/authRoutes');
 const testRoutes = require('./src/routes/testRoutes');
+const danhMucRoutes = require('./src/routes/danhMucRoutes');
 
 
 const app = express();
@@ -15,11 +16,10 @@ app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Routes
-app.use('/api/users', userRoutes);
-app.use('/api/auth', authRoutes);
+app.use('/users', userRoutes);
+app.use('/auth', authRoutes);
 app.use('/test', testRoutes);
-
-app.use('/img', )
+app.use('/danhmuc', danhMucRoutes);
 
 
 
