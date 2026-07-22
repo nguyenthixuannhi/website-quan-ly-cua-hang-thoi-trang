@@ -53,6 +53,16 @@ const swaggerDocs = {
           ten_danh_muc: { type: 'string' },
         },
       },
+      SanPham: {
+        type: 'object',
+        properties: {
+          id_san_pham: { type: 'integer' },
+          id_danh_muc: { type: 'integer' },
+          ten_san_pham: { type: 'string' },
+          anh_san_pham: { type: 'string' },
+          danh_muc: { $ref: '#/components/schemas/DanhMuc' },
+        },
+      },
       ErrorResponse: {
         type: 'object',
         properties: {
@@ -153,6 +163,26 @@ const swaggerDocs = {
                 schema: {
                   type: 'array',
                   items: { $ref: '#/components/schemas/DanhMuc' },
+                },
+              },
+            },
+          },
+          '500': { description: 'Server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } },
+        },
+      },
+    },
+    '/sanpham': {
+      get: {
+        tags: ['SanPham'],
+        summary: 'Get all products (SANPHAM)',
+        responses: {
+          '200': {
+            description: 'List of products',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'array',
+                  items: { $ref: '#/components/schemas/SanPham' },
                 },
               },
             },

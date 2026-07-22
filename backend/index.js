@@ -5,6 +5,7 @@ const userRoutes = require('./src/routes/userRoutes');
 const authRoutes = require('./src/routes/authRoutes');
 const testRoutes = require('./src/routes/testRoutes');
 const danhMucRoutes = require('./src/routes/danhMucRoutes');
+const sanPhamRoutes = require('./src/routes/sanPhamRoutes');
 
 
 const app = express();
@@ -20,6 +21,7 @@ app.use('/users', userRoutes);
 app.use('/auth', authRoutes);
 app.use('/test', testRoutes);
 app.use('/danhmuc', danhMucRoutes);
+app.use('/sanpham', sanPhamRoutes);
 
 
 
