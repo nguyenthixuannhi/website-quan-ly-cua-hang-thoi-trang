@@ -1,6 +1,7 @@
 const { sequelize } = require('../../db/connection');
 
 const NguoiDungModel = require('./NguoiDung');
+const QuangCaoModel = require('./QuangCao');
 const NhaCungCapModel = require('./NhaCungCap');
 const DanhMucModel = require('./DanhMuc');
 const SanPhamModel = require('./SanPham');
@@ -22,6 +23,7 @@ const ThanhToanModel = require('./ThanhToan');
 
 const models = {
   NguoiDung: NguoiDungModel(sequelize),
+  QuangCao: QuangCaoModel(sequelize),
   NhaCungCap: NhaCungCapModel(sequelize),
   DanhMuc: DanhMucModel(sequelize),
   SanPham: SanPhamModel(sequelize),
