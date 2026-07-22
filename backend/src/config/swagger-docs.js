@@ -70,6 +70,29 @@ const swaggerDocs = {
           error: { type: 'string' },
         },
       },
+      Banners: {
+        type: 'object',
+        properties: {
+          hero: { type: 'string', description: 'Hero image URL' },
+          loginBanner: { type: 'string', description: 'Login page banner URL' },
+          signUpBanner: { type: 'string', description: 'Sign-up page banner URL' },
+        },
+      },
+      QuangCao: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer' },
+          tieu_de: { type: 'string', description: 'Tiêu đề quảng cáo' },
+          url_hinh_anh: { type: 'string', description: 'Đường dẫn hình ảnh đầy đủ' },
+          url_dich: { type: 'string', nullable: true, description: 'Đường dẫn chuyển hướng' },
+          mua: { type: 'string', nullable: true, description: 'Mùa' },
+          danh_muc_trong_tam: { type: 'string', nullable: true, description: 'Danh mục trọng tâm' },
+          uu_tien: { type: 'integer', description: 'Độ ưu tiên' },
+          ngay_bat_dau: { type: 'string', format: 'date-time', nullable: true, description: 'Ngày bắt đầu' },
+          ngay_ket_thuc: { type: 'string', format: 'date-time', nullable: true, description: 'Ngày kết thúc' },
+          kich_hoat: { type: 'boolean', description: 'Kích hoạt' },
+        },
+      },
     },
   },
   paths: {
@@ -188,6 +211,43 @@ const swaggerDocs = {
             },
           },
           '500': { description: 'Server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } },
+        },
+      },
+    },
+    '/ui/banners': {
+      get: {
+        tags: ['UI'],
+        summary: 'Get banner image URLs (hero, login, sign-up)',
+        responses: {
+          '200': {
+            description: 'Banner URLs',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/Banners' },
+              },
+            },
+          },
+          '500': { description: 'Server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } },
+        },
+      },
+    },
+    '/ui/quang-cao': {
+      get: {
+        tags: ['UI'],
+        summary: 'Lấy danh sách quảng cáo đang kích hoạt',
+        responses: {
+          '200': {
+            description: 'Danh sách quảng cáo đang kích hoạt',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'array',
+                  items: { $ref: '#/components/schemas/QuangCao' },
+                },
+              },
+            },
+          },
+          '500': { description: 'Lỗi máy chủ', content: { 'application/json': { schema: { $ref: '#/components/schemas/ErrorResponse' } } } },
         },
       },
     },
