@@ -13,17 +13,17 @@ function sanitizeUser(user) {
 // POST /api/auth/register
 async function register(req, res) {
   try {
-    const { id_nguoi_dung, email, mat_khau, vai_tro } = req.body || {};
+    const { id_nguoi_dung, email, mat_khau } = req.body || {};
 
-    if (id_nguoi_dung == null || !email || !mat_khau || !vai_tro) {
+    if (id_nguoi_dung == null || !email || !mat_khau) {
       return res.status(400).json({
-        message: 'Missing required fields: id_nguoi_dung, email, mat_khau, vai_tro',
+        message: 'Missing required fields: id_nguoi_dung, email, mat_khau',
       });
     }
 
     const existing = await models.NguoiDung.findOne({ where: { email } });
     if (existing) {
-      return res.status(409).json({ message: 'Email da otn tai' });
+      return res.status(409).json({ message: 'Email da ton tai' });
     }
 
     const hashedPassword = await bcrypt.hash(mat_khau, 10);
@@ -32,7 +32,7 @@ async function register(req, res) {
       id_nguoi_dung,
       email,
       mat_khau: hashedPassword,
-      vai_tro,
+      vai_tro: 'khach hang',
     });
 
     return res.status(201).json({ user: sanitizeUser(created) });

@@ -30,13 +30,13 @@ const swaggerDocs = {
       },
       RegisterRequest: {
         type: 'object',
-        required: ['id_nguoi_dung', 'email', 'mat_khau', 'vai_tro'],
+        required: ['id_nguoi_dung', 'email', 'mat_khau'],
         properties: {
           id_nguoi_dung: { type: 'integer' },
           email: { type: 'string' },
           mat_khau: { type: 'string', format: 'password' },
-          vai_tro: { type: 'string' },
         },
+        description: 'Vai tro mac dinh duoc dat la "khach hang"',
       },
       LoginRequest: {
         type: 'object',
