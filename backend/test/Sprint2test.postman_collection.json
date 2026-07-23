@@ -1,0 +1,692 @@
+{
+  "info": {
+    "_postman_id": "3f0f8d4b-0d63-4f1b-b5b4-8c4b3c0d1234",
+    "name": "Sprint2 API",
+    "description": "Test all API in sprint 2",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "description": "Authentication endpoints — register, login, and get current user info.",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Response has user object', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('user');",
+                  "    pm.expect(json.user).to.have.property('id_nguoi_dung');",
+                  "    pm.expect(json.user).to.have.property('email');",
+                  "    pm.expect(json.user).to.have.property('vai_tro');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_nguoi_dung\": 1,\n  \"email\": \"test@example.com\",\n  \"mat_khau\": \"password123\",\n  \"vai_tro\": \"khach_hang\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Register a new user account. Requires id_nguoi_dung, email, mat_khau, and vai_tro."
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has token and user', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('token');",
+                  "    pm.expect(json).to.have.property('user');",
+                  "});",
+                  "",
+                  "pm.test('Save token to collection variable', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.collectionVariables.set('token', json.token);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"mat_khau\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Login with email and password. Returns a JWT token that is automatically saved to the `token` collection variable."
+          }
+        },
+        {
+          "name": "Get Current User (Me)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has user object', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('user');",
+                  "    pm.expect(json.user).to.have.property('id_nguoi_dung');",
+                  "    pm.expect(json.user).to.have.property('email');",
+                  "    pm.expect(json.user).to.have.property('vai_tro');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Get the currently authenticated user's information. Requires a valid Bearer token (auto-populated from the Login response)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "description": "User management endpoints.",
+      "item": [
+        {
+          "name": "Create User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Response contains user data', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('id_nguoi_dung');",
+                  "    pm.expect(json).to.have.property('email');",
+                  "    pm.expect(json).to.have.property('mat_khau');",
+                  "    pm.expect(json).to.have.property('vai_tro');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_nguoi_dung\": 2,\n  \"email\": \"newuser@example.com\",\n  \"mat_khau\": \"securepass456\",\n  \"vai_tro\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "description": "Create a new user directly (bypasses auth). Requires id_nguoi_dung, email, mat_khau, and vai_tro."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Test",
+      "description": "System health check endpoints.",
+      "item": [
+        {
+          "name": "Test DB Connection",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response indicates success', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('status', 'ok');",
+                  "    pm.expect(json).to.have.property('message');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/test/dbconnect",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "test",
+                "dbconnect"
+              ]
+            },
+            "description": "Test the database connection. Returns status 'ok' if the connection is successful."
+          }
+        }
+      ]
+    },
+    {
+      "name": "DanhMuc (Categories)",
+      "description": "Category management endpoints.",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('Each item has required fields', function () {",
+                  "    const json = pm.response.json();",
+                  "    if (json.length > 0) {",
+                  "        json.forEach(item => {",
+                  "            pm.expect(item).to.have.property('id_danh_muc');",
+                  "            pm.expect(item).to.have.property('ten_danh_muc');",
+                  "        });",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/danhmuc",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "danhmuc"
+              ]
+            },
+            "description": "Retrieve all danh muc (categories). Returns an array of category objects."
+          }
+        }
+      ]
+    },
+    {
+      "name": "SanPham (Products)",
+      "description": "Product management endpoints.",
+      "item": [
+        {
+          "name": "Get All Products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('Each item has required fields and includes category', function () {",
+                  "    const json = pm.response.json();",
+                  "    if (json.length > 0) {",
+                  "        json.forEach(item => {",
+                  "            pm.expect(item).to.have.property('id_san_pham');",
+                  "            pm.expect(item).to.have.property('ten_san_pham');",
+                  "            pm.expect(item).to.have.property('danh_muc');",
+                  "        });",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/sanpham",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sanpham"
+              ]
+            },
+            "description": "Retrieve all products (san pham). Each product includes its associated category (danh_muc)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "UI",
+      "description": "UI configuration endpoints — banners and advertisements.",
+      "item": [
+        {
+          "name": "Get Banners",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has all banner URLs', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('hero');",
+                  "    pm.expect(json).to.have.property('loginBanner');",
+                  "    pm.expect(json).to.have.property('signUpBanner');",
+                  "});",
+                  "",
+                  "pm.test('Banner URLs point to the server', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.hero).to.match(/^http/);",
+                  "    pm.expect(json.loginBanner).to.match(/^http/);",
+                  "    pm.expect(json.signUpBanner).to.match(/^http/);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ui/banners",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ui",
+                "banners"
+              ]
+            },
+            "description": "Get banner image URLs for the hero section, login page, and sign-up page."
+          }
+        },
+        {
+          "name": "Get Active Advertisements (Quang Cao)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('Each ad has required fields', function () {",
+                  "    const json = pm.response.json();",
+                  "    if (json.length > 0) {",
+                  "        json.forEach(item => {",
+                  "            pm.expect(item).to.have.property('id');",
+                  "            pm.expect(item).to.have.property('tieu_de');",
+                  "            pm.expect(item).to.have.property('url_hinh_anh');",
+                  "            pm.expect(item).to.have.property('kich_hoat');",
+                  "            pm.expect(item).to.have.property('uu_tien');",
+                  "        });",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ui/quang-cao",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ui",
+                "quang-cao"
+              ]
+            },
+            "description": "Get the list of active advertisements (quảng cáo đang kích hoạt), ordered by priority descending."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Scenarios",
+      "description": "Test error handling for various invalid inputs and edge cases.",
+      "item": [
+        {
+          "name": "Register - Missing Fields",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 400', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test('Response has error message', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('message');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"incomplete@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Attempt to register with missing required fields. Should return 400."
+          }
+        },
+        {
+          "name": "Login - Invalid Credentials",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 401', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test('Response has error message', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('message');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"nonexistent@example.com\",\n  \"mat_khau\": \"wrongpassword\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Attempt to login with invalid email/password. Should return 401."
+          }
+        },
+        {
+          "name": "Get Me - No Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 401', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test('Response has error message', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('message');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Attempt to access a protected route without a Bearer token. Should return 401."
+          }
+        },
+        {
+          "name": "Register - Duplicate Email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 409', function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "",
+                  "pm.test('Response has conflict message', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('message');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_nguoi_dung\": 99,\n  \"email\": \"test@example.com\",\n  \"mat_khau\": \"password123\",\n  \"vai_tro\": \"khach_hang\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Attempt to register with an email that already exists.Should return 409 Conflict."
+          }
+        },
+        {
+          "name": "Login - Missing Fields",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 400', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test('Response has error message', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('message');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Attempt to login without providing a password. Should return 400."
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
