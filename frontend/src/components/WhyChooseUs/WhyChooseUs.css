@@ -1,0 +1,280 @@
+.why{
+
+    padding:100px 0;
+
+    background:#f7f8fc;
+
+}
+
+.why .container{
+
+    width:1200px;
+
+    max-width:92%;
+
+    margin:auto;
+
+}
+
+.section-tag{
+
+    display:inline-block;
+
+    padding:10px 22px;
+
+    background:#eef3ff;
+
+    color:#2f6df5;
+
+    border-radius:999px;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+
+    margin-bottom:20px;
+
+}
+
+.why h2{
+
+    font-size:46px;
+
+    color:#111;
+
+    line-height:1.25;
+
+    margin-bottom:60px;
+
+    font-weight:800;
+
+}
+
+.why-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:30px;
+
+}
+
+
+/*==================================
+CARD
+===================================*/
+
+.why-card{
+
+    background:#fff;
+
+    border-radius:22px;
+
+    padding:42px 30px;
+
+    text-align:center;
+
+    box-shadow:0 12px 35px rgba(0,0,0,.06);
+
+    transition:.35s;
+
+    cursor:pointer;
+
+}
+
+.why-icon{
+
+    width:78px;
+
+    height:78px;
+
+    margin:0 auto 28px;
+
+    border-radius:50%;
+
+    background:#2f6df5;
+
+    color:#fff;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:34px;
+
+    transition:.35s;
+
+}
+
+.why-card h3{
+
+    font-size:24px;
+
+    color:#111;
+
+    margin-bottom:18px;
+
+    font-weight:700;
+
+}
+
+.why-card p{
+
+    color:#666;
+
+    line-height:1.8;
+
+    font-size:16px;
+
+}
+
+/*==================================
+HOVER
+===================================*/
+
+.why-card:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:0 22px 55px rgba(0,0,0,.12);
+
+}
+
+.why-card:hover .why-icon{
+
+    transform:rotate(-8deg) scale(1.08);
+
+    background:#111;
+
+}
+
+/*==================================
+ANIMATION
+===================================*/
+
+.why-card{
+
+    animation:whyFade .7s ease;
+
+}
+
+@keyframes whyFade{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(35px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/*==================================
+RESPONSIVE
+===================================*/
+
+@media (max-width:1100px){
+
+    .why-grid{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+}
+
+@media (max-width:768px){
+
+    .why{
+
+        padding:70px 0;
+
+    }
+
+    .why h2{
+
+        font-size:34px;
+
+        margin-bottom:40px;
+
+    }
+
+    .why-grid{
+
+        grid-template-columns:1fr;
+
+        gap:22px;
+
+    }
+
+    .why-card{
+
+        padding:35px 25px;
+
+    }
+
+    .why-icon{
+
+        width:68px;
+
+        height:68px;
+
+        font-size:30px;
+
+        margin-bottom:22px;
+
+    }
+
+    .why-card h3{
+
+        font-size:22px;
+
+    }
+
+}
+
+@media (max-width:576px){
+
+    .section-tag{
+
+        font-size:12px;
+
+        padding:8px 18px;
+
+    }
+
+    .why h2{
+
+        font-size:28px;
+
+    }
+
+    .why-card{
+
+        padding:28px 20px;
+
+    }
+
+    .why-card p{
+
+        font-size:15px;
+
+    }
+
+}
