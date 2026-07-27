@@ -27,7 +27,7 @@ function Header() {
           </li>
 
           <li>
-            <Link to="/products">
+            <Link to="/product">
               Sản phẩm
             </Link>
           </li>

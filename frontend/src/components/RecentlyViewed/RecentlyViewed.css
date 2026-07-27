@@ -1,0 +1,444 @@
+/*======================================
+=        RECENTLY VIEWED SECTION      =
+======================================*/
+
+.recently{
+
+    width:1200px;
+
+    max-width:95%;
+
+    margin:90px auto;
+
+}
+
+/*======================================
+=          SECTION HEADER             =
+======================================*/
+
+.recently-header{
+
+    text-align:center;
+
+    margin-bottom:55px;
+
+}
+
+.recently-header span{
+
+    display:inline-block;
+
+    color:#2f67ff;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    letter-spacing:2px;
+
+    text-transform:uppercase;
+
+    margin-bottom:14px;
+
+}
+
+.recently-header h2{
+
+    font-size:46px;
+
+    color:#111;
+
+    font-weight:800;
+
+    line-height:1.25;
+
+}
+
+/*======================================
+=             PRODUCT GRID            =
+======================================*/
+
+.recent-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:30px;
+
+    align-items:stretch;
+
+}
+
+
+/*======================================
+=          RECENT PRODUCT CARD        =
+======================================*/
+
+.recent-card{
+
+    background:#ffffff;
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    border:1px solid #edf1f7;
+
+    box-shadow:0 12px 35px rgba(20,32,56,.06);
+
+    transition:.35s;
+
+    position:relative;
+
+    cursor:pointer;
+}
+
+.recent-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 24px 50px rgba(20,32,56,.14);
+}
+
+/*======================================
+=          PRODUCT IMAGE              =
+======================================*/
+
+.recent-card img{
+
+    width:100%;
+
+    height:320px;
+
+    object-fit:cover;
+
+    display:block;
+
+    transition:.55s ease;
+}
+
+/* Zoom ảnh */
+
+.recent-card:hover img{
+
+    transform:scale(1.08);
+}
+
+/*======================================
+=          IMAGE OVERLAY              =
+======================================*/
+
+.recent-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:0;
+
+    width:100%;
+
+    height:320px;
+
+    background:linear-gradient(
+        rgba(0,0,0,0),
+        rgba(0,0,0,.15)
+    );
+
+    opacity:0;
+
+    transition:.35s;
+
+    z-index:1;
+}
+
+.recent-card:hover::before{
+
+    opacity:1;
+}
+
+/*======================================
+=       ADD TO CART BUTTON            =
+======================================*/
+
+.recent-card button{
+
+    position:absolute;
+
+    left:20px;
+
+    right:20px;
+
+    bottom:135px;
+
+    height:48px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:#111;
+
+    color:#fff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:10px;
+
+    font-size:15px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    opacity:0;
+
+    transform:translateY(25px);
+
+    transition:.35s;
+
+    z-index:3;
+}
+
+.recent-card:hover button{
+
+    opacity:1;
+
+    transform:translateY(0);
+}
+
+.recent-card button:hover{
+
+    background:#2f67ff;
+
+    box-shadow:0 12px 28px rgba(47,103,255,.30);
+}
+
+.recent-card button:active{
+
+    transform:scale(.97);
+}
+
+.recent-card button svg{
+
+    font-size:18px;
+}
+
+
+/*======================================
+=          PRODUCT INFO               =
+======================================*/
+
+.recent-info{
+
+    padding:22px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+    background:#fff;
+}
+
+.recent-info small{
+
+    color:#2f67ff;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+}
+
+.recent-info h3{
+
+    font-size:19px;
+
+    color:#222;
+
+    line-height:1.45;
+
+    font-weight:700;
+
+    min-height:55px;
+
+    transition:.3s;
+}
+
+.recent-card:hover .recent-info h3{
+
+    color:#2f67ff;
+}
+
+.recent-info h4{
+
+    font-size:24px;
+
+    color:#111;
+
+    font-weight:800;
+
+    margin-top:4px;
+}
+
+/*======================================
+=            RESPONSIVE               =
+======================================*/
+
+@media(max-width:1200px){
+
+    .recent-grid{
+
+        grid-template-columns:repeat(3,1fr);
+
+    }
+
+}
+
+@media(max-width:992px){
+
+    .recent-grid{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+    .recently-header h2{
+
+        font-size:40px;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .recent-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .recently{
+
+        margin:70px auto;
+
+    }
+
+    .recently-header h2{
+
+        font-size:32px;
+
+    }
+
+    .recent-card img{
+
+        height:300px;
+
+    }
+
+    .recent-card::before{
+
+        height:300px;
+
+    }
+
+    .recent-card button{
+
+        bottom:120px;
+
+    }
+
+}
+
+@media(max-width:576px){
+
+    .recent-card img{
+
+        height:260px;
+
+    }
+
+    .recent-card::before{
+
+        height:260px;
+
+    }
+
+    .recent-info{
+
+        padding:18px;
+
+    }
+
+    .recent-info h3{
+
+        font-size:17px;
+
+        min-height:auto;
+
+    }
+
+    .recent-info h4{
+
+        font-size:21px;
+
+    }
+
+    .recent-card button{
+
+        left:15px;
+
+        right:15px;
+
+        bottom:110px;
+
+        height:44px;
+
+        font-size:14px;
+
+    }
+
+}
+
+/*======================================
+=            ANIMATION                =
+======================================*/
+
+.recent-card{
+
+    animation:recentFade .7s ease;
+
+}
+
+@keyframes recentFade{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(35px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}

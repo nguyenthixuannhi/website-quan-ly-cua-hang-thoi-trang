@@ -15,6 +15,7 @@ Route
 import "./index.css";
 
 import Home from "./pages/Home/Home";
+import Product from "./pages/Product/Product";
 
 import Login from "./pages/Login/Login";
 
@@ -34,6 +35,8 @@ document.getElementById("root")
 path="/"
 element={<Home/>}
 />
+
+<Route path="/product" element={<Product />} />
 
 <Route
 path="/login"

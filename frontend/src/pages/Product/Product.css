@@ -1,0 +1,85 @@
+.product-page{
+
+    width:100%;
+
+    min-height:100vh;
+
+    background:#f7f8fc;
+
+}
+
+/*======================================
+=         MAIN CONTENT                =
+======================================*/
+
+.product-content{
+
+    width:1200px;
+
+    max-width:95%;
+
+    margin:80px auto;
+
+    display:grid;
+
+    grid-template-columns:280px 1fr;
+
+    gap:40px;
+
+    align-items:start;
+
+}
+
+/*======================================
+=           RESPONSIVE                =
+======================================*/
+
+@media(max-width:1200px){
+
+    .product-content{
+
+        width:100%;
+
+        padding:0 20px;
+
+        grid-template-columns:260px 1fr;
+
+    }
+
+}
+
+@media(max-width:992px){
+
+    .product-content{
+
+        grid-template-columns:1fr;
+
+        gap:30px;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .product-content{
+
+        padding:0 15px;
+
+        margin:60px auto;
+
+    }
+
+}
+
+@media(max-width:576px){
+
+    .product-content{
+
+        margin:40px auto;
+
+        gap:25px;
+
+    }
+
+}
