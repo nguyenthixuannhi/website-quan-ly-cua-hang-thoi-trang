@@ -2,7 +2,7 @@ import "./About.css";
 
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import MissionVision from "../../components/StorySection/StorySection";
+import StorySection  from "../../components/StorySection/StorySection";
 import MissionVision from "../../components/MissionVision/MissionVision";
 import CoreValues from "../../components/CoreValues/CoreValues";
 import Statistics from "../../components/Statistics/Statistics";
