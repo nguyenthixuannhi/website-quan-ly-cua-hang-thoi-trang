@@ -1,7 +1,7 @@
 const { models } = require('../models');
 
 // GET /danhmuc
-async function getAll(req, res) {
+async function getDanhMuc(req, res) {
   try {
     const danhMucs = await models.DanhMuc.findAll();
     return res.status(200).json(danhMucs);
@@ -12,5 +12,5 @@ async function getAll(req, res) {
   }
 }
 
-module.exports = { getAll };
+module.exports = { getDanhMuc };
 
