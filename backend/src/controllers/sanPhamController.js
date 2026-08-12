@@ -1,7 +1,7 @@
 const { models } = require('../models');
 
 // GET /sanpham
-async function getAll(req, res) {
+async function getSanPhamAll(req, res) {
   try {
     const sanPhams = await models.SanPham.findAll({
       include: [
@@ -20,5 +20,5 @@ async function getAll(req, res) {
   }
 }
 
-module.exports = { getAll };
+module.exports = { getSanPhamAll };
 
