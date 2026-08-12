@@ -35,7 +35,7 @@ async function getSanPhamById(req, res) {
         },
         {
           model: models.KieuSanPham,
-          as: 'bien_the', // Đảm bảo alias khớp với lúc bạn định nghĩa quan hệ hasMany
+          as: 'bien_the',
           attributes: ['id_bien_the', 'size', 'mau_sac', 'so_luong_ton', 'gia_ban'],
         },
       ],
