@@ -3,7 +3,7 @@ const { models } = require('../models');
 // GET /sanpham
 async function getSanPhamAll(req, res) {
   try {
-    const sanPhams = await models.SanPham.findAll({
+    const sanPhams = await models.SanPham.getSanPhamAll({
       include: [
         {
           model: models.DanhMuc,
