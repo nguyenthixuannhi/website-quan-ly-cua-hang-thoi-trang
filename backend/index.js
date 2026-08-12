@@ -22,12 +22,12 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Routes
-app.use('/users', userRoutes);
+app.use('api/users', userRoutes);
 app.use('/auth', authRoutes);
 app.use('/test', testRoutes);
-app.use('/danhmuc', danhMucRoutes);
-app.use('/sanpham', sanPhamRoutes);
-app.use('/ui', uiRoutes);
+app.use('api/danhmuc', danhMucRoutes);
+app.use('api/sanpham', sanPhamRoutes);
+app.use('api/ui', uiRoutes);
 
 
 
