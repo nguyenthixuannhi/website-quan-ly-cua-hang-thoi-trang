@@ -1,0 +1,630 @@
+/* =========================================
+   CONTACT LOCATION
+   ========================================= */
+
+.contact-location {
+  width: 100%;
+
+  padding: 82px 0 86px;
+
+  background: #ffffff;
+}
+
+
+/* =========================================
+   CONTAINER
+   ========================================= */
+
+.contact-location-container {
+  width: min(1100px, calc(100% - 80px));
+
+  margin: 0 auto;
+}
+
+
+/* =========================================
+   HEADING
+   ========================================= */
+
+.contact-location-heading {
+  max-width: 620px;
+
+  margin: 0 auto 42px;
+
+  text-align: center;
+}
+
+.contact-location-label {
+  display: inline-block;
+
+  margin-bottom: 13px;
+
+  color: #1769ff;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 2.5px;
+}
+
+.contact-location-heading h2 {
+  margin: 0 0 13px;
+
+  color: #0a1428;
+
+  font-size: 34px;
+  font-weight: 800;
+
+  line-height: 1.2;
+
+  letter-spacing: -0.5px;
+}
+
+.contact-location-heading p {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 14px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================
+   LOCATION CONTENT
+   ========================================= */
+
+.contact-location-content {
+  display: grid;
+
+  grid-template-columns: 300px minmax(0, 1fr);
+
+  gap: 24px;
+
+  align-items: stretch;
+}
+
+
+/* =========================================
+   STORE INFO
+   ========================================= */
+
+.contact-location-info {
+  min-height: 310px;
+
+  padding: 28px 25px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  justify-content: center;
+
+  background: #f7f9fc;
+
+  border: 1px solid #e8ecf2;
+
+  border-radius: 16px;
+}
+
+.contact-location-info-icon {
+  width: 48px;
+  height: 48px;
+
+  margin-bottom: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #1769ff;
+
+  color: #ffffff;
+
+  font-size: 21px;
+
+  box-shadow: 0 8px 18px rgba(23, 105, 255, 0.18);
+}
+
+.contact-location-info-icon svg {
+  width: 21px;
+  height: 21px;
+
+  stroke-width: 2;
+}
+
+.contact-location-info-label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #1769ff;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 1.8px;
+}
+
+.contact-location-info h3 {
+  margin: 0 0 7px;
+
+  color: #0a1428;
+
+  font-size: 18px;
+  font-weight: 800;
+
+  line-height: 1.35;
+}
+
+.contact-location-info p {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   MAP
+   ========================================= */
+
+.contact-map {
+  position: relative;
+
+  min-height: 310px;
+
+  overflow: hidden;
+
+  border: 1px solid #e1e6ee;
+
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eef2f5 0%,
+      #f8fafc 45%,
+      #e8edf2 100%
+    );
+
+  box-shadow:
+    0 10px 25px rgba(15, 23, 42, 0.05);
+}
+
+
+/*
+   Giả lập bản đồ bằng các đường phố
+*/
+
+.contact-map::before {
+  content: "";
+
+  position: absolute;
+
+  width: 140%;
+  height: 55px;
+
+  left: -20%;
+  top: 40%;
+
+  background: rgba(255, 255, 255, 0.9);
+
+  transform: rotate(-8deg);
+
+  box-shadow:
+    0 65px 0 rgba(255, 255, 255, 0.75),
+    0 -70px 0 rgba(255, 255, 255, 0.65);
+}
+
+.contact-map::after {
+  content: "";
+
+  position: absolute;
+
+  width: 60px;
+  height: 140%;
+
+  left: 48%;
+  top: -20%;
+
+  background: rgba(255, 255, 255, 0.65);
+
+  transform: rotate(22deg);
+
+  box-shadow:
+    85px 0 0 rgba(255, 255, 255, 0.45),
+    -100px 0 0 rgba(255, 255, 255, 0.45);
+}
+
+
+/* =========================================
+   MAP PLACEHOLDER
+   ========================================= */
+
+.contact-map-placeholder {
+  position: absolute;
+
+  z-index: 2;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  min-width: 220px;
+
+  padding: 13px 17px;
+
+  background: rgba(255, 255, 255, 0.94);
+
+  border: 1px solid rgba(255, 255, 255, 0.9);
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 10px 25px rgba(15, 23, 42, 0.12);
+
+  backdrop-filter: blur(8px);
+}
+
+.contact-map-marker {
+  flex-shrink: 0;
+
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #1769ff;
+
+  color: #ffffff;
+
+  font-size: 18px;
+}
+
+.contact-map-marker svg {
+  width: 18px;
+  height: 18px;
+}
+
+.contact-map-text {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.contact-map-text strong {
+  color: #0a1428;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.contact-map-text span,
+.contact-map-text small {
+  color: #64748b;
+
+  font-size: 10px;
+
+  line-height: 1.4;
+}
+
+.contact-map-text small {
+  font-size: 9px;
+}
+
+
+/* =========================================
+   DIRECTIONS BUTTON
+   ========================================= */
+
+.contact-map-button {
+  position: absolute;
+
+  z-index: 5;
+
+  right: 18px;
+  bottom: 18px;
+
+  height: 38px;
+
+  padding: 0 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #1769ff;
+
+  font-family: inherit;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 6px 16px rgba(15, 23, 42, 0.12);
+
+  transition:
+    transform 0.25s ease,
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.contact-map-button svg {
+  width: 14px;
+  height: 14px;
+}
+
+.contact-map-button:hover {
+  transform: translateY(-2px);
+
+  background: #1769ff;
+
+  color: #ffffff;
+}
+
+
+/* =========================================
+   ANIMATION
+   ========================================= */
+
+.contact-location-heading {
+  animation: contactLocationHeading 0.7s ease both;
+}
+
+.contact-location-info,
+.contact-map {
+  animation: contactLocationFadeUp 0.7s ease both;
+}
+
+.contact-map {
+  animation-delay: 0.12s;
+}
+
+@keyframes contactLocationHeading {
+  from {
+    opacity: 0;
+
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+}
+
+@keyframes contactLocationFadeUp {
+  from {
+    opacity: 0;
+
+    transform: translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 900px) {
+  .contact-location {
+    padding: 65px 0 70px;
+  }
+
+  .contact-location-container {
+    width: min(90%, 760px);
+  }
+
+  .contact-location-content {
+    grid-template-columns: 1fr;
+
+    gap: 20px;
+  }
+
+  .contact-location-info {
+    min-height: auto;
+
+    padding: 25px;
+
+    display: grid;
+
+    grid-template-columns: auto 1fr;
+
+    align-items: center;
+
+    column-gap: 18px;
+  }
+
+  .contact-location-info-icon {
+    grid-row: span 2;
+
+    margin-bottom: 0;
+  }
+
+  .contact-map {
+    min-height: 300px;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+  .contact-location {
+    padding: 52px 0 58px;
+  }
+
+  .contact-location-container {
+    width: calc(100% - 32px);
+  }
+
+  .contact-location-heading {
+    margin-bottom: 30px;
+  }
+
+  .contact-location-label {
+    font-size: 10px;
+
+    letter-spacing: 2px;
+  }
+
+  .contact-location-heading h2 {
+    font-size: 29px;
+  }
+
+  .contact-location-heading p {
+    font-size: 13px;
+  }
+
+  .contact-location-info {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    padding: 23px 20px;
+
+    border-radius: 14px;
+  }
+
+  .contact-location-info-icon {
+    margin-bottom: 17px;
+  }
+
+  .contact-location-info h3 {
+    font-size: 16px;
+  }
+
+  .contact-location-info p {
+    font-size: 12px;
+  }
+
+  .contact-map {
+    min-height: 250px;
+
+    border-radius: 14px;
+  }
+
+  .contact-map-placeholder {
+    min-width: 190px;
+
+    padding: 11px 13px;
+  }
+
+  .contact-map-marker {
+    width: 34px;
+    height: 34px;
+
+    font-size: 16px;
+  }
+
+  .contact-map-text strong {
+    font-size: 11px;
+  }
+
+  .contact-map-text span {
+    font-size: 9px;
+  }
+
+  .contact-map-text small {
+    font-size: 8px;
+  }
+
+  .contact-map-button {
+    right: 12px;
+    bottom: 12px;
+
+    height: 35px;
+
+    padding: 0 11px;
+
+    font-size: 10px;
+  }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+   ========================================= */
+
+@media (max-width: 375px) {
+  .contact-location-container {
+    width: calc(100% - 24px);
+  }
+
+  .contact-location-heading h2 {
+    font-size: 27px;
+  }
+
+  .contact-map {
+    min-height: 225px;
+  }
+
+  .contact-map-placeholder {
+    min-width: 175px;
+  }
+}
+
+
+/* =========================================
+   REDUCE MOTION
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-location-heading,
+  .contact-location-info,
+  .contact-map {
+    animation: none;
+  }
+
+  .contact-map-button {
+    transition: none;
+  }
+
+  .contact-map-button:hover {
+    transform: none;
+  }
+}
