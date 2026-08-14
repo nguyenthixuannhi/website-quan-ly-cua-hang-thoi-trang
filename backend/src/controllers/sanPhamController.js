@@ -1,12 +1,10 @@
 const { models } = require('../models');
 const { Op } = require('sequelize');
 
-// GET /sanpham/search
-// Ví dụ:
-// /sanpham/search?keyword=ao&page=1
-// /sanpham/search?keyword=ao&page=2
-// /sanpham/search?size=M&limit=10&page=1
-// /sanpham/search?sortBy=gia_ban&order=ASC&page=1
+async function getNextId(model, fieldName) {
+  const maxValue = await model.max(fieldName);
+  return Number(maxValue || 0) + 1;
+}
 
 async function searchAndFilterSanPham(req, res) {
   try {
@@ -17,51 +15,32 @@ async function searchAndFilterSanPham(req, res) {
       max_price,
       size,
       mau_sac,
-
-      // Pagination
       page = 1,
       limit = 10,
-
-      // Sorting
       sortBy = 'id_san_pham',
       order = 'ASC',
     } = req.query;
 
-    // PAGINATION
-
-    // giới hạn tối đa 10 sản phẩm mỗi lần tải
     const pageNumber = Math.max(Number(page) || 1, 1);
-    const pageSize = 10;
-
+    const pageSize = Math.min(Math.max(Number(limit) || 10, 1), 100);
     const offset = (pageNumber - 1) * pageSize;
 
-    // FILTER SANPHAM
     const whereSanPham = {};
 
     if (keyword) {
-      whereSanPham.ten_san_pham = {
-        [Op.like]: `%${keyword}%`,
-      };
+      whereSanPham.ten_san_pham = { [Op.like]: `%${keyword}%` };
     }
 
     if (id_danh_muc) {
       whereSanPham.id_danh_muc = id_danh_muc;
     }
 
-    // FILTER KIEUSANPHAM
-
     const whereKieuSanPham = {};
 
     if (min_price || max_price) {
       whereKieuSanPham.gia_ban = {};
-
-      if (min_price) {
-        whereKieuSanPham.gia_ban[Op.gte] = Number(min_price);
-      }
-
-      if (max_price) {
-        whereKieuSanPham.gia_ban[Op.lte] = Number(max_price);
-      }
+      if (min_price) whereKieuSanPham.gia_ban[Op.gte] = Number(min_price);
+      if (max_price) whereKieuSanPham.gia_ban[Op.lte] = Number(max_price);
     }
 
     if (size) {
@@ -69,51 +48,101 @@ async function searchAndFilterSanPham(req, res) {
     }
 
     if (mau_sac) {
-      whereKieuSanPham.mau_sac = {
-        [Op.like]: `%${mau_sac}%`,
-      };
+      whereKieuSanPham.mau_sac = { [Op.like]: `%${mau_sac}%` };
     }
 
-    const hasVariantFilter =
-      Object.keys(whereKieuSanPham).length > 0;
+    const hasVariantFilter = Object.keys(whereKieuSanPham).length > 0;
 
-    // Sort
-
-    const allowedSortFields = [
-      'id_san_pham',
-      'ten_san_pham',
-      'gia_ban',
-    ];
-
+    const allowedSortFields = ['id_san_pham', 'ten_san_pham', 'gia_ban'];
     const allowedOrders = ['ASC', 'DESC'];
-
-    const safeSortBy = allowedSortFields.includes(sortBy)
-      ? sortBy
-      : 'id_san_pham';
-
-    const safeOrder = allowedOrders.includes(order.toUpperCase())
-      ? order.toUpperCase()
-      : 'ASC';
+    const safeSortBy = allowedSortFields.includes(sortBy) ? sortBy : 'id_san_pham';
+    const safeOrder = allowedOrders.includes(String(order).toUpperCase()) ? String(order).toUpperCase() : 'ASC';
 
     let orderConfig = [];
-
     if (safeSortBy === 'gia_ban') {
       orderConfig = [
-        [
-          { model: models.KieuSanPham, as: 'bien_the' },
-          'gia_ban',
-          safeOrder,
-        ],
+        [{ model: models.KieuSanPham, as: 'bien_the' }, 'gia_ban', safeOrder],
         ['id_san_pham', 'ASC'],
       ];
     } else {
-      orderConfig = [
-        [safeSortBy, safeOrder],
-        ['id_san_pham', 'ASC'],
-      ];
+      orderConfig = [[safeSortBy, safeOrder], ['id_san_pham', 'ASC']];
     }
 
-    // QUERY
+    const sanPhams = await models.SanPham.findAll({
+      where: whereSanPham,
+      include: [
+        {
+          model: models.DanhMuc,
+          as: 'danh_muc',
+          attributes: ['id_danh_muc', 'ten_danh_muc'],
+        },
+        {
+          model: models.KieuSanPham,
+          as: 'bien_the',
+          where: hasVariantFilter ? whereKieuSanPham : undefined,
+          required: hasVariantFilter,
+          attributes: ['id_bien_the', 'size', 'mau_sac', 'so_luong_ton', 'gia_ban'],
+        },
+      ],
+      order: orderConfig,
+      limit: pageSize,
+      offset,
+    });
+
+    const hasMore = sanPhams.length === pageSize;
+
+    return res.status(200).json({
+      page: pageNumber,
+      limit: pageSize,
+      hasMore,
+      data: sanPhams,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      message: err.message || 'Failed to search, filter and sort products',
+    });
+  }
+}
+
+async function getSanPhamById(req, res) {
+  try {
+    const { id } = req.params;
+
+    const sanPham = await models.SanPham.findOne({
+      where: { id_san_pham: id },
+      include: [
+        {
+          model: models.DanhMuc,
+          as: 'danh_muc',
+          attributes: ['id_danh_muc', 'ten_danh_muc'],
+        },
+        {
+          model: models.KieuSanPham,
+          as: 'bien_the',
+          attributes: ['id_bien_the', 'size', 'mau_sac', 'so_luong_ton', 'gia_ban'],
+        },
+      ],
+    });
+
+    if (!sanPham) {
+      return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
+    }
+
+    return res.status(200).json(sanPham);
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message || 'Failed to fetch san pham detail',
+    });
+  }
+}
+
+async function getSanPhamAll(req, res) {
+  try {
+    const { page = 1 } = req.query;
+    const pageNumber = Math.max(Number(page) || 1, 1);
+    const pageSize = 10;
+    const offset = (pageNumber - 1) * pageSize;
 
     const sanPhams = await models.SanPham.findAll({
       where: whereSanPham,
@@ -207,55 +236,11 @@ async function getSanPhamById(req, res) {
           ],
         },
       ],
-    });
-
-    if (!sanPham) {
-      return res.status(404).json({
-        message: 'Không tìm thấy sản phẩm',
-      });
-    }
-
-    return res.status(200).json(sanPham);
-  } catch (err) {
-    return res.status(500).json({
-      message: err.message || 'Failed to fetch san pham detail',
-    });
-  }
-}
-
-
- // GET /sanpham
- // GET /sanpham?page=1
- // GET /sanpham?page=2
-async function getSanPhamAll(req, res) {
-  try {
-    const { page = 1 } = req.query;
-
-    // Luôn chỉ tải 10 sản phẩm mỗi lafn
-    const pageNumber = Math.max(Number(page) || 1, 1);
-    const pageSize = 10;
-
-    const offset = (pageNumber - 1) * pageSize;
-
-    const sanPhams = await models.SanPham.findAll({
-      include: [
-        {
-          model: models.DanhMuc,
-          as: 'danh_muc',
-          attributes: [
-            'id_danh_muc',
-            'ten_danh_muc',
-          ],
-        },
-      ],
-
-      // 10/request
       limit: pageSize,
       offset,
-      order: [
-        ['id_san_pham', 'ASC'],
-      ],
+      order: [['id_san_pham', 'ASC']],
     });
+
     const hasMore = sanPhams.length === pageSize;
 
     return res.status(200).json({
@@ -264,18 +249,84 @@ async function getSanPhamAll(req, res) {
       hasMore,
       data: sanPhams,
     });
-
   } catch (err) {
     console.error(err);
-
     return res.status(500).json({
-      message:
-        err.message ||
-        'Failed to fetch san pham list',
+      message: err.message || 'Failed to fetch san pham detail',
     });
   }
 }
+
+async function create(req, res) {
+  try {
+    const { id_san_pham, id_danh_muc, ten_san_pham, anh_san_pham } = req.body || {};
+
+    if (!ten_san_pham) {
+      return res.status(400).json({ message: 'Thiếu trường ten_san_pham' });
+    }
+
+    const product = await models.SanPham.create({
+      id_san_pham: id_san_pham ?? (await getNextId(models.SanPham, 'id_san_pham')),
+      id_danh_muc: id_danh_muc || null,
+      ten_san_pham,
+      anh_san_pham: anh_san_pham || null,
+    });
+
+    return res.status(201).json(product);
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message || 'Failed to create san pham',
+    });
+  }
+}
+
+async function update(req, res) {
+  try {
+    const { id } = req.params;
+    const { id_danh_muc, ten_san_pham, anh_san_pham } = req.body || {};
+
+    const product = await models.SanPham.findByPk(id);
+    if (!product) {
+      return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
+    }
+
+    if (id_danh_muc !== undefined) product.id_danh_muc = id_danh_muc;
+    if (ten_san_pham) product.ten_san_pham = ten_san_pham;
+    if (anh_san_pham !== undefined) product.anh_san_pham = anh_san_pham;
+
+    await product.save();
+    return res.status(200).json(product);
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message || 'Failed to update san pham',
+    });
+  }
+}
+
+async function remove(req, res) {
+  try {
+    const { id } = req.params;
+    const product = await models.SanPham.findByPk(id);
+
+    if (!product) {
+      return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
+    }
+
+    await product.destroy();
+    return res.status(200).json({ message: 'Xóa sản phẩm thành công' });
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message || 'Failed to delete san pham',
+    });
+  }
+}
+
 module.exports = {
+  getAll: getSanPhamAll,
+  getById: getSanPhamById,
+  create,
+  update,
+  remove,
   getSanPhamAll,
   getSanPhamById,
   searchAndFilterSanPham,
