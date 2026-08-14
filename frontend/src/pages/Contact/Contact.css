@@ -1,0 +1,114 @@
+/* =========================================
+   CONTACT PAGE
+   ========================================= */
+
+.contact-page {
+  width: 100%;
+
+  min-height: 100vh;
+
+  background: #ffffff;
+
+  overflow-x: hidden;
+}
+
+
+/* =========================================
+   SECTION SPACING
+   ========================================= */
+
+/*
+   Các component Contact đã tự có padding
+   riêng nên Contact.css chỉ xử lý phần
+   tổng thể của trang.
+*/
+
+.contact-page section {
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   CONTACT HERO
+   ========================================= */
+
+.contact-page .contact-hero {
+  margin-top: 0;
+}
+
+
+/* =========================================
+   CONTACT INFO
+   ========================================= */
+
+.contact-page .contact-info {
+  position: relative;
+
+  z-index: 1;
+}
+
+
+/* =========================================
+   CONTACT MESSAGE
+   ========================================= */
+
+.contact-page .contact-message {
+  position: relative;
+
+  z-index: 1;
+}
+
+
+/* =========================================
+   CONTACT LOCATION
+   ========================================= */
+
+.contact-page .contact-location {
+  position: relative;
+
+  z-index: 1;
+}
+
+
+/* =========================================
+   CTA
+   ========================================= */
+
+.contact-page .cta-banner {
+  position: relative;
+
+  z-index: 1;
+}
+
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 1024px) {
+  .contact-page {
+    overflow-x: hidden;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+  .contact-page {
+    width: 100%;
+  }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+   ========================================= */
+
+@media (max-width: 375px) {
+  .contact-page {
+    overflow-x: hidden;
+  }
+}

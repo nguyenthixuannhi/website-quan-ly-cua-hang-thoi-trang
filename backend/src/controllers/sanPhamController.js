@@ -145,11 +145,95 @@ async function getSanPhamAll(req, res) {
     const offset = (pageNumber - 1) * pageSize;
 
     const sanPhams = await models.SanPham.findAll({
+      where: whereSanPham,
+
+      include: [
+        {
+          model: models.DanhMuc,
+          as: 'danh_muc',
+          attributes: [
+            'id_danh_muc',
+            'ten_danh_muc',
+          ],
+        },
+
+        {
+          model: models.KieuSanPham,
+          as: 'bien_the',
+
+          where: hasVariantFilter
+            ? whereKieuSanPham
+            : undefined,
+
+          required: hasVariantFilter,
+
+          attributes: [
+            'id_bien_the',
+            'size',
+            'mau_sac',
+            'so_luong_ton',
+            'gia_ban',
+          ],
+        },
+      ],
+
+      order: orderConfig,
+
+      // Chỉ lấy 10 sản phẩm
+      limit: pageSize,
+
+      // Bỏ qua sản phẩm của các trang trước
+      offset,
+    });
+
+    // CHECK CÒN SẢN PHẨM KHÔNG
+    // Nếu lấy đủ 10 thì có khả năng còn trang tiếp theo.
+    // Nếu lấy < 10 thì đã tới cuối.
+    const hasMore = sanPhams.length === pageSize;
+
+    // RES
+
+    return res.status(200).json({
+      page: pageNumber,
+      limit: pageSize,
+      hasMore,
+      data: sanPhams,
+    });
+
+  } catch (err) {
+    console.error(err);
+
+    return res.status(500).json({
+      message:
+        err.message ||
+        'Failed to search, filter and sort products',
+    });
+  }
+}
+
+// Get /Sanpham/:id
+async function getSanPhamById(req, res) {
+  try {
+    const { id } = req.params;
+
+    const sanPham = await models.SanPham.findOne({
+      where: { id_san_pham: id },
       include: [
         {
           model: models.DanhMuc,
           as: 'danh_muc',
           attributes: ['id_danh_muc', 'ten_danh_muc'],
+        },
+        {
+          model: models.KieuSanPham,
+          as: 'bien_the',
+          attributes: [
+            'id_bien_the',
+            'size',
+            'mau_sac',
+            'so_luong_ton',
+            'gia_ban',
+          ],
         },
       ],
       limit: pageSize,
@@ -168,7 +252,7 @@ async function getSanPhamAll(req, res) {
   } catch (err) {
     console.error(err);
     return res.status(500).json({
-      message: err.message || 'Failed to fetch san pham list',
+      message: err.message || 'Failed to fetch san pham detail',
     });
   }
 }

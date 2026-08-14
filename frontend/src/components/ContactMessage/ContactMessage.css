@@ -1,0 +1,642 @@
+/* =========================================
+   CONTACT MESSAGE SECTION
+   ========================================= */
+
+.contact-message {
+  width: 100%;
+  padding: 78px 0;
+
+  background: #f7f9fc;
+}
+
+
+/* =========================================
+   CONTAINER
+   ========================================= */
+
+.contact-message-container {
+  width: min(1100px, calc(100% - 80px));
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.9fr);
+
+  gap: 38px;
+
+  align-items: start;
+}
+
+
+/* =========================================
+   FORM CARD
+   ========================================= */
+
+.contact-message-form-card {
+  padding: 36px 34px 38px;
+
+  background: #ffffff;
+
+  border: 1px solid #e8ecf2;
+  border-radius: 16px;
+
+  box-shadow: 0 8px 25px rgba(15, 23, 42, 0.04);
+}
+
+
+/* =========================================
+   FORM HEADING
+   ========================================= */
+
+.contact-message-heading {
+  margin-bottom: 30px;
+}
+
+.contact-message-heading h2 {
+  margin: 0 0 8px;
+
+  color: #0a1428;
+
+  font-size: 26px;
+  font-weight: 800;
+
+  line-height: 1.25;
+}
+
+.contact-message-heading p {
+  max-width: 620px;
+
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+
+/* =========================================
+   FORM
+   ========================================= */
+
+.contact-form {
+  width: 100%;
+}
+
+.contact-form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 16px;
+
+  margin-bottom: 18px;
+}
+
+
+/* =========================================
+   FORM GROUP
+   ========================================= */
+
+.contact-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-form-group label {
+  margin-bottom: 8px;
+
+  color: #0a1428;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  line-height: 1.4;
+}
+
+.contact-form-group label span {
+  color: #ef4444;
+}
+
+
+/* =========================================
+   INPUT / SELECT / TEXTAREA
+   ========================================= */
+
+.contact-form-group input,
+.contact-form-group select,
+.contact-form-group textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dce2ea;
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #334155;
+
+  font-family: inherit;
+  font-size: 13px;
+
+  outline: none;
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.contact-form-group input,
+.contact-form-group select {
+  height: 40px;
+
+  padding: 0 13px;
+}
+
+.contact-form-group textarea {
+  min-height: 104px;
+
+  padding: 12px 13px;
+
+  resize: vertical;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   PLACEHOLDER
+   ========================================= */
+
+.contact-form-group input::placeholder,
+.contact-form-group textarea::placeholder {
+  color: #a1aabd;
+}
+
+
+/* =========================================
+   FOCUS
+   ========================================= */
+
+.contact-form-group input:focus,
+.contact-form-group select:focus,
+.contact-form-group textarea:focus {
+  border-color: #1769ff;
+
+  box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.08);
+}
+
+
+/* =========================================
+   MESSAGE FIELD
+   ========================================= */
+
+.contact-message-field {
+  margin-bottom: 22px;
+}
+
+
+/* =========================================
+   SUBMIT BUTTON
+   ========================================= */
+
+.contact-submit-button {
+  min-width: 145px;
+  height: 42px;
+
+  padding: 0 20px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #1769ff;
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow: 0 6px 15px rgba(23, 105, 255, 0.18);
+
+  transition:
+    transform 0.25s ease,
+    background-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.contact-submit-button svg {
+  width: 15px;
+  height: 15px;
+
+  stroke-width: 2;
+}
+
+.contact-submit-button:hover {
+  background: #0d5bea;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 10px 22px rgba(23, 105, 255, 0.25);
+}
+
+.contact-submit-button:active {
+  transform: translateY(0);
+}
+
+
+/* =========================================
+   SIDEBAR
+   ========================================= */
+
+.contact-message-sidebar {
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+
+/* =========================================
+   SUPPORT CARD
+   ========================================= */
+
+.contact-support-card {
+  padding: 30px 28px;
+
+  background: #ffffff;
+
+  border: 1px solid #e8ecf2;
+  border-radius: 16px;
+
+  box-shadow: 0 8px 25px rgba(15, 23, 42, 0.04);
+}
+
+.contact-support-card h3 {
+  margin: 0 0 6px;
+
+  color: #0a1428;
+
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.contact-support-intro {
+  margin: 0 0 28px;
+
+  color: #64748b;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   SUPPORT LIST
+   ========================================= */
+
+.contact-support-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 23px;
+}
+
+
+/* =========================================
+   SUPPORT ITEM
+   ========================================= */
+
+.contact-support-item {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 13px;
+}
+
+.contact-support-icon {
+  flex-shrink: 0;
+
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+
+  background: #eef4ff;
+
+  color: #1769ff;
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.contact-support-icon svg {
+  width: 15px;
+  height: 15px;
+
+  stroke-width: 2;
+}
+
+.contact-support-item:hover .contact-support-icon {
+  background: #1769ff;
+
+  color: #ffffff;
+
+  transform: scale(1.06);
+}
+
+
+/* =========================================
+   SUPPORT CONTENT
+   ========================================= */
+
+.contact-support-content {
+  flex: 1;
+}
+
+.contact-support-content h4 {
+  margin: 0 0 4px;
+
+  color: #0a1428;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  line-height: 1.4;
+}
+
+.contact-support-content p {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   STORE CARD
+   ========================================= */
+
+.contact-store-card {
+  position: relative;
+
+  width: 100%;
+  height: 174px;
+
+  overflow: hidden;
+
+  border-radius: 14px;
+
+  background: #0f172a;
+
+  box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+}
+
+.contact-store-card img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition: transform 0.5s ease;
+}
+
+.contact-store-card:hover img {
+  transform: scale(1.04);
+}
+
+
+/* =========================================
+   STORE OVERLAY
+   ========================================= */
+
+.contact-store-overlay {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  padding: 45px 16px 15px;
+
+  background: linear-gradient(
+    to top,
+    rgba(5, 15, 30, 0.88),
+    rgba(5, 15, 30, 0)
+  );
+
+  color: #ffffff;
+}
+
+.contact-store-overlay h3 {
+  margin: 0 0 3px;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.contact-store-overlay p {
+  margin: 0;
+
+  color: rgba(255, 255, 255, 0.82);
+
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+
+/* =========================================
+   ANIMATION
+   ========================================= */
+
+.contact-message-form-card,
+.contact-support-card,
+.contact-store-card {
+  animation: contactMessageFadeUp 0.7s ease both;
+}
+
+.contact-support-card {
+  animation-delay: 0.12s;
+}
+
+.contact-store-card {
+  animation-delay: 0.22s;
+}
+
+@keyframes contactMessageFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 1024px) {
+  .contact-message {
+    padding: 65px 0;
+  }
+
+  .contact-message-container {
+    width: min(90%, 850px);
+
+    grid-template-columns: 1fr;
+
+    gap: 25px;
+  }
+
+  .contact-message-sidebar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    align-items: start;
+  }
+
+  .contact-store-card {
+    height: 100%;
+    min-height: 220px;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+  .contact-message {
+    padding: 50px 0;
+  }
+
+  .contact-message-container {
+    width: calc(100% - 32px);
+
+    grid-template-columns: 1fr;
+  }
+
+  .contact-message-form-card {
+    padding: 26px 20px 28px;
+
+    border-radius: 14px;
+  }
+
+  .contact-message-heading {
+    margin-bottom: 25px;
+  }
+
+  .contact-message-heading h2 {
+    font-size: 22px;
+  }
+
+  .contact-message-heading p {
+    font-size: 12px;
+  }
+
+  .contact-form-row {
+    grid-template-columns: 1fr;
+
+    gap: 16px;
+
+    margin-bottom: 16px;
+  }
+
+  .contact-message-sidebar {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 16px;
+  }
+
+  .contact-support-card {
+    padding: 25px 20px;
+  }
+
+  .contact-support-list {
+    gap: 20px;
+  }
+
+  .contact-store-card {
+    height: 190px;
+    min-height: auto;
+  }
+
+  .contact-submit-button {
+    width: 100%;
+  }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+   ========================================= */
+
+@media (max-width: 375px) {
+  .contact-message-container {
+    width: calc(100% - 24px);
+  }
+
+  .contact-message-form-card {
+    padding: 23px 17px 25px;
+  }
+
+  .contact-message-heading h2 {
+    font-size: 20px;
+  }
+
+  .contact-support-card {
+    padding: 22px 17px;
+  }
+}
+
+
+/* =========================================
+   REDUCE MOTION
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-message-form-card,
+  .contact-support-card,
+  .contact-store-card {
+    animation: none;
+  }
+
+  .contact-submit-button,
+  .contact-support-icon,
+  .contact-store-card img {
+    transition: none;
+  }
+
+  .contact-submit-button:hover {
+    transform: none;
+  }
+
+  .contact-store-card:hover img {
+    transform: none;
+  }
+}
