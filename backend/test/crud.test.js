@@ -9,6 +9,10 @@ const donNhapHangController = require('../src/controllers/donNhapHangController'
 const chiTietPhieuNhapController = require('../src/controllers/chiTietPhieuNhapController');
 const chuongTrinhGiamGiaController = require('../src/controllers/chuongTrinhGiamGiaController');
 const lichSuKhoController = require('../src/controllers/lichSuKhoController');
+const diaChiController = require('../src/controllers/diaChiController');
+const traHangController = require('../src/controllers/traHangController');
+const thanhToanController = require('../src/controllers/thanhToanController');
+const phieuGiaoHangController = require('../src/controllers/phieuGiaoHangController');
 
 test('danhMucController exposes CRUD operations', () => {
   assert.equal(typeof danhMucController.getAll, 'function');
@@ -34,6 +38,10 @@ test('order and inventory controllers expose CRUD operations', () => {
     chiTietPhieuNhapController,
     chuongTrinhGiamGiaController,
     lichSuKhoController,
+    diaChiController,
+    traHangController,
+    thanhToanController,
+    phieuGiaoHangController,
   ];
 
   for (const controller of targets) {
