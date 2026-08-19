@@ -25,6 +25,7 @@ test('danhMucController exposes CRUD operations', () => {
 test('sanPhamController exposes CRUD operations', () => {
   assert.equal(typeof sanPhamController.getAll, 'function');
   assert.equal(typeof sanPhamController.getById, 'function');
+  assert.equal(typeof sanPhamController.getRelatedProducts, 'function');
   assert.equal(typeof sanPhamController.create, 'function');
   assert.equal(typeof sanPhamController.update, 'function');
   assert.equal(typeof sanPhamController.remove, 'function');
