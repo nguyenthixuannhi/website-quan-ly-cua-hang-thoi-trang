@@ -1,5 +1,6 @@
 import "./ProductGrid.css";
 import { FiHeart, FiShoppingCart } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 import product1 from "../../assets/products/product1.jpg";
 import product2 from "../../assets/products/product2.jpg";
@@ -121,10 +122,11 @@ function ProductGrid() {
 
         {products.map((item) => (
 
-          <div
-            className="product-card"
-            key={item.id}
-          >
+         <Link
+  to={`/product/${item.id}`}
+  className="product-card"
+  key={item.id}
+>
 
             <div className="product-image">
 
@@ -175,7 +177,7 @@ function ProductGrid() {
 
             </div>
 
-          </div>
+         </Link>
 
         ))}
 
