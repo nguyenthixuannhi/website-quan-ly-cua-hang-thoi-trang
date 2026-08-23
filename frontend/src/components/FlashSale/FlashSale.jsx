@@ -138,7 +138,6 @@ function FlashSale() {
                   </strong>
 
                   <del>
-
                     {item.old}
 
                   </del>
