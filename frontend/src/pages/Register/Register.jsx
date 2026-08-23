@@ -6,7 +6,7 @@ import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 
 import { Link, useNavigate } from "react-router-dom";
-import { FiEye } from "react-icons/fi";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useState } from "react";
 
 function Register() {
@@ -17,6 +17,9 @@ function Register() {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
 	const [success, setSuccess] = useState(null);
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirm, setShowConfirm] = useState(false);
 
 	async function handleSubmit(e) {
 		e.preventDefault();
@@ -34,7 +37,7 @@ function Register() {
 
 		setLoading(true);
 		try {
-			// generate a simple numeric id.
+			// generate a simple numeric id
 			const id_nguoi_dung = Math.floor(Date.now() / 1000);
 
 			const resp = await fetch("http://localhost:3000/auth/register", {
@@ -89,28 +92,55 @@ function Register() {
 						<p className="subtitle">Tạo tài khoản để bắt đầu mua sắm cùng LUXEWEAR.</p>
 
 						<form onSubmit={handleSubmit}>
-							<label>Email</label>
-							<input type="email" placeholder="ban@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
 
-							<label>Mật khẩu</label>
-							<div className="password-box">
-								<input type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} />
-								<FiEye />
-							</div>
+                            <label>Email</label>
+                            <input
+                                type="email"
+                                placeholder="ban@example.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
 
-							<label>Xác nhận mật khẩu</label>
-							<div className="password-box">
-								<input type="password" placeholder="••••••••" value={confirm} onChange={(e) => setConfirm(e.target.value)} />
-								<FiEye />
-							</div>
+                            <label>Mật khẩu</label>
+                            <div className="password-box">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="••••••••"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
 
-							{error && <div className="form-error">{error}</div>}
-							{success && <div className="form-success">{success}</div>}
+                                <span onClick={() => setShowPassword(!showPassword)}>
+                                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                                </span>
+                            </div>
 
-							<button type="submit" className="register-button" disabled={loading}>
-								{loading ? "Đang xử lý..." : "Đăng ký"}
-							</button>
-						</form>
+                            <label>Xác nhận mật khẩu</label>
+                            <div className="password-box">
+                                <input
+                                    type={showConfirm ? "text" : "password"}
+                                    placeholder="••••••••"
+                                    value={confirm}
+                                    onChange={(e) => setConfirm(e.target.value)}
+                                />
+
+                                <span onClick={() => setShowConfirm(!showConfirm)}>
+                                    {showConfirm ? <FiEyeOff /> : <FiEye />}
+                                </span>
+                            </div>
+
+                            {error && <div className="form-error">{error}</div>}
+                            {success && <div className="form-success">{success}</div>}
+
+                            <button
+                                type="submit"
+                                className="register-button"
+                                disabled={loading}
+                            >
+                                {loading ? "Đang xử lý..." : "Đăng ký"}
+                            </button>
+
+                        </form>
 
 						<div className="divider">
 							<span>hoặc</span>
