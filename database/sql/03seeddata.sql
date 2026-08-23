@@ -1,3 +1,7 @@
+-- Enforce UTF-8 connection settings before running any INSERT queries
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
 -- 1. Thêm người dùng (NGUOIDUNG)
 INSERT INTO NGUOIDUNG (id_nguoi_dung, email, mat_khau, vai_tro) VALUES
 (1, 'admin@shop.com', '$2b$10$adminhashpassword', 'ADMIN'),
@@ -10,7 +14,7 @@ INSERT INTO NHACUNGCAP (id_nha_cung_cap, ten_ncc) VALUES
 (1, 'Công ty Thời trang ABC Vietnam'),
 (2, 'Xưởng May Gia Định');
 
--- 3. Thêm danh mục (DANHMUC) - Đúng theo yêu cầu
+-- 3. Thêm danh mục (DANHMUC)
 INSERT INTO DANHMUC (id_danh_muc, ten_danh_muc) VALUES
 (1, 'Áo'),
 (2, 'Váy + đầm'),
@@ -19,7 +23,7 @@ INSERT INTO DANHMUC (id_danh_muc, ten_danh_muc) VALUES
 (5, 'Túi xách'),
 (6, 'Phụ kiện');
 
--- 4. Thêm sản phẩm (SANPHAM) với link ảnh place_holder.png
+-- 4. Thêm sản phẩm (SANPHAM)
 INSERT INTO SANPHAM (id_san_pham, id_danh_muc, ten_san_pham, anh_san_pham) VALUES
 (1, 1, 'Áo Thun Nam Cotton Basic', 'https://placehold.net/main.svg'),
 (2, 2, 'Đầm Maxi Hoa Nhí Đi Biển', 'https://placehold.net/main.svg'),
@@ -28,7 +32,7 @@ INSERT INTO SANPHAM (id_san_pham, id_danh_muc, ten_san_pham, anh_san_pham) VALUE
 (5, 5, 'Túi Xách Da Đeo Chéo Nữ', 'https://placehold.net/main.svg'),
 (6, 6, 'Kính Mát Thời Trang Unisex', 'https://placehold.net/main.svg');
 
--- 5. Thêm biến thể / kiểu sản phẩm (KIEUSANPHAM)
+-- 5. Thêm kiểu sản phẩm (KIEUSANPHAM)
 INSERT INTO KIEUSANPHAM (id_bien_the, id_san_pham, `size`, mau_sac, so_luong_ton, gia_ban) VALUES
 (1, 1, 'M', 'Trắng', 50, 150000.00),
 (2, 1, 'L', 'Đen', 30, 150000.00),

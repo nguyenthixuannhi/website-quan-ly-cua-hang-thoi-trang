@@ -1,4 +1,7 @@
--- Tables Creation
+-- defaults to UTF-8
+ALTER DATABASE store CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+
+-- ochinchin
 CREATE TABLE NGUOIDUNG (
     id_nguoi_dung INT NOT NULL,
     email VARCHAR(100) NOT NULL,
@@ -6,19 +9,19 @@ CREATE TABLE NGUOIDUNG (
     vai_tro VARCHAR(20) NOT NULL,
     PRIMARY KEY (id_nguoi_dung),
     UNIQUE (email)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE NHACUNGCAP (
     id_nha_cung_cap INT NOT NULL,
     ten_ncc VARCHAR(100) NOT NULL,
     PRIMARY KEY (id_nha_cung_cap)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE DANHMUC (
     id_danh_muc INT NOT NULL,
     ten_danh_muc VARCHAR(100) NOT NULL,
     PRIMARY KEY (id_danh_muc)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE SANPHAM (
     id_san_pham INT NOT NULL,
@@ -26,7 +29,7 @@ CREATE TABLE SANPHAM (
     ten_san_pham VARCHAR(200) NOT NULL,
     anh_san_pham VARCHAR(255),
     PRIMARY KEY (id_san_pham)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE KIEUSANPHAM (
     id_bien_the INT NOT NULL,
@@ -36,7 +39,7 @@ CREATE TABLE KIEUSANPHAM (
     so_luong_ton INT DEFAULT 0,
     gia_ban DECIMAL(15,2) NOT NULL,
     PRIMARY KEY (id_bien_the)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE CHUONGTRINHGIAMGIA (
     id_giam_gia INT NOT NULL,
@@ -44,7 +47,7 @@ CREATE TABLE CHUONGTRINHGIAMGIA (
     ten_chuong_trinh VARCHAR(100),
     phan_tram_giam DECIMAL(5,2),
     PRIMARY KEY (id_giam_gia)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE CHITIETGIAMGIA (
     id_chi_tiet_km INT NOT NULL,
@@ -52,7 +55,7 @@ CREATE TABLE CHITIETGIAMGIA (
     id_san_pham INT,
     id_danh_muc INT,
     PRIMARY KEY (id_chi_tiet_km)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE DONHANG (
     id_don_hang INT NOT NULL,
@@ -61,7 +64,7 @@ CREATE TABLE DONHANG (
     trang_thai VARCHAR(50),
     ngay_tao DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id_don_hang)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE CHITIETDONHANG (
     id_ct_don INT NOT NULL,
@@ -70,13 +73,13 @@ CREATE TABLE CHITIETDONHANG (
     so_luong INT NOT NULL,
     don_gia_thuc DECIMAL(15,2) NOT NULL,
     PRIMARY KEY (id_ct_don)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE GIOHANG (
     id_gio_hang INT NOT NULL,
     id_nguoi_dung INT,
     PRIMARY KEY (id_gio_hang)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE CHITIETGIOHANG (
     id_ct_gio INT NOT NULL,
@@ -84,7 +87,7 @@ CREATE TABLE CHITIETGIOHANG (
     id_bien_the INT,
     so_luong INT,
     PRIMARY KEY (id_ct_gio)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE DONNHAPHANG (
     id_don_nhap INT NOT NULL,
@@ -92,7 +95,7 @@ CREATE TABLE DONNHAPHANG (
     id_nguoi_dung INT,
     ngay_nhap DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id_don_nhap)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE CHITIETPHIEUNHAP (
     id_chi_tiet_nhap INT NOT NULL,
@@ -100,7 +103,7 @@ CREATE TABLE CHITIETPHIEUNHAP (
     id_bien_the INT,
     so_luong INT NOT NULL,
     PRIMARY KEY (id_chi_tiet_nhap)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE TRAHANG (
     id_phieu_tra INT NOT NULL,
@@ -108,7 +111,7 @@ CREATE TABLE TRAHANG (
     ly_do VARCHAR(500),
     PRIMARY KEY (id_phieu_tra),
     UNIQUE (id_don_hang)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE CHITIETTRAHANG (
     id_chi_tiet_tra INT NOT NULL,
@@ -116,14 +119,14 @@ CREATE TABLE CHITIETTRAHANG (
     id_bien_the INT,
     so_luong INT,
     PRIMARY KEY (id_chi_tiet_tra)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE DIACHI (
     id_dia_chi INT NOT NULL,
     id_nguoi_dung INT,
     dia_chi_chi_tiet VARCHAR(255),
     PRIMARY KEY (id_dia_chi)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE LICHSUKHO (
     id_lich_su INT NOT NULL,
@@ -132,7 +135,7 @@ CREATE TABLE LICHSUKHO (
     loai_thao_tac VARCHAR(20),
     so_luong_thay_doi INT,
     PRIMARY KEY (id_lich_su)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE PHIEUGIAOHANG (
     id_phieu_giao INT NOT NULL,
@@ -141,7 +144,7 @@ CREATE TABLE PHIEUGIAOHANG (
     trang_thai VARCHAR(50),
     PRIMARY KEY (id_phieu_giao),
     UNIQUE (id_don_hang)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE THANHTOAN (
     id_thanh_toan INT NOT NULL,
@@ -150,7 +153,22 @@ CREATE TABLE THANHTOAN (
     so_tien DECIMAL(15,2),
     PRIMARY KEY (id_thanh_toan),
     UNIQUE (id_don_hang)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Bang quang cao
+CREATE TABLE QUANGCAO (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tieu_de VARCHAR(255) NOT NULL,
+    url_hinh_anh VARCHAR(500) NOT NULL,
+    url_dich VARCHAR(500),
+    mua VARCHAR(50),
+    danh_muc_trong_tam VARCHAR(100),
+    ngay_bat_dau TIMESTAMP NULL,
+    ngay_ket_thuc TIMESTAMP NULL,
+    uu_tien INT DEFAULT 0,
+    kich_hoat BOOLEAN DEFAULT TRUE,
+    ngay_tao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Foreign Keys
 ALTER TABLE SANPHAM ADD CONSTRAINT SANPHAM_DANHMUC_FK FOREIGN KEY (id_danh_muc) REFERENCES DANHMUC (id_danh_muc);
@@ -177,18 +195,3 @@ ALTER TABLE LICHSUKHO ADD CONSTRAINT LICHSUKHO_NGUOIDUNG_FK FOREIGN KEY (id_nguo
 ALTER TABLE PHIEUGIAOHANG ADD CONSTRAINT PHIEUGIAOHANG_DONHANG_FK FOREIGN KEY (id_don_hang) REFERENCES DONHANG (id_don_hang);
 ALTER TABLE THANHTOAN ADD CONSTRAINT THANHTOAN_DONHANG_FK FOREIGN KEY (id_don_hang) REFERENCES DONHANG (id_don_hang);
 ALTER TABLE TRAHANG ADD CONSTRAINT TRAHANG_DONHANG_FK FOREIGN KEY (id_don_hang) REFERENCES DONHANG (id_don_hang);
-
--- Bang quang cao
-CREATE TABLE QUANGCAO (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    tieu_de VARCHAR(255) NOT NULL,
-    url_hinh_anh VARCHAR(500) NOT NULL,
-    url_dich VARCHAR(500),
-    mua VARCHAR(50),
-    danh_muc_trong_tam VARCHAR(100),
-    ngay_bat_dau TIMESTAMP NULL,
-    ngay_ket_thuc TIMESTAMP NULL,
-    uu_tien INT DEFAULT 0,
-    kich_hoat BOOLEAN DEFAULT TRUE,
-    ngay_tao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB;

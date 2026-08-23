@@ -14,12 +14,18 @@ const {
   DB_DIALECT_OPTIONS = '{}',
 } = process.env;
 
-let dialectOptions = {};
+let parsedDialectOptions = {};
 try {
-  dialectOptions = JSON.parse(DB_DIALECT_OPTIONS);
+  parsedDialectOptions = JSON.parse(DB_DIALECT_OPTIONS);
 } catch (_err) {
-  dialectOptions = {};
+  parsedDialectOptions = {};
 }
+
+// Merge charset into dialectOptions
+const dialectOptions = {
+  ...parsedDialectOptions,
+  charset: 'utf8mb4',
+};
 
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
   host: DB_HOST,
@@ -27,7 +33,10 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
   dialect: DB_DIALECT,
   logging: false,
   dialectOptions,
+  define: {
+    charset: 'utf8mb4',
+    collate: 'utf8mb4_unicode_ci',
+  },
 });
 
 module.exports = { sequelize };
-
