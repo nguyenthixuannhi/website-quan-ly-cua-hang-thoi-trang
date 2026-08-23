@@ -80,10 +80,11 @@ async function searchAndFilterSanPham(req, res) {
           model: models.KieuSanPham,
           as: 'bien_the',
           where: hasVariantFilter ? whereKieuSanPham : undefined,
-          required: hasVariantFilter,
+          required: hasVariantFilter || safeSortBy === 'gia_ban', // Ensure join when sorting by price
           attributes: ['id_bien_the', 'size', 'mau_sac', 'so_luong_ton', 'gia_ban'],
         },
       ],
+      distinct: true,
       order: orderConfig,
       limit: pageSize,
       offset,
