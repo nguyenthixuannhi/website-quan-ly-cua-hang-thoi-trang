@@ -82,28 +82,11 @@ async function me(req, res) {
   return res.status(200).json({ user: req.user });
 }
 
-// Get /api/auth/verify-token
-function verifyToken(req, res, next) {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ message: 'Không tìm thấy token' });
-  }
-
-  const token = authHeader.split(' ')[1];
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'YOUR_SECRET_KEY');
-    req.user = decoded;
-    next();
-  } catch (err) {
-    return res.status(401).json({ message: 'Token không hợp lệ hoặc đã hết hạn' });
-  }
-}
 
 
 module.exports = {
   register,
   login,
   me,
-  verifyToken,
 };
 
