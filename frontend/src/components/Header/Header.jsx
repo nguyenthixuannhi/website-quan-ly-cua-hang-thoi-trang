@@ -1,13 +1,18 @@
 import "./Header.css";
 import { Link, useNavigate } from "react-router-dom";
-import { FiSearch, FiShoppingBag, FiUser, FiLogOut } from "react-icons/fi";
-import { useState, useEffect } from "react";
+import { FiSearch, FiShoppingBag, FiUser, FiLogOut, FiX } from "react-icons/fi";
+import { useState, useEffect, useRef } from "react";
 
 function Header() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [cartCount, setCartCount] = useState(0);
   const [loading, setLoading] = useState(true);
+
+  // Search state
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
     async function verifyAndFetchCart() {
@@ -21,7 +26,6 @@ function Header() {
       }
 
       try {
-        // 1. Verify User Session
         const authResp = await fetch("http://localhost:3000/auth/me", {
           method: "GET",
           headers: {
@@ -34,7 +38,6 @@ function Header() {
           const authData = await authResp.json();
           setUser(authData.user);
 
-          // 2. Fetch Cart Count for logged-in user
           const cartResp = await fetch("http://localhost:3000/api/giohang/count", {
             method: "GET",
             headers: {
@@ -48,7 +51,6 @@ function Header() {
             setCartCount(cartData.count || 0);
           }
         } else {
-          // Token is invalid or expired
           localStorage.removeItem("token");
           localStorage.removeItem("user");
           setUser(null);
@@ -66,12 +68,33 @@ function Header() {
     verifyAndFetchCart();
   }, []);
 
+  // Auto-focus search input when opened
+  useEffect(() => {
+    if (isSearchOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [isSearchOpen]);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
     setCartCount(0);
     navigate("/login");
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/product?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const toggleSearch = () => {
+    if (isSearchOpen) {
+      setSearchQuery("");
+    }
+    setIsSearchOpen(!isSearchOpen);
   };
 
   return (
@@ -83,7 +106,7 @@ function Header() {
         </h2>
       </div>
 
-      <nav>
+      <nav className={`nav-container ${isSearchOpen ? "search-active" : ""}`}>
         <ul>
           <li>
             <Link to="/" className="active">
@@ -103,9 +126,36 @@ function Header() {
       </nav>
 
       <div className="header-right">
-        <button className="icon-btn">
-          <FiSearch />
-        </button>
+        {/* Animated Search Container */}
+        <div className={`search-wrapper ${isSearchOpen ? "expanded" : ""}`}>
+          <form onSubmit={handleSearchSubmit} className="search-form">
+            <button
+              type="button"
+              className="icon-btn search-toggle"
+              onClick={toggleSearch}
+              aria-label="Toggle search"
+            >
+              <FiSearch />
+            </button>
+            <input
+              ref={searchInputRef}
+              type="text"
+              className="search-input"
+              placeholder="Tìm kiếm sản phẩm..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {isSearchOpen && (
+              <button
+                type="button"
+                className="clear-search-btn"
+                onClick={toggleSearch}
+              >
+                <FiX />
+              </button>
+            )}
+          </form>
+        </div>
 
         <button className="icon-btn cart">
           <FiShoppingBag />
