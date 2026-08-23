@@ -88,7 +88,7 @@ function Header() {
         </button>
 
         <button className="icon-btn cart">
-          <FiShoppingBag />
+          <FiShoppingBag />  
           <span className="cart-count">3</span>
         </button>
 
