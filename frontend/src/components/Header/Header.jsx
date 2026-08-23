@@ -6,20 +6,23 @@ import { useState, useEffect } from "react";
 function Header() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [cartCount, setCartCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function verifyToken() {
+    async function verifyAndFetchCart() {
       const token = localStorage.getItem("token");
 
       if (!token) {
         setUser(null);
+        setCartCount(0);
         setLoading(false);
         return;
       }
 
       try {
-        const resp = await fetch("http://localhost:3000/auth/me", {
+        // 1. Verify User Session
+        const authResp = await fetch("http://localhost:3000/auth/me", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -27,30 +30,47 @@ function Header() {
           },
         });
 
-        if (resp.ok) {
-          const data = await resp.json();
-          setUser(data.user);
+        if (authResp.ok) {
+          const authData = await authResp.json();
+          setUser(authData.user);
+
+          // 2. Fetch Cart Count for logged-in user
+          const cartResp = await fetch("http://localhost:3000/api/giohang/count", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (cartResp.ok) {
+            const cartData = await cartResp.json();
+            setCartCount(cartData.count || 0);
+          }
         } else {
           // Token is invalid or expired
           localStorage.removeItem("token");
           localStorage.removeItem("user");
           setUser(null);
+          setCartCount(0);
         }
       } catch (error) {
-        console.error("Token verification failed:", error);
+        console.error("Auth verification failed:", error);
         setUser(null);
+        setCartCount(0);
       } finally {
         setLoading(false);
       }
     }
 
-    verifyToken();
+    verifyAndFetchCart();
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
+    setCartCount(0);
     navigate("/login");
   };
 
@@ -88,8 +108,8 @@ function Header() {
         </button>
 
         <button className="icon-btn cart">
-          <FiShoppingBag />  
-          <span className="cart-count">3</span>
+          <FiShoppingBag />
+          {user && <span className="cart-count">{cartCount}</span>}
         </button>
 
         {!loading && (

@@ -22,6 +22,7 @@ const traHangRoutes = require('./src/routes/traHangRoutes');
 const thanhToanRoutes = require('./src/routes/thanhToanRoutes');
 const phieuGiaoHangRoutes = require('./src/routes/phieuGiaoHangRoutes');
 const gioHangRoutes = require('./src/routes/gioHangRoutes');
+const chiTietGioHangRoutes = require('./src/routes/chiTietGioHangRoutes');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -57,6 +58,7 @@ app.use('/api/thanhtoan', thanhToanRoutes);
 app.use('/api/phieugiaohang', phieuGiaoHangRoutes);
 app.use('/api/ui', uiRoutes);
 app.use('/api/giohang', gioHangRoutes);
+app.use('/api/chitietgiohang', chiTietGioHangRoutes);
 app.use('/auth', authRoutes);
 app.use('/test', testRoutes);
 
