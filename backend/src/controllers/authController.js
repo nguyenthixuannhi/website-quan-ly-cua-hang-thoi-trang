@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const { models } = require('../models');
 const { signToken } = require('../config/jwt');
-const jwt = require('jsonwebtoken');
 
 
 function sanitizeUser(user) {
@@ -81,8 +80,6 @@ async function login(req, res) {
 async function me(req, res) {
   return res.status(200).json({ user: req.user });
 }
-
-
 
 module.exports = {
   register,

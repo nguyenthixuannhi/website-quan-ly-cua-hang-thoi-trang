@@ -143,6 +143,49 @@ nav a:hover{
     background:#2f6df5;
 }
 
+.user-profile-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-email {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #111;
+  background-color: #f3f4f6;
+  padding: 8px 14px;
+  border-radius: 10px;
+}
+
+.user-icon {
+  font-size: 16px;
+  color: #2f6df5;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid #ff4d4f;
+  color: #ff4d4f;
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background: #ff4d4f;
+  color: #fff;
+}
+
 @media(max-width:1100px){
     nav{
         display:none;
