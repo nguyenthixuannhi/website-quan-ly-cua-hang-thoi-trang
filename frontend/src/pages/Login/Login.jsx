@@ -4,29 +4,32 @@ import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 
 
-import { Link } from "react-router-dom";
-import { FiEye } from "react-icons/fi";
+import { Link, useNavigate } from "react-router-dom";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import loginBanner from "../../assets/login-banner.png";
 
 function Login() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
-
     <>
-
 <Header/>
     <main className="login-page">
 
       <div className="login-card">
 
-        {/* Bên trái */}
-
         <div className="login-image">
-
           <img
              src={loginBanner}
              alt="Fashion"
          />
-
           <div className="image-overlay">
 
             <div className="badge">
@@ -49,9 +52,6 @@ function Login() {
           </div>
 
         </div>
-
-        {/* Bên phải */}
-
         <div className="login-form">
 
           <span className="welcome">
@@ -70,7 +70,6 @@ function Login() {
             type="email"
             placeholder="ban@example.com"
           />
-
           <div className="password-header">
 
             <label>Mật khẩu</label>
@@ -87,9 +86,7 @@ function Login() {
               type="password"
               placeholder="••••••••"
             />
-
             <FiEye />
-
           </div>
 
           <button className="login-btn-main">
