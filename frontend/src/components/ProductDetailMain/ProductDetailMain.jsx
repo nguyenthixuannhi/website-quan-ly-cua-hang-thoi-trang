@@ -12,6 +12,7 @@ import {
 } from "react-icons/fi";
 
 import RelatedProducts from "../RelatedProducts/RelatedProducts";
+import PurchaseModal from "../../components/PurchaseModal/PurchaseModal";
 
 const API_URL = "http://localhost:81";
 
@@ -23,6 +24,7 @@ function ProductDetailMain() {
   const [error, setError] = useState("");
   const [selectedVariantId, setSelectedVariantId] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
 
   const getImageUrl = (image) => {
     if (!image) return "/placeholder-product.jpg";
@@ -240,7 +242,12 @@ function ProductDetailMain() {
                   Thêm vào giỏ hàng
                 </button>
 
-                <button type="button" className="buy-now-button">Mua ngay</button>
+                <button type="button" className="buy-now-button" onClick={() => {
+                  if (!selectedVariantId) { alert('Vui lòng chọn biến thể'); return; }
+                  const token = localStorage.getItem('token');
+                  if (!token) { window.location.href = '/login'; return; }
+                  setShowPurchaseModal(true);
+                }}>Mua ngay</button>
               </div>
 
               <div className="product-benefits">
@@ -284,7 +291,16 @@ function ProductDetailMain() {
       </section>
 
       <RelatedProducts productId={id} />
-    </>
+    
+      {showPurchaseModal && (
+        <PurchaseModal
+          items={[{ variantId: selectedVariantId, quantity, price: product.bien_the?.find(v => v.id_bien_the === selectedVariantId)?.gia_ban || 0, name: product.ten_san_pham }]}
+          onClose={() => setShowPurchaseModal(false)}
+          onSuccess={() => { alert('Đặt hàng thành công'); }}
+          clearCartAfter={false}
+        />
+      )}
+      </>
   );
 }
 

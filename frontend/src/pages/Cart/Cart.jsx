@@ -14,6 +14,7 @@ import {
 
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
+import PurchaseModal from "../../components/PurchaseModal/PurchaseModal";
 
 const API_URL = "http://localhost:81";
 
@@ -230,38 +231,17 @@ function Cart() {
   };
 
   const handlePlaceOrder = async () => {
-    if (cartItems.length === 0) {
-      return;
-    }
+    if (cartItems.length === 0) return;
+    const token = localStorage.getItem('token');
+    if (!token) { window.location.href = '/login'; return; }
+    setShowPurchaseModal(true);
+  };
 
-    const token = localStorage.getItem("token");
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
 
-    if (!token) {
-      window.location.href = "/login";
-      return;
-    }
-
-    try {
-      const response = await fetch(`${API_URL}/api/giohang`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await response.json().catch(() => ({}));
-
-      if (!response.ok) {
-        throw new Error(data.message || "Không thể đặt hàng");
-      }
-
-      setSuccessMessage("Đặt hàng thành công! Cảm ơn bạn đã mua sắm tại LUXEWEAR.");
-      setCartItems([]);
-      window.dispatchEvent(new CustomEvent("cart-updated"));
-    } catch (err) {
-      setError(err.message || "Đặt hàng thất bại");
-    }
+  const handlePurchaseSuccess = ({ orderId } = {}) => {
+    setSuccessMessage("Đặt hàng thành công! Mã đơn: " + (orderId || ''));
+    setCartItems([]);
   };
 
   if (loading) {
@@ -491,6 +471,14 @@ function Cart() {
       </main>
 
       <Footer />
+      {showPurchaseModal && (
+        <PurchaseModal
+          items={cartItems}
+          onClose={() => setShowPurchaseModal(false)}
+          onSuccess={handlePurchaseSuccess}
+          clearCartAfter={true}
+        />
+      )}
     </>
   );
 }
