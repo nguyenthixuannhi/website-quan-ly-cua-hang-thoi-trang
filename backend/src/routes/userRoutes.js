@@ -5,7 +5,6 @@ const authMiddleware = require('../middlewares/authMiddleware');
 const multer = require('multer');
 const path = require('path');
 
-// simple multer storage to backend/uploads/user
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
 		const dest = path.join(__dirname, '../../uploads/user');
@@ -20,16 +19,17 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-router.get('/', userController.getAll);
+
+router.post('/me/avatar', authMiddleware, upload.single('avatar'), userController.uploadAvatar);
+router.get('/me', authMiddleware, userController.getProfile);
+router.put('/me', authMiddleware, userController.updateMe);
+
 router.get('/:id', userController.getById);
-router.post('/', userController.createUser);
 router.put('/:id', userController.update);
 router.delete('/:id', userController.remove);
 
-// profile routes for logged in user
-router.get('/me', authMiddleware, userController.getProfile);
-router.put('/me', authMiddleware, userController.updateMe);
-router.post('/me/avatar', authMiddleware, upload.single('avatar'), userController.uploadAvatar);
+router.get('/', userController.getAll);
+router.post('/', userController.createUser);
 
 module.exports = router;
 

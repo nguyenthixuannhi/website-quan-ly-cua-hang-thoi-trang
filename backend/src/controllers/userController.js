@@ -201,6 +201,9 @@ async function remove(req, res) {
 module.exports = {
   getAll,
   getById,
+  getProfile,
+  updateMe,
+  uploadAvatar,
   create: createUser,
   update,
   remove,
