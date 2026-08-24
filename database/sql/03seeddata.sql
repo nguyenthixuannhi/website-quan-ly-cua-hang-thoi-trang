@@ -38,7 +38,7 @@ INSERT INTO SANPHAM (id_san_pham, id_danh_muc, ten_san_pham, mo_ta, anh_san_pham
 (7, 1, 'Áo Sơ Mi Nam Công Sở Oxford', 'Áo sơ mi nam dài tay vải Oxford chống nhăn lịch lãm, form dáng regular fit tôn dáng.', 'sanpham/1787594146458-maid.jpg'),
 (8, 1, 'Áo Khoác Bomber Nam Dù 2 Lớp', 'Áo khoác bomber thời trang chống gió nhẹ, 2 lớp dày dặn, thiết kế trẻ trung năng động.', 'sanpham/1787594146458-maid.jpg'),
 (9, 1, 'Áo Polo Nam Cổ Bẻ Thể Thao', 'Áo polo nam vải cá sấu cotton co giãn 4 chiều, thoáng khí, phù hợp đi chơi và chơi thể thao.', 'sanpham/1787594146458-maid.jpg'),
-(10, 1, 'Áo Hoodie Nam Nữ Form rộng', 'Áo hoodie nỉ bông dày dặn ấm áp, phong cách streetwear cá tính cho giới trẻ.', 'sanpham/1787594146458-maid.jpg'),
+(10, 1, 'Áo Hoodie Nam Nữ Form rộng', 'Áo hoodie nỉ bông dày dặn ấm áp, phong cách streetwear cá tính cho giới trẻ.', 'sanpham/hoodienamnuthongrong.jpeg'),
 (11, 2, 'Đầm Ôm Body Dự Tiệc Sang Trọng', 'Đầm ôm sát tôn đường cong cơ thể, chất liệu thun kim tuyến lấp lánh cuốn hút mọi ánh nhìn.', 'sanpham/1787594146458-maid.jpg'),
 (12, 2, 'Chân Váy Xếp Ly Dáng Dài', 'Chân váy dài xếp ly phong cách Hàn Quốc dịu dàng, dễ phối cùng áo thun hoặc áo sơ mi.', 'sanpham/1787594146458-maid.jpg'),
 (13, 2, 'Đầm Sơ Mi Công Sở Thanh Lịch', 'Đầm dáng sơ mi kèm đai lưng thời trang, lịch sự nhưng không kém phần trẻ trung.', 'sanpham/1787594146458-maid.jpg'),
