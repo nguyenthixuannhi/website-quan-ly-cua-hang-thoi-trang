@@ -139,7 +139,7 @@ const initializeAdmin = async (app) => {
       softwareBrothers: false,
     },
   });
-
+  admin.watch();
   const adminRouter = buildRouter(admin);
   app.use(admin.options.rootPath, requireAdminAccess, adminRouter);
 };
