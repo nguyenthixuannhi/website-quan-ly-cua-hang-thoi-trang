@@ -163,6 +163,10 @@
     }
 }
 
+.product-title-link{
+    text-decoration:none;
+    color:black;
+}
 
 /*======================================
 =          PRODUCT INFO               =
