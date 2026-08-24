@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './User.css';
+
+import Header from "../../components/Header/Header";
 
 const API_URL = 'http://localhost:81';
 
@@ -7,6 +10,8 @@ export default function User() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [editMode, setEditMode] = useState(false); // Mode toggle: view vs edit
+  
   const [editEmail, setEditEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newAddress, setNewAddress] = useState('');
@@ -47,6 +52,7 @@ export default function User() {
       if (resp.ok) {
         await fetchProfile();
         setNewPassword('');
+        setEditMode(false); // Switch back to view mode on success
         alert('Cập nhật thông tin thành công');
       } else {
         const err = await resp.json();
@@ -103,74 +109,119 @@ export default function User() {
     } catch (err) { console.error(err); }
   }
 
-  if (loading) return <div>Đang tải...</div>;
-  if (!user) return <div>Không có người dùng</div>;
+  if (loading) return <div className="user-loading">Đang tải...</div>;
+  if (!user) return <div className="user-loading">Không có người dùng</div>;
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Trang Người Dùng</h2>
-      <div style={{ display: 'flex', gap: 20 }}>
-        <div style={{ flex: 1 }}>
-          <h3>Thông tin</h3>
-          {user.avatar && <img src={user.avatar} alt="avatar" style={{ width: 120, height: 120, objectFit: 'cover', borderRadius: 8 }} />}
-          <form onSubmit={handleUpdateProfile} style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 420 }}>
-            <label>Email</label>
-            <input value={editEmail} onChange={(e) => setEditEmail(e.target.value)} />
-            <label>Mật khẩu mới (để trống nếu không đổi)</label>
-            <input value={newPassword} onChange={(e) => setNewPassword(e.target.value)} type="password" />
-            <button type="submit">Cập nhật</button>
-          </form>
+    <>
+      <Header />
+    <div className="user-page-container">
+      <div className="user-header-banner">
+        <h2>Trang Người Dùng</h2>
+        <button className="mode-toggle-btn" onClick={() => setEditMode(!editMode)}>
+          {editMode ? 'Chế độ Xem' : 'Chỉnh sửa Thông tin'}
+        </button>
+      </div>
+
+      <div className="user-content-layout">
+        {/* Left Side: Profile & Avatar */}
+        <div className="user-card profile-card">
+          <h3>Thông tin cá nhân</h3>
+          {user.avatar && <img src={user.avatar} alt="avatar" className="user-avatar-img" />}
+
+          {!editMode ? (
+            <div className="profile-view-mode">
+              <div className="info-group">
+                <span className="info-label">Email:</span>
+                <span className="info-value">{user.email || 'Chưa cập nhật'}</span>
+              </div>
+              <div className="info-group">
+                <span className="info-label">Mật khẩu:</span>
+                <span className="info-value">••••••••</span>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleUpdateProfile} className="profile-form">
+              <label>Email</label>
+              <input className="user-input" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} />
+              
+              <label>Mật khẩu mới (để trống nếu không đổi)</label>
+              <input className="user-input" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} type="password" />
+              
+              <div className="form-actions">
+                <button type="submit" className="primary-btn">Lưu thay đổi</button>
+                <button type="button" className="secondary-btn" onClick={() => setEditMode(false)}>Hủy</button>
+              </div>
+            </form>
+          )}
 
           <h4>Ảnh đại diện</h4>
-          <form onSubmit={handleAvatarUpload}>
-            <input type="file" accept="image/*" onChange={(e) => setAvatarFile(e.target.files[0])} />
-            <button type="submit">Tải lên</button>
+          <form onSubmit={handleAvatarUpload} className="avatar-form">
+            <input type="file" accept="image/*" onChange={(e) => setAvatarFile(e.target.files[0])} className="file-input" />
+            <button type="submit" className="action-btn">Tải lên</button>
           </form>
         </div>
 
-        <div style={{ flex: 2 }}>
-          <h3>Địa chỉ</h3>
-          <div>
-            {(user.dia_chi || []).map((d) => (
-              <div key={d.id_dia_chi} style={{ marginBottom: 8, borderBottom: '1px solid #eee', paddingBottom: 6 }}>
-                <div>{d.dia_chi_chi_tiet}</div>
-                <div style={{ marginTop: 6 }}>
-                  <button onClick={() => { const val = prompt('Sửa địa chỉ', d.dia_chi_chi_tiet); if (val != null) fetch(`${API_URL}/api/diachi/${d.id_dia_chi}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` }, body: JSON.stringify({ dia_chi_chi_tiet: val }) }).then(()=>fetchProfile()); }}>Sửa</button>
-                  <button onClick={() => handleDeleteAddress(d.id_dia_chi)} style={{ marginLeft: 8 }}>Xóa</button>
+        {/* Right Side: Addresses & Orders */}
+        <div className="user-right-column">
+          <div className="user-card">
+            <h3>Địa chỉ nhận hàng</h3>
+            <div className="address-list">
+              {(user.dia_chi || []).map((d) => (
+                <div key={d.id_dia_chi} className="address-item">
+                  <div className="address-text">{d.dia_chi_chi_tiet}</div>
+                  <div className="address-actions">
+                    <button className="action-btn sm" onClick={() => { 
+                      const val = prompt('Sửa địa chỉ', d.dia_chi_chi_tiet); 
+                      if (val != null) fetch(`${API_URL}/api/diachi/${d.id_dia_chi}`, { 
+                        method: 'PUT', 
+                        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` }, 
+                        body: JSON.stringify({ dia_chi_chi_tiet: val }) 
+                      }).then(() => fetchProfile()); 
+                    }}>Sửa</button>
+                    <button className="action-btn sm danger" onClick={() => handleDeleteAddress(d.id_dia_chi)}>Xóa</button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-          <div style={{ marginTop: 8 }}>
-            <input placeholder="Địa chỉ mới" value={newAddress} onChange={(e) => setNewAddress(e.target.value)} />
-            <button onClick={handleAddAddress} style={{ marginLeft: 8 }}>Thêm</button>
+              ))}
+            </div>
+            <div className="add-address-box">
+              <input className="user-input" placeholder="Nhập địa chỉ mới..." value={newAddress} onChange={(e) => setNewAddress(e.target.value)} />
+              <button className="primary-btn" onClick={handleAddAddress}>Thêm</button>
+            </div>
           </div>
 
-          <h3 style={{ marginTop: 20 }}>Đơn hàng</h3>
-          <div>
-            {(user.don_hang || []).map((o) => (
-              <div key={o.id_don_hang} style={{ border: '1px solid #ddd', padding: 10, marginBottom: 10 }}>
-                <div><strong>Đơn #{o.id_don_hang}</strong> - {o.loai_don} - {o.trang_thai}</div>
-                <div>Ngày: {o.ngay_tao}</div>
-                <div style={{ marginTop: 8 }}>
-                  <strong>Chi tiết:</strong>
-                  <ul>
-                    {(o.chi_tiet_don_hang || []).map((it) => (
-                      <li key={it.id_ct_don}>{it.so_luong} x {it.don_gia_thuc} (biên thể {it.id_bien_the})</li>
-                    ))}
-                  </ul>
+          <div className="user-card" style={{ marginTop: '20px' }}>
+            <h3>Lịch sử đơn hàng</h3>
+            <div className="orders-list">
+              {(user.don_hang || []).map((o) => (
+                <div key={o.id_don_hang} className="order-card-item">
+                  <div className="order-header">
+                    <strong>Đơn #{o.id_don_hang}</strong> 
+                    <span className={`badge ${o.trang_thai}`}>{o.trang_thai}</span>
+                  </div>
+                  <div className="order-subinfo">Loại: {o.loai_don} | Ngày: {o.ngay_tao}</div>
+                  
+                  <div className="order-details-box">
+                    <strong>Chi tiết:</strong>
+                    <ul>
+                      {(o.chi_tiet_don_hang || []).map((it) => (
+                        <li key={it.id_ct_don}>{it.so_luong} x {it.don_gia_thuc}đ (Biến thể: {it.id_bien_the})</li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div className="shipping-info">
+                    <strong>Giao hàng:</strong> {o.phieu_giao ? (
+                      <span>Đơn vị: {o.phieu_giao.don_vi_van_chuyen} - Trạng thái: <b>{o.phieu_giao.trang_thai}</b></span>
+                    ) : <span className="text-muted">Chưa có thông tin giao hàng</span>}
+                  </div>
                 </div>
-                <div>
-                  <strong>Giao hàng:</strong>
-                  {o.phieu_giao ? (
-                    <div>Đơn vị: {o.phieu_giao.don_vi_van_chuyen} - Trạng thái: {o.phieu_giao.trang_thai}</div>
-                  ) : <div>Chưa có thông tin giao hàng</div>}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
     </div>
+    </>
   );
 }
