@@ -1,138 +1,97 @@
 import "./RelatedProducts.css";
 
+import React, { useEffect, useState } from "react";
 import { FiHeart } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
-import product1 from "../../assets/products/product2.jpg";
-import product2 from "../../assets/products/product3.jpg";
-import product3 from "../../assets/products/product4.jpg";
-import product4 from "../../assets/products/product5.jpg";
+const API_URL = "http://localhost:81";
 
-function RelatedProducts() {
-  const products = [
-    {
-      image: product1,
-      brand: "CK",
-      name: "Đồng Hồ Bạc Mesh Band",
-      price: "3.500.000đ",
-      oldPrice: "4.200.000đ",
-      sale: "-17%",
-    },
-    {
-      image: product2,
-      brand: "CHANEL",
-      name: "Nước Hoa Nữ Nhẹ Nhàng",
-      price: "2.800.000đ",
-      oldPrice: "3.200.000đ",
-      sale: "-13%",
-    },
-    {
-      image: product3,
-      brand: "LUXEWEAR",
-      name: "Kính Mát & Đồng Hồ Set",
-      price: "1.600.000đ",
-      oldPrice: "",
-      sale: "",
-    },
-    {
-      image: product4,
-      brand: "CK",
-      name: "Kính Mát Đen Trong UV400",
-      price: "780.000đ",
-      oldPrice: "1.000.000đ",
-      sale: "-22%",
-    },
-  ];
+function RelatedProducts({ productId }) {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const getImageUrl = (image) => {
+    if (!image) return "/placeholder-product.jpg";
+    if (image.startsWith("http://") || image.startsWith("https://")) return image;
+    if (image.startsWith("/")) return `${API_URL}${image}`;
+    return `${API_URL}/${image}`;
+  };
+
+  useEffect(() => {
+    if (!productId) return setProducts([]);
+
+    const fetchRelated = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`${API_URL}/api/sanpham/related/${productId}`);
+        if (!res.ok) throw new Error("Không thể tải sản phẩm liên quan");
+        const json = await res.json();
+        setProducts(json.data || []);
+      } catch (err) {
+        console.error(err);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRelated();
+  }, [productId]);
+
+  if (loading) return null;
+  if (!products || products.length === 0) return null;
 
   return (
     <section className="related-products">
-
       <div className="related-products-container">
-
         <div className="related-products-heading">
-
           <div>
             <span>GỢI Ý CHO BẠN</span>
-
-            <h2>
-              Có thể bạn sẽ thích
-            </h2>
+            <h2>Có thể bạn sẽ thích</h2>
           </div>
 
-          <button type="button">
-            Xem tất cả →
-          </button>
-
+          <button type="button">Xem tất cả →</button>
         </div>
 
         <div className="related-products-grid">
+          {products.map((product) => {
+            const minPrice =
+              product.bien_the && product.bien_the.length > 0
+                ? Math.min(...product.bien_the.map((v) => Number(v.gia_ban) || Infinity))
+                : null;
 
-          {products.map((product, index) => (
-            <article
-              className="related-product-card"
-              key={index}
-            >
-
-              <div className="related-product-image">
-
-                <span className="related-hot">
-                  HOT
-                </span>
-
-                <button
-                  type="button"
-                  className="related-heart"
-                  aria-label="Yêu thích"
-                >
-                  <FiHeart />
-                </button>
-
-                <img
-                  src={product.image}
-                  alt={product.name}
-                />
-
-              </div>
-
-              <div className="related-product-info">
-
-                <span className="related-brand">
-                  {product.brand}
-                </span>
-
-                <h3>
-                  {product.name}
-                </h3>
-
-                <div className="related-rating">
-                  <span>★★★★★</span>
-                  <small>(176)</small>
+            return (
+              <article className="related-product-card" key={product.id_san_pham}>
+                <div className="related-product-image">
+                  <span className="related-hot">HOT</span>
+                  <button type="button" className="related-heart" aria-label="Yêu thích">
+                    <FiHeart />
+                  </button>
+                  <Link to={`/product/${product.id_san_pham}`}>
+                    <img src={getImageUrl(product.anh_san_pham)} alt={product.ten_san_pham} />
+                  </Link>
                 </div>
 
-                <div className="related-price">
-                  {product.price}
+                <div className="related-product-info">
+                  <span className="related-brand">{product.danh_muc?.ten_danh_muc || ""}</span>
+                  <h3>
+                    <Link to={`/product/${product.id_san_pham}`}>{product.ten_san_pham}</Link>
+                  </h3>
 
-                  {product.oldPrice && (
-                    <del>
-                      {product.oldPrice}
-                    </del>
-                  )}
+                  <div className="related-rating">
+                    <span>★★★★★</span>
+                    <small>(--)</small>
+                  </div>
+
+                  <div className="related-price">
+                    {minPrice ? `${minPrice.toLocaleString("vi-VN")}đ` : "Liên hệ"}
+                  </div>
                 </div>
-
-                {product.sale && (
-                  <span className="related-sale">
-                    {product.sale}
-                  </span>
-                )}
-
-              </div>
-
-            </article>
-          ))}
-
+              </article>
+            );
+          })}
         </div>
-
       </div>
-
     </section>
   );
 }

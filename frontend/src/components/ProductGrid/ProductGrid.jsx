@@ -347,15 +347,16 @@ function ProductGrid() {
               >
                 {/* PRODUCT IMAGE */}
                 <div className="product-image">
-
-                  <img
-                    src={getImageUrl(
-                      item.anh_san_pham
-                    )}
-                    alt={
-                      item.ten_san_pham
-                    }
-                  />
+                  <Link to={`/product/${item.id_san_pham}`} className="product-image-link">
+                    <img
+                      src={getImageUrl(
+                        item.anh_san_pham
+                      )}
+                      alt={
+                        item.ten_san_pham
+                      }
+                    />
+                  </Link>
                   <span className="badge">
                     Mới
                   </span>
@@ -379,7 +380,9 @@ function ProductGrid() {
                   </span>
 
                   <h3>
-                    {item.ten_san_pham}
+                    <Link to={`/product/${item.id_san_pham}`} className="product-title-link">
+                      {item.ten_san_pham}
+                    </Link>
                   </h3>
 
                   <h4>
