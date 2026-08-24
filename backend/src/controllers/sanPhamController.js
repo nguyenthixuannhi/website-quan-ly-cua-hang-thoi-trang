@@ -16,19 +16,21 @@ async function searchAndFilterSanPham(req, res) {
       size,
       mau_sac,
       page = 1,
-      limit = 10,
-      sortBy = 'id_san_pham',
-      order = 'ASC',
+      limit = 12,
+      sortBy = "id_san_pham",
+      order = "ASC",
     } = req.query;
 
     const pageNumber = Math.max(Number(page) || 1, 1);
-    const pageSize = Math.min(Math.max(Number(limit) || 10, 1), 100);
+    const pageSize = Math.min(Math.max(Number(limit) || 12, 1), 100);
     const offset = (pageNumber - 1) * pageSize;
-
+    
     const whereSanPham = {};
 
     if (keyword) {
-      whereSanPham.ten_san_pham = { [Op.like]: `%${keyword}%` };
+      whereSanPham.ten_san_pham = {
+        [Op.like]: `%${keyword}%`,
+      };
     }
 
     if (id_danh_muc) {
@@ -39,8 +41,14 @@ async function searchAndFilterSanPham(req, res) {
 
     if (min_price || max_price) {
       whereKieuSanPham.gia_ban = {};
-      if (min_price) whereKieuSanPham.gia_ban[Op.gte] = Number(min_price);
-      if (max_price) whereKieuSanPham.gia_ban[Op.lte] = Number(max_price);
+
+      if (min_price) {
+        whereKieuSanPham.gia_ban[Op.gte] = Number(min_price);
+      }
+
+      if (max_price) {
+        whereKieuSanPham.gia_ban[Op.lte] = Number(max_price);
+      }
     }
 
     if (size) {
@@ -48,60 +56,138 @@ async function searchAndFilterSanPham(req, res) {
     }
 
     if (mau_sac) {
-      whereKieuSanPham.mau_sac = { [Op.like]: `%${mau_sac}%` };
+      whereKieuSanPham.mau_sac = {
+        [Op.like]: `%${mau_sac}%`,
+      };
     }
 
-    const hasVariantFilter = Object.keys(whereKieuSanPham).length > 0;
+    const hasVariantFilter =
+      Object.keys(whereKieuSanPham).length > 0;
 
-    const allowedSortFields = ['id_san_pham', 'ten_san_pham', 'gia_ban'];
-    const allowedOrders = ['ASC', 'DESC'];
-    const safeSortBy = allowedSortFields.includes(sortBy) ? sortBy : 'id_san_pham';
-    const safeOrder = allowedOrders.includes(String(order).toUpperCase()) ? String(order).toUpperCase() : 'ASC';
+    const allowedSortFields = [
+      "id_san_pham",
+      "ten_san_pham",
+      "gia_ban",
+    ];
 
-    let orderConfig = [];
-    if (safeSortBy === 'gia_ban') {
+    const allowedOrders = ["ASC", "DESC"];
+
+    const safeSortBy = allowedSortFields.includes(sortBy)
+      ? sortBy
+      : "id_san_pham";
+
+    const safeOrder = allowedOrders.includes(
+      String(order).toUpperCase()
+    )
+      ? String(order).toUpperCase()
+      : "ASC";
+
+    let orderConfig;
+
+    if (safeSortBy === "gia_ban") {
       orderConfig = [
-        [{ model: models.KieuSanPham, as: 'bien_the' }, 'gia_ban', safeOrder],
-        ['id_san_pham', 'ASC'],
+        [
+          {
+            model: models.KieuSanPham,
+            as: "bien_the",
+          },
+          "gia_ban",
+          safeOrder,
+        ],
+        ["id_san_pham", "ASC"],
       ];
     } else {
-      orderConfig = [[safeSortBy, safeOrder], ['id_san_pham', 'ASC']];
+      orderConfig = [
+        [safeSortBy, safeOrder],
+        ["id_san_pham", "ASC"],
+      ];
     }
+    const total = await models.SanPham.count({
+      where: whereSanPham,
+
+      distinct: true,
+
+      col: "id_san_pham",
+
+      include: [
+        {
+          model: models.KieuSanPham,
+          as: "bien_the",
+
+          where: hasVariantFilter
+            ? whereKieuSanPham
+            : undefined,
+
+          required: hasVariantFilter,
+        },
+      ],
+    });
 
     const sanPhams = await models.SanPham.findAll({
       where: whereSanPham,
+
       include: [
         {
           model: models.DanhMuc,
-          as: 'danh_muc',
-          attributes: ['id_danh_muc', 'ten_danh_muc'],
+          as: "danh_muc",
+          attributes: [
+            "id_danh_muc",
+            "ten_danh_muc",
+          ],
         },
+
         {
           model: models.KieuSanPham,
-          as: 'bien_the',
-          where: hasVariantFilter ? whereKieuSanPham : undefined,
-          required: hasVariantFilter || safeSortBy === 'gia_ban', // Ensure join when sorting by price
-          attributes: ['id_bien_the', 'size', 'mau_sac', 'so_luong_ton', 'gia_ban'],
+          as: "bien_the",
+
+          where: hasVariantFilter
+            ? whereKieuSanPham
+            : undefined,
+
+          required:
+            hasVariantFilter ||
+            safeSortBy === "gia_ban",
+
+          attributes: [
+            "id_bien_the",
+            "size",
+            "mau_sac",
+            "so_luong_ton",
+            "gia_ban",
+          ],
         },
       ],
+
       distinct: true,
+
       order: orderConfig,
+
       limit: pageSize,
       offset,
     });
 
-    const hasMore = sanPhams.length === pageSize;
+    const totalPages = Math.ceil(total / pageSize);
+
+    const hasMore = pageNumber < totalPages;
 
     return res.status(200).json({
       page: pageNumber,
       limit: pageSize,
+
+      total,
+      totalPages,
+
       hasMore,
+
       data: sanPhams,
     });
   } catch (err) {
-    console.error(err);
+    console.error("Search/filter error:", err);
+
     return res.status(500).json({
-      message: err.message || 'Failed to search, filter and sort products',
+      message:
+        err.message ||
+        "Failed to search, filter and sort products",
     });
   }
 }
