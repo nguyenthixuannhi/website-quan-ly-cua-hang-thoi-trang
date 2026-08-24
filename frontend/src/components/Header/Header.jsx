@@ -278,10 +278,10 @@ function Header() {
           <>
             {user ? (
               <div className="user-profile-menu">
-                <span className="user-email">
+                <Link to="/user" className="user-email">
                   <FiUser className="user-icon" />
                   {user.email}
-                </span>
+                </Link>
                 {isAdmin && (
                   <a href="http://localhost:81/admin" target="_blank" rel="noopener noreferrer" className="dashboard-btn">
                     Dashboard
