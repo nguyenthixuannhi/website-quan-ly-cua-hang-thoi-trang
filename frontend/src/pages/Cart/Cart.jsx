@@ -39,11 +39,10 @@ function Cart() {
       return imagePath;
     }
 
-    if (imagePath.startsWith("/")) {
-      return `${API_URL}${imagePath}`;
-    }
+    const normalized = imagePath.startsWith("/") ? imagePath.slice(1) : imagePath;
+    const path = normalized.startsWith("uploads/") ? normalized : `uploads/${normalized}`;
 
-    return `${API_URL}/uploads/${imagePath}`;
+    return `${API_URL}/${path}`;
   };
 
   const fetchCartData = async () => {

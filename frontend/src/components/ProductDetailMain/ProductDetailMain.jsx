@@ -29,8 +29,11 @@ function ProductDetailMain() {
   const getImageUrl = (image) => {
     if (!image) return "/placeholder-product.jpg";
     if (image.startsWith("http://") || image.startsWith("https://")) return image;
-    if (image.startsWith("/")) return `${API_URL}${image}`;
-    return `${API_URL}/${image}`;
+
+    const normalized = image.startsWith("/") ? image.slice(1) : image;
+    const path = normalized.startsWith("uploads/") ? normalized : `uploads/${normalized}`;
+
+    return `${API_URL}/${path}`;
   };
 
   const formatPrice = (price) => {
