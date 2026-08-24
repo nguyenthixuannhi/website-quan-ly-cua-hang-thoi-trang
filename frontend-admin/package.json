@@ -1,0 +1,23 @@
+{
+  "name": "frontend-admin",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@pankod/refine-core": "^5.0.0",
+    "@pankod/refine-react-router-v6": "^1.0.0",
+    "@pankod/refine-antd": "^5.0.0",
+    "antd": "^5.8.6",
+    "axios": "^1.4.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "@vitejs/plugin-react": "^4.0.0"
+  }
+}
