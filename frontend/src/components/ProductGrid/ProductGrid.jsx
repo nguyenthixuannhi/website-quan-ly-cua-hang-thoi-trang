@@ -7,7 +7,7 @@ import "./ProductGrid.css";
 
 import { ProductPaginationContext } from "../../pages/Product/Product";
 
-const API_URL = "http://localhost:81";
+const API_URL = import.meta.env.VITE_BASE_URL || "http://localhost:81";
 
 function ProductGrid() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -36,11 +36,10 @@ function ProductGrid() {
       return image;
     }
 
-    if (image.startsWith("/")) {
-      return `${API_URL}${image}`;
-    }
+    const normalized = image.startsWith("/") ? image.slice(1) : image;
+    const path = normalized.startsWith("uploads/") ? normalized : `uploads/${normalized}`;
 
-    return `${API_URL}/${image}`;
+    return `${API_URL}/${path}`;
   };
 
   const formatPrice = (price) => {
@@ -199,6 +198,64 @@ function ProductGrid() {
     setSearchParams(newParams);
   };
 
+  const addToCart = async (product) => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      window.location.href = "/login";
+      return;
+    }
+
+    const variants = Array.isArray(product?.bien_the) ? product.bien_the : [];
+    const selectedVariant = [...variants]
+      .filter((variant) => Number(variant.so_luong_ton) > 0)
+      .sort((a, b) => Number(a.gia_ban) - Number(b.gia_ban))[0] || variants[0];
+
+    if (!selectedVariant) {
+      alert("Sản phẩm này hiện chưa có biến thể để thêm vào giỏ hàng.");
+      return;
+    }
+
+    try {
+      const cartResponse = await fetch(`${API_URL}/api/giohang`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const cartData = await cartResponse.json().catch(() => ({}));
+
+      if (!cartResponse.ok) {
+        throw new Error(cartData.message || "Không thể lấy giỏ hàng của bạn");
+      }
+
+      const response = await fetch(`${API_URL}/api/chitietgiohang`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id_bien_the: Number(selectedVariant.id_bien_the),
+          so_luong: 1,
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.message || "Thêm sản phẩm vào giỏ hàng thất bại");
+      }
+
+      window.dispatchEvent(new CustomEvent("cart-updated"));
+      alert("Đã thêm sản phẩm vào giỏ hàng");
+    } catch (error) {
+      alert(error.message || "Không thể thêm sản phẩm vào giỏ hàng");
+    }
+  };
+
   const activeKeyword =
     searchParams.get("keyword") ||
     searchParams.get("search");
@@ -347,28 +404,16 @@ function ProductGrid() {
               >
                 {/* PRODUCT IMAGE */}
                 <div className="product-image">
-
-                  <img
-                    src={getImageUrl(
-                      item.anh_san_pham
-                    )}
-                    alt={
-                      item.ten_san_pham
-                    }
-                  />
-                  <span className="badge">
-                    Mới
-                  </span>
-
-                  {/* WISHLIST BUTTON  NO IDEA HOW TO CODE IT YET*/}
-                  <button
-                    className="wishlist"
-                    onClick={() =>
-                      console.log( "Wishlist:", item )
-                    }
-                  >
-                    <FiHeart />
-                  </button>
+                  <Link to={`/product/${item.id_san_pham}`} className="product-image-link">
+                    <img
+                      src={getImageUrl(
+                        item.anh_san_pham
+                      )}
+                      alt={
+                        item.ten_san_pham
+                      }
+                    />
+                  </Link>
                 </div>
 
 
@@ -379,7 +424,8 @@ function ProductGrid() {
                   </span>
 
                   <h3>
-                    {item.ten_san_pham}
+                    <Link to={`/product/${item.id_san_pham}`} className="product-title-link">
+                      {item.ten_san_pham}</Link>
                   </h3>
 
                   <h4>
@@ -388,9 +434,7 @@ function ProductGrid() {
                   {/* ADD TO CART BUTTON  NO IDEA */}
                   <button
                     className="cart-btn"
-                    onClick={() =>
-                      console.log( "Add to cart:", item )
-                    }
+                    onClick={() => addToCart(item)}
                   >
                     <FiShoppingCart />
                     Thêm vào giỏ

@@ -4,10 +4,6 @@
     flex-direction:column;
 }
 
-/*======================================
-=            TOOLBAR                  =
-======================================*/
-
 .toolbar{
     display:flex;
     justify-content:space-between;
@@ -115,10 +111,6 @@
     transform:scale(1.08);
 }
 
-/*======================================
-=             BADGE                   =
-======================================*/
-
 .badge{
     position:absolute;
     top:18px;
@@ -135,60 +127,6 @@
     box-shadow:
     0 10px 20px rgba(47,103,255,.30);
 }
-
-/*======================================
-=         WISHLIST BUTTON             =
-======================================*/
-
-.wishlist{
-    position:absolute;
-    top:18px;
-    right:18px;
-    width:44px;
-    height:44px;
-    border:none;
-    border-radius:50%;
-    background:rgba(255,255,255,.95);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    color:#555;
-    font-size:20px;
-    transition:.35s;
-    opacity:0;
-    transform:translateY(-12px);
-    z-index:5;
-    box-shadow:
-    0 12px 28px rgba(0,0,0,.10);
-}
-
-/* Hover card mới hiện icon */
-
-.product-card:hover .wishlist{
-    opacity:1;
-    transform:translateY(0);
-}
-
-/* Hover icon */
-
-.wishlist:hover{
-    background:#2f67ff;
-    color:#fff;
-    transform:scale(1.12);
-    box-shadow:
-    0 16px 35px rgba(47,103,255,.35);
-}
-
-/* Click */
-
-.wishlist:active{
-    transform:scale(.92);
-}
-
-/*======================================
-=      IMAGE OVERLAY EFFECT           =
-======================================*/
 
 .product-image::after{
     content:"";
@@ -225,6 +163,10 @@
     }
 }
 
+.product-title-link{
+    text-decoration:none;
+    color:black;
+}
 
 /*======================================
 =          PRODUCT INFO               =

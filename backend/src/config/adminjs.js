@@ -72,9 +72,12 @@ const initializeAdmin = async (app) => {
       resource: models.NguoiDung,
       options: {
         properties: {
+          id_nguoi_dung: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          email: { isVisible: { list: true, show: true, edit: true, filter: true } },
           mat_khau: {
             isVisible: { list: false, show: false, edit: true, filter: false },
           },
+          vai_tro: { isVisible: { list: true, show: true, edit: true, filter: true } },
         },
       },
     },
@@ -82,7 +85,17 @@ const initializeAdmin = async (app) => {
       resource: models.QuangCao,
       options: {
         properties: {
+          id: { isVisible: { list: true, show: true, edit: false, filter: true } },
+          tieu_de: { isVisible: { list: true, show: true, edit: true, filter: true } },
           url_hinh_anh: { isVisible: { list: true, show: true, edit: false, filter: false } },
+          url_dich: { isVisible: { list: true, show: true, edit: true, filter: false } },
+          mua: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          danh_muc_trong_tam: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          ngay_bat_dau: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          ngay_ket_thuc: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          uu_tien: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          kich_hoat: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          ngay_tao: { isVisible: { list: true, show: true, edit: false, filter: false } },
         },
       },
       features: [
@@ -94,40 +107,210 @@ const initializeAdmin = async (app) => {
         }),
       ],
     },
-    { resource: models.NhaCungCap },
-    { resource: models.DanhMuc },
+    { 
+      resource: models.NhaCungCap,
+      options: {
+        properties: {
+          id_nha_cung_cap: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          ten_ncc: { isVisible: { list: true, show: true, edit: true, filter: true } },
+        }
+      }
+    },
+    { 
+      resource: models.DanhMuc,
+      options: {
+        properties: {
+          id_danh_muc: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          ten_danh_muc: { isVisible: { list: true, show: true, edit: true, filter: true } },
+        }
+      }
+    },
     {
       resource: models.SanPham,
       options: {
         properties: {
-          anh_san_pham: { isVisible: { list: true, show: true, edit: false, filter: false } },
+          id_san_pham: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_danh_muc: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          ten_san_pham: { isVisible: { list: true, show: true, edit: true, filter: true } },
           mo_ta: { isVisible: { list: true, show: true, edit: true, filter: false } },
+          anh_san_pham: { isVisible: { list: true, show: true, edit: true, filter: false } },
         },
       },
       features: [
         uploadFeature({
-          componentLoader, 
+          componentLoader,
           provider: { local: { bucket: uploadBucket } },
           properties: { key: 'anh_san_pham' },
           uploadPath: (record, filename) => `sanpham/${Date.now()}-${filename}`,
         }),
       ],
     },
-    { resource: models.KieuSanPham },
-    { resource: models.ChuongTrinhGiamGia },
-    { resource: models.ChiTietGiamGia },
-    { resource: models.DonHang },
-    { resource: models.ChiTietDonHang },
-    { resource: models.GioHang },
-    { resource: models.ChiTietGioHang },
-    { resource: models.DonNhapHang },
-    { resource: models.ChiTietPhieuNhap },
-    { resource: models.TraHang },
-    { resource: models.ChiTietTraHang },
-    { resource: models.DiaChi },
-    { resource: models.LichSuKho },
-    { resource: models.PhieuGiaoHang },
-    { resource: models.ThanhToan },
+    {
+      resource: models.KieuSanPham,
+      options: {
+        properties: {
+          id_bien_the: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_san_pham: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          size: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          mau_sac: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          so_luong_ton: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          gia_ban: { isVisible: { list: true, show: true, edit: true, filter: true } },
+        },
+      },
+    },
+    { 
+      resource: models.ChuongTrinhGiamGia,
+      options: {
+        properties: {
+          id_giam_gia: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_nguoi_dung: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          ten_chuong_trinh: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          phan_tram_giam: { isVisible: { list: true, show: true, edit: true, filter: true } },
+        }
+      }
+    },
+    { 
+      resource: models.ChiTietGiamGia,
+      options: {
+        properties: {
+          id_chi_tiet_km: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_giam_gia: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_san_pham: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_danh_muc: { isVisible: { list: true, show: true, edit: true, filter: true } },
+        }
+      }
+    },
+    { 
+      resource: models.DonHang,
+      options: {
+        properties: {
+          id_don_hang: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_nguoi_dung: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          loai_don: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          trang_thai: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          ngay_tao: { isVisible: { list: true, show: true, edit: false, filter: true } },
+        }
+      }
+    },
+    { 
+      resource: models.ChiTietDonHang,
+      options: {
+        properties: {
+          id_ct_don: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_don_hang: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_bien_the: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          so_luong: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          don_gia_thuc: { isVisible: { list: true, show: true, edit: true, filter: true } },
+        }
+      }
+    },
+    { 
+      resource: models.GioHang,
+      options: {
+        properties: {
+          id_gio_hang: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_nguoi_dung: { isVisible: { list: true, show: true, edit: true, filter: true } },
+        }
+      }
+    },
+    { 
+      resource: models.ChiTietGioHang,
+      options: {
+        properties: {
+          id_ct_gio: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_gio_hang: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_bien_the: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          so_luong: { isVisible: { list: true, show: true, edit: true, filter: true } },
+        }
+      }
+    },
+    { 
+      resource: models.DonNhapHang,
+      options: {
+        properties: {
+          id_don_nhap: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_nha_cung_cap: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_nguoi_dung: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          ngay_nhap: { isVisible: { list: true, show: true, edit: false, filter: true } },
+        }
+      }
+    },
+    { 
+      resource: models.ChiTietPhieuNhap,
+      options: {
+        properties: {
+          id_chi_tiet_nhap: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_don_nhap: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_bien_the: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          so_luong: { isVisible: { list: true, show: true, edit: true, filter: true } },
+        }
+      }
+    },
+    { 
+      resource: models.TraHang,
+      options: {
+        properties: {
+          id_phieu_tra: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_don_hang: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          ly_do: { isVisible: { list: true, show: true, edit: true, filter: false } },
+        }
+      }
+    },
+    { 
+      resource: models.ChiTietTraHang,
+      options: {
+        properties: {
+          id_chi_tiet_tra: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_phieu_tra: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_bien_the: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          so_luong: { isVisible: { list: true, show: true, edit: true, filter: true } },
+        }
+      }
+    },
+    { 
+      resource: models.DiaChi,
+      options: {
+        properties: {
+          id_dia_chi: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_nguoi_dung: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          dia_chi_chi_tiet: { isVisible: { list: true, show: true, edit: true, filter: true } },
+        }
+      }
+    },
+    { 
+      resource: models.LichSuKho,
+      options: {
+        properties: {
+          id_lich_su: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_bien_the: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_nguoi_dung: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          loai_thao_tac: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          so_luong_thay_doi: { isVisible: { list: true, show: true, edit: true, filter: true } },
+        }
+      }
+    },
+    { 
+      resource: models.PhieuGiaoHang,
+      options: {
+        properties: {
+          id_phieu_giao: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_don_hang: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          don_vi_van_chuyen: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          trang_thai: { isVisible: { list: true, show: true, edit: true, filter: true } },
+        }
+      }
+    },
+    { 
+      resource: models.ThanhToan,
+      options: {
+        properties: {
+          id_thanh_toan: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          id_don_hang: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          phuong_thuc: { isVisible: { list: true, show: true, edit: true, filter: true } },
+          so_tien: { isVisible: { list: true, show: true, edit: true, filter: true } },
+        }
+      }
+    },
   ];
 
   const admin = new AdminJS({
@@ -139,7 +322,7 @@ const initializeAdmin = async (app) => {
       softwareBrothers: false,
     },
   });
-
+  admin.watch();
   const adminRouter = buildRouter(admin);
   app.use(admin.options.rootPath, requireAdminAccess, adminRouter);
 };

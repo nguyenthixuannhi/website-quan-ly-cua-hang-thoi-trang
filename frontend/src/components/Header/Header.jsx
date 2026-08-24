@@ -15,6 +15,7 @@ function Header() {
 
   const [cartCount, setCartCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_BASE_URL || "http://localhost:81";
   const isAdmin = user && ['ADMIN', 'STAFF'].includes((user.vai_tro || '').toUpperCase());
 
   // Search state - auto expand if there's already a search query in the URL
@@ -41,7 +42,48 @@ function Header() {
       }
     };
 
-    window.addEventListener('auth-changed', handleAuthChanged);
+    const handleCartUpdated = () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        setUser(null);
+        setCartCount(0);
+        return;
+      }
+
+      fetchCartCount(token);
+    };
+
+    async function fetchCartCount(token) {
+      try {
+        const cartResp = await fetch(`${API_URL}/api/giohang/count`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (cartResp.ok) {
+          const cartData = await cartResp.json();
+          setCartCount(cartData.count || 0);
+          return;
+        }
+
+        if (cartResp.status === 401) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          setUser(null);
+          setCartCount(0);
+          return;
+        }
+
+        setCartCount(0);
+      } catch (error) {
+        console.error("Cart count fetch failed:", error);
+        setCartCount(0);
+      }
+    }
 
     async function verifyAndFetchCart() {
       const token = localStorage.getItem("token");
@@ -54,7 +96,7 @@ function Header() {
       }
 
       try {
-        const authResp = await fetch("http://localhost:3000/auth/me", {
+        const authResp = await fetch(`${API_URL}/auth/me`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -65,19 +107,7 @@ function Header() {
         if (authResp.ok) {
           const authData = await authResp.json();
           setUser(authData.user);
-
-          const cartResp = await fetch("http://localhost:3000/api/giohang/count", {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          });
-
-          if (cartResp.ok) {
-            const cartData = await cartResp.json();
-            setCartCount(cartData.count || 0);
-          }
+          await fetchCartCount(token);
         } else {
           localStorage.removeItem("token");
           localStorage.removeItem("user");
@@ -93,9 +123,15 @@ function Header() {
       }
     }
 
+    window.addEventListener('auth-changed', handleAuthChanged);
+    window.addEventListener('cart-updated', handleCartUpdated);
+
     verifyAndFetchCart();
 
-    return () => window.removeEventListener('auth-changed', handleAuthChanged);
+    return () => {
+      window.removeEventListener('auth-changed', handleAuthChanged);
+      window.removeEventListener('cart-updated', handleCartUpdated);
+    };
   }, []);
 
   // focus search input when opened
@@ -121,6 +157,15 @@ function Header() {
       // ignore
     }
     navigate("/login");
+  };
+
+  const handleCartClick = () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    navigate("/cart");
   };
 
   const handleSearchSubmit = (e) => {
@@ -224,7 +269,7 @@ function Header() {
           </form>
         </div>
 
-        <button className="icon-btn cart">
+        <button type="button" className="icon-btn cart" onClick={handleCartClick}>
           <FiShoppingBag />
           {user && <span className="cart-count">{cartCount}</span>}
         </button>
@@ -233,12 +278,12 @@ function Header() {
           <>
             {user ? (
               <div className="user-profile-menu">
-                <span className="user-email">
+                <Link to="/user" className="user-email">
                   <FiUser className="user-icon" />
                   {user.email}
-                </span>
+                </Link>
                 {isAdmin && (
-                  <a href="http://localhost:81/admin" target="_blank" rel="noopener noreferrer" className="dashboard-btn">
+                  <a href={`${API_URL}/admin`} target="_blank" rel="noopener noreferrer" className="dashboard-btn">
                     Dashboard
                   </a>
                 )}

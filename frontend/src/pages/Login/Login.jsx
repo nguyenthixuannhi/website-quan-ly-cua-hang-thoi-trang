@@ -8,6 +8,8 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import loginBanner from "../../assets/login-banner.png";
 import { useState } from "react";
 
+const API_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:81';
+
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -30,7 +32,7 @@ function Login() {
 
     setLoading(true);
     try {
-      const resp = await fetch("http://localhost:81/auth/login", {
+      const resp = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, mat_khau: password }),
@@ -65,7 +67,7 @@ function Login() {
 
       setSuccess("Đăng nhập thành công.");
       setLoading(false);
-      setTimeout(() => navigate("/"), 800);
+      setTimeout(() => navigate("/cart"), 800);
     } catch (err) {
       setError(err.message || "Lỗi kết nối");
       setLoading(false);

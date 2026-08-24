@@ -9,6 +9,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useState } from "react";
 
+const API_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:81';
+
 function Register() {
 	const navigate = useNavigate();
 	const [email, setEmail] = useState("");
@@ -40,7 +42,7 @@ function Register() {
 			// generate a simple numeric id
 			const id_nguoi_dung = Math.floor(Date.now() / 1000);
 
-			const resp = await fetch("http://localhost:81/auth/register", {
+			const resp = await fetch(`${API_URL}/auth/register`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ id_nguoi_dung, email, mat_khau: password }),

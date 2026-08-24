@@ -77,7 +77,7 @@ async function countCartItems(req, res) {
       });
     }
 
-    const result = await models.CHITIETGIOHANG.sum('so_luong', {
+    const result = await models.ChiTietGioHang.sum('so_luong', {
       where: {
         id_gio_hang: cart.id_gio_hang,
       },
@@ -119,7 +119,7 @@ async function clearCart(req, res) {
       });
     }
 
-    await models.CHITIETGIOHANG.destroy({
+    await models.ChiTietGioHang.destroy({
       where: {
         id_gio_hang: cart.id_gio_hang,
       },

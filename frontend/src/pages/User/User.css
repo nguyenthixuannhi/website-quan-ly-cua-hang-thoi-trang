@@ -1,0 +1,260 @@
+:root {
+  --accent: #2f6df5;
+  --accent-bg: #eff6ff;
+  --accent-border: #bfdbfe;
+  --border: #e5e7eb;
+  --text-h: #111827;
+  --social-bg: #f9fafb;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.user-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: inherit;
+  color: #374151;
+}
+
+.user-loading {
+  text-align: center;
+  padding: 50px;
+  font-size: 18px;
+}
+
+.user-header-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 15px;
+}
+
+.user-header-banner h2 {
+  font-size: 26px;
+  color: var(--text-h);
+}
+
+.mode-toggle-btn {
+  background: var(--accent-bg);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.mode-toggle-btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.user-content-layout {
+  display: flex;
+  gap: 25px;
+}
+
+@media (max-width: 1024px) {
+  .user-content-layout {
+    flex-direction: column;
+  }
+}
+
+.user-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.profile-card {
+  flex: 1;
+  height: fit-content;
+}
+
+.user-right-column {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.user-avatar-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 16px;
+  border: 2px solid var(--accent);
+}
+
+.profile-view-mode {
+  margin: 15px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.info-group {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--border);
+}
+
+.info-label {
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.info-value {
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+.profile-form, .avatar-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.user-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.user-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+.primary-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+.primary-btn:hover {
+  background: #1d4ed8;
+}
+
+.secondary-btn {
+  background: #e5e7eb;
+  color: #374151;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.action-btn {
+  background: var(--social-bg);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: box-shadow 0.3s;
+}
+
+.action-btn:hover {
+  box-shadow: var(--shadow);
+}
+
+.action-btn.sm {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.action-btn.danger {
+  color: #ef4444;
+  border-color: #fca5a5;
+}
+
+.action-btn.danger:hover {
+  background: #fef2f2;
+}
+
+.address-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.address-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.add-address-box {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.order-card-item {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 12px;
+  background: var(--social-bg);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.order-subinfo {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.order-details-box {
+  font-size: 14px;
+  background: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
+.order-details-box ul {
+  padding-left: 20px;
+  margin-top: 4px;
+}
+
+.shipping-info {
+  font-size: 13px;
+}
+
+.text-muted {
+  color: #9ca3af;
+}

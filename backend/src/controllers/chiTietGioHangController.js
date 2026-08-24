@@ -37,7 +37,7 @@ async function getAll(req, res) {
       });
     }
 
-    const items = await models.CHITIETGIOHANG.findAll({
+    const items = await models.ChiTietGioHang.findAll({
       where: {
         id_gio_hang: cart.id_gio_hang,
       },
@@ -80,7 +80,7 @@ async function getOne(req, res) {
       });
     }
 
-    const item = await models.CHITIETGIOHANG.findOne({
+    const item = await models.ChiTietGioHang.findOne({
       where: {
         id_ct_gio: id,
         id_gio_hang: cart.id_gio_hang,
@@ -132,7 +132,7 @@ async function addItem(req, res) {
     }
 
     // Check product variant exists
-    const variant = await models.KIEUSANPHAM.findOne({
+    const variant = await models.KieuSanPham.findOne({
       where: {
         id_bien_the,
       },
@@ -156,7 +156,7 @@ async function addItem(req, res) {
     const cart = await getOrCreateCart(userId);
 
     // Check if this variant is already in cart
-    const existing = await models.CHITIETGIOHANG.findOne({
+    const existing = await models.ChiTietGioHang.findOne({
       where: {
         id_gio_hang: cart.id_gio_hang,
         id_bien_the,
@@ -185,11 +185,11 @@ async function addItem(req, res) {
     }
 
     // Generate ID
-    const maxId = await models.CHITIETGIOHANG.max('id_ct_gio');
+    const maxId = await models.ChiTietGioHang.max('id_ct_gio');
 
     const newId = (maxId || 0) + 1;
 
-    const item = await models.CHITIETGIOHANG.create({
+    const item = await models.ChiTietGioHang.create({
       id_ct_gio: newId,
       id_gio_hang: cart.id_gio_hang,
       id_bien_the,
@@ -240,7 +240,7 @@ async function updateItem(req, res) {
       });
     }
 
-    const item = await models.CHITIETGIOHANG.findOne({
+    const item = await models.ChiTietGioHang.findOne({
       where: {
         id_ct_gio: id,
         id_gio_hang: cart.id_gio_hang,
@@ -253,7 +253,7 @@ async function updateItem(req, res) {
       });
     }
 
-    const variant = await models.KIEUSANPHAM.findOne({
+    const variant = await models.KieuSanPham.findOne({
       where: {
         id_bien_the: item.id_bien_the,
       },
@@ -319,7 +319,7 @@ async function changeQuantity(req, res) {
       });
     }
 
-    const item = await models.CHITIETGIOHANG.findOne({
+    const item = await models.ChiTietGioHang.findOne({
       where: {
         id_ct_gio: id,
         id_gio_hang: cart.id_gio_hang,
@@ -343,7 +343,7 @@ async function changeQuantity(req, res) {
       });
     }
 
-    const variant = await models.KIEUSANPHAM.findOne({
+    const variant = await models.KieuSanPham.findOne({
       where: {
         id_bien_the: item.id_bien_the,
       },
@@ -400,7 +400,7 @@ async function removeItem(req, res) {
       });
     }
 
-    const item = await models.CHITIETGIOHANG.findOne({
+    const item = await models.ChiTietGioHang.findOne({
       where: {
         id_ct_gio: id,
         id_gio_hang: cart.id_gio_hang,

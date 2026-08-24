@@ -178,7 +178,6 @@ async function searchAndFilterSanPham(req, res) {
       totalPages,
 
       hasMore,
-
       data: sanPhams,
     });
   } catch (err) {
@@ -188,6 +187,31 @@ async function searchAndFilterSanPham(req, res) {
       message:
         err.message ||
         "Failed to search, filter and sort products",
+    });
+  }
+}
+
+async function create(req, res) {
+  try {
+    // Added mo_ta here
+    const { id_san_pham, id_danh_muc, ten_san_pham, mo_ta, anh_san_pham } = req.body || {};
+
+    if (!ten_san_pham) {
+      return res.status(400).json({ message: 'Thiếu trường ten_san_pham' });
+    }
+
+    const product = await models.SanPham.create({
+      id_san_pham: id_san_pham ?? (await getNextId(models.SanPham, 'id_san_pham')),
+      id_danh_muc: id_danh_muc || null,
+      ten_san_pham,
+      mo_ta: mo_ta || null, // Added mo_ta here
+      anh_san_pham: anh_san_pham || null,
+    });
+
+    return res.status(201).json(product);
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message || 'Failed to create san pham',
     });
   }
 }
@@ -329,33 +353,11 @@ async function getRelatedProducts(req, res) {
   }
 }
 
-async function create(req, res) {
-  try {
-    const { id_san_pham, id_danh_muc, ten_san_pham, anh_san_pham } = req.body || {};
-
-    if (!ten_san_pham) {
-      return res.status(400).json({ message: 'Thiếu trường ten_san_pham' });
-    }
-
-    const product = await models.SanPham.create({
-      id_san_pham: id_san_pham ?? (await getNextId(models.SanPham, 'id_san_pham')),
-      id_danh_muc: id_danh_muc || null,
-      ten_san_pham,
-      anh_san_pham: anh_san_pham || null,
-    });
-
-    return res.status(201).json(product);
-  } catch (err) {
-    return res.status(500).json({
-      message: err.message || 'Failed to create san pham',
-    });
-  }
-}
-
 async function update(req, res) {
   try {
     const { id } = req.params;
-    const { id_danh_muc, ten_san_pham, anh_san_pham } = req.body || {};
+    // Added mo_ta here
+    const { id_danh_muc, ten_san_pham, mo_ta, anh_san_pham } = req.body || {};
 
     const product = await models.SanPham.findByPk(id);
     if (!product) {
@@ -364,6 +366,32 @@ async function update(req, res) {
 
     if (id_danh_muc !== undefined) product.id_danh_muc = id_danh_muc;
     if (ten_san_pham) product.ten_san_pham = ten_san_pham;
+    if (mo_ta !== undefined) product.mo_ta = mo_ta;
+    if (anh_san_pham !== undefined) product.anh_san_pham = anh_san_pham;
+
+    await product.save();
+    return res.status(200).json(product);
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message || 'Failed to update san pham',
+    });
+  }
+}
+
+async function update(req, res) {
+  try {
+    const { id } = req.params;
+    // Added mo_ta here
+    const { id_danh_muc, ten_san_pham, mo_ta, anh_san_pham } = req.body || {};
+
+    const product = await models.SanPham.findByPk(id);
+    if (!product) {
+      return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
+    }
+
+    if (id_danh_muc !== undefined) product.id_danh_muc = id_danh_muc;
+    if (ten_san_pham) product.ten_san_pham = ten_san_pham;
+    if (mo_ta !== undefined) product.mo_ta = mo_ta; // Added mo_ta update check
     if (anh_san_pham !== undefined) product.anh_san_pham = anh_san_pham;
 
     await product.save();

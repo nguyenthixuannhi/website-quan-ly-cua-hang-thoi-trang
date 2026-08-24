@@ -40,6 +40,24 @@ async function getById(req, res) {
   }
 }
 
+async function getByUserId(req, res) {
+  try {
+    const { id } = req.params;
+    const orders = await models.DonHang.findAll({
+      where: { id_nguoi_dung: id },
+      include: [
+        { model: models.NguoiDung, as: 'nguoi_dung', attributes: ['id_nguoi_dung', 'email'] },
+        { model: models.ChiTietDonHang, as: 'chi_tiet_don_hang' },
+        { model: models.PhieuGiaoHang, as: 'phieu_giao' },
+      ],
+      order: [['id_don_hang', 'ASC']],
+    });
+    return res.status(200).json(orders);
+  } catch (err) {
+    return res.status(500).json({ message: err.message || 'Failed to fetch user orders' });
+  }
+}
+
 async function create(req, res) {
   try {
     const { id_don_hang, id_nguoi_dung, loai_don, trang_thai, ngay_tao } = req.body || {};
@@ -100,4 +118,4 @@ async function remove(req, res) {
   }
 }
 
-module.exports = { getAll, getById, create, update, remove };
+module.exports = { getAll, getById, getByUserId, create, update, remove };

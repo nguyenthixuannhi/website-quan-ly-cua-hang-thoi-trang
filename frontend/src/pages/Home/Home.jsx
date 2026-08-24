@@ -41,18 +41,6 @@ function Home() {
                 cho những người yêu thời trang.
               </p>
 
-              <div className="hero-buttons">
-
-                <button className="btn-dark">
-                  Mua ngay
-                </button>
-
-                <button className="btn-light">
-                  Xem bộ sưu tập
-                </button>
-
-              </div>
-
               <div className="hero-stat">
 
                 <div>

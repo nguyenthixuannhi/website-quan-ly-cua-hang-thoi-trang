@@ -38,8 +38,6 @@ function Product() {
 
         <Pagination />
 
-        <RecentlyViewed />
-
       </main>
 
       <Footer />

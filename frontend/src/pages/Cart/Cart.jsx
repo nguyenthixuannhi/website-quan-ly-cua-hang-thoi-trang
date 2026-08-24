@@ -1,6 +1,6 @@
 import "./Cart.css";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import {
@@ -14,110 +14,295 @@ import {
 
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
+import PurchaseModal from "../../components/PurchaseModal/PurchaseModal";
 
-import product1 from "../../assets/home/product4.jpg";
-import product2 from "../../assets/products/product4.jpg";
-import product3 from "../../assets/products/product2.jpg";
+const API_URL = import.meta.env.VITE_BASE_URL || "http://localhost:81";
 
 function Cart() {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      brand: "LUXEWEAR",
-      name: "Áo Blazer Nữ Oversize",
-      color: "Đen",
-      size: "M",
-      price: 890000,
-      oldPrice: 1200000,
-      quantity: 1,
-      image: product1,
-    },
-    {
-      id: 2,
-      brand: "LUXEWEAR",
-      name: "Áo Vest Nam Cổ Điển",
-      color: "Đen",
-      size: "M",
-      price: 1200000,
-      oldPrice: 1600000,
-      quantity: 1,
-      image: product2,
-    },
-    {
-      id: 3,
-      brand: "CK",
-      name: "Đồng Hồ Bạc Mesh Band",
-      color: "Bạc",
-      size: "M",
-      price: 3500000,
-      oldPrice: 4200000,
-      quantity: 1,
-      image: product3,
-    },
-  ]);
-
+  const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [coupon, setCoupon] = useState("");
-
   const [successMessage, setSuccessMessage] = useState("");
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [promoError, setPromoError] = useState("");
 
-  const subtotal = useMemo(() => {
-    return cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-  }, [cartItems]);
-
-  const shipping = subtotal >= 500000 ? 0 : 30000;
-
-  const discount = coupon.trim()
-    ? 0
-    : 0;
-
-  const total = subtotal - discount + shipping;
-
-  const updateQuantity = (id, type) => {
-    setCartItems((items) =>
-      items.map((item) => {
-        if (item.id !== id) {
-          return item;
-        }
-
-        const nextQuantity =
-          type === "increase"
-            ? item.quantity + 1
-            : item.quantity - 1;
-
-        return {
-          ...item,
-          quantity: Math.max(1, nextQuantity),
-        };
-      })
-    );
+  const formatPrice = (value) => {
+    const numericValue = Number(value || 0);
+    return Number.isFinite(numericValue) ? numericValue.toLocaleString("vi-VN") : "0";
   };
 
-  const removeItem = (id) => {
-    setCartItems((items) =>
-      items.filter((item) => item.id !== id)
-    );
+  const resolveImageUrl = (imagePath) => {
+    if (!imagePath) {
+      return "https://placehold.co/800x1000/eeeeee/333333?text=LUXEWEAR";
+    }
+
+    if (imagePath.startsWith("http")) {
+      return imagePath;
+    }
+
+    const normalized = imagePath.startsWith("/") ? imagePath.slice(1) : imagePath;
+    const path = normalized.startsWith("uploads/") ? normalized : `uploads/${normalized}`;
+
+    return `${API_URL}/${path}`;
   };
 
-  const handlePlaceOrder = () => {
-    if (cartItems.length === 0) {
+  const fetchCartData = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setCartItems([]);
+      setLoading(false);
       return;
     }
 
-    /*
-      Hiện tại chỉ mô phỏng đặt hàng.
-      Khi Backend có API đặt hàng,
-      chỗ này sẽ gọi POST /orders.
-    */
+    try {
+      setLoading(true);
+      setError("");
 
-    setSuccessMessage(
-      "Đặt hàng thành công! Cảm ơn bạn đã mua sắm tại LUXEWEAR."
-    );
+      const cartResponse = await fetch(`${API_URL}/api/chitietgiohang`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
+      if (cartResponse.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "/login";
+        return;
+      }
+
+      if (!cartResponse.ok) {
+        const cartData = await cartResponse.json().catch(() => ({}));
+        throw new Error(cartData.message || "Không thể tải giỏ hàng");
+      }
+
+      const cartData = await cartResponse.json();
+      const cartList = Array.isArray(cartData?.items) ? cartData.items : [];
+
+      const productsResponse = await fetch(`${API_URL}/api/sanpham?page=1&limit=100`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!productsResponse.ok) {
+        throw new Error("Không thể tải thông tin sản phẩm");
+      }
+
+      const productsData = await productsResponse.json();
+      const productList = Array.isArray(productsData?.data) ? productsData.data : [];
+
+      const mappedItems = cartList
+        .map((item) => {
+          const matchedProduct = productList.find((product) =>
+            Array.isArray(product?.bien_the) &&
+            product.bien_the.some((variant) => Number(variant.id_bien_the) === Number(item.id_bien_the))
+          );
+
+          if (!matchedProduct) {
+            return null;
+          }
+
+          const variant = matchedProduct.bien_the.find(
+            (variant) => Number(variant.id_bien_the) === Number(item.id_bien_the)
+          );
+
+          if (!variant) {
+            return null;
+          }
+
+          const quantity = Number(item.so_luong || 0);
+          const price = Number(variant.gia_ban || 0);
+
+          return {
+            id: Number(item.id_ct_gio),
+            cartId: Number(item.id_ct_gio),
+            variantId: Number(item.id_bien_the),
+            productId: matchedProduct?.id_san_pham || null,
+            categoryId: matchedProduct?.danh_muc?.id_danh_muc || null,
+            brand: matchedProduct?.danh_muc?.ten_danh_muc || "LUXEWEAR",
+            name: matchedProduct?.ten_san_pham || "Sản phẩm",
+            color: variant.mau_sac || "Không xác định",
+            size: variant.size || "Free",
+            price,
+            oldPrice: Math.max(price * 1.25, price),
+            quantity: quantity > 0 ? quantity : 1,
+            image: resolveImageUrl(matchedProduct.anh_san_pham),
+            stock: Number(variant.so_luong_ton || 0),
+          };
+        })
+        .filter(Boolean);
+
+      setCartItems(mappedItems);
+      // Fetch promotions and compute automatic discounts
+      try {
+        const promoResp = await fetch(`${API_URL}/api/chuongtrinhgiamgia`, { method: 'GET' });
+        const promos = promoResp.ok ? await promoResp.json() : [];
+
+        const computeDiscount = (items, programs, couponFilter) => {
+          let total = 0;
+          items.forEach((it) => {
+            let bestPercent = 0;
+            (programs || []).forEach((p) => {
+              // If couponFilter provided, only consider programs that match
+              if (couponFilter) {
+                const name = (p.ten_chuong_trinh || '').toString().toLowerCase();
+                if (!name.includes(couponFilter.toLowerCase()) && String(p.id_giam_gia) !== couponFilter) return;
+              }
+
+              const details = Array.isArray(p.chi_tiet_giam_gia) ? p.chi_tiet_giam_gia : [];
+              details.forEach((d) => {
+                if (
+                  (d.id_san_pham && Number(d.id_san_pham) === Number(it.productId)) ||
+                  (d.id_danh_muc && Number(d.id_danh_muc) === Number(it.categoryId))
+                ) {
+                  const pct = Number(p.phan_tram_giam || 0);
+                  if (pct > bestPercent) bestPercent = pct;
+                }
+              });
+            });
+
+            if (bestPercent > 0) {
+              total += (it.price * it.quantity * bestPercent) / 100;
+            }
+          });
+          return Math.round(total);
+        };
+
+        const initialDiscount = computeDiscount(mappedItems, promos, null);
+        setDiscountAmount(initialDiscount);
+      } catch (err) {
+        console.error('Failed to fetch promotions', err);
+      }
+    } catch (err) {
+      console.error("fetchCartData error:", err);
+      setCartItems([]);
+      setError(err.message || "Không thể tải giỏ hàng");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCartData();
+  }, []);
+
+  const subtotal = useMemo(() => {
+    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  }, [cartItems]);
+
+  const shipping = subtotal >= 500000 ? 0 : 30000;
+  const total = subtotal - (discountAmount || 0) + shipping;
+
+  const updateQuantity = async (id, type) => {
+    const item = cartItems.find((entry) => entry.id === id);
+
+    if (!item) {
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      window.location.href = "/login";
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/api/chitietgiohang/${item.cartId}`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ change: type === "increase" ? 1 : -1 }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.message || "Không thể cập nhật số lượng");
+      }
+
+      await fetchCartData();
+      window.dispatchEvent(new CustomEvent("cart-updated"));
+    } catch (err) {
+      setError(err.message || "Không thể cập nhật số lượng");
+    }
+  };
+
+  const removeItem = async (id) => {
+    const item = cartItems.find((entry) => entry.id === id);
+
+    if (!item) {
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      window.location.href = "/login";
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/api/chitietgiohang/${item.cartId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.message || "Không thể xóa sản phẩm khỏi giỏ hàng");
+      }
+
+      await fetchCartData();
+      window.dispatchEvent(new CustomEvent("cart-updated"));
+    } catch (err) {
+      setError(err.message || "Không thể xóa sản phẩm khỏi giỏ hàng");
+    }
+  };
+
+  const handlePlaceOrder = async () => {
+    if (cartItems.length === 0) return;
+    const token = localStorage.getItem('token');
+    if (!token) { window.location.href = '/login'; return; }
+    setShowPurchaseModal(true);
+  };
+
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+
+  const handlePurchaseSuccess = ({ orderId } = {}) => {
+    setSuccessMessage("Đặt hàng thành công! Mã đơn: " + (orderId || ''));
     setCartItems([]);
   };
+
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <main className="cart-page">
+          <div className="cart-empty">
+            <div className="cart-empty-icon">
+              <FiShoppingBag />
+            </div>
+            <h1>Đang tải giỏ hàng...</h1>
+            <p>Vui lòng chờ trong giây lát.</p>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
 
   if (cartItems.length === 0) {
     return (
@@ -126,21 +311,18 @@ function Cart() {
 
         <main className="cart-page">
           <div className="cart-empty">
-
             <div className="cart-empty-icon">
               <FiShoppingBag />
             </div>
 
-            <h1>
-              Giỏ hàng của bạn đang trống
-            </h1>
+            <h1>Giỏ hàng của bạn đang trống</h1>
 
             <p>
-              Hãy khám phá các sản phẩm mới nhất của
-              LUXEWEAR và chọn món đồ phù hợp với phong
+              Hãy khám phá các sản phẩm mới nhất của LUXEWEAR và chọn món đồ phù hợp với phong
               cách của bạn.
             </p>
 
+            {error && <div className="cart-success-message"><FiCheck /><span>{error}</span></div>}
             {successMessage && (
               <div className="cart-success-message">
                 <FiCheck />
@@ -148,13 +330,9 @@ function Cart() {
               </div>
             )}
 
-            <Link
-              to="/product"
-              className="cart-empty-button"
-            >
+            <Link to="/product" className="cart-empty-button">
               Mua sắm ngay
             </Link>
-
           </div>
         </main>
 
@@ -168,89 +346,38 @@ function Cart() {
       <Header />
 
       <main className="cart-page">
-
-        {/* =====================================
-            HEADER
-        ===================================== */}
-
         <section className="cart-header">
           <div className="cart-container">
-
             <div className="cart-breadcrumb">
-              <Link to="/">
-                Trang chủ
-              </Link>
-
+              <Link to="/">Trang chủ</Link>
               <span>/</span>
-
-              <strong>
-                Giỏ hàng
-              </strong>
+              <strong>Giỏ hàng</strong>
             </div>
 
-            <h1>
-              Giỏ hàng của bạn
-            </h1>
+            <h1>Giỏ hàng của bạn</h1>
 
-            <p>
-              Bạn đang có {cartItems.length} sản phẩm trong giỏ hàng.
-            </p>
-
+            <p>Bạn đang có {cartItems.length} sản phẩm trong giỏ hàng.</p>
           </div>
         </section>
 
-
-        {/* =====================================
-            MAIN
-        ===================================== */}
-
         <section className="cart-content">
           <div className="cart-container">
-
             <div className="cart-layout">
-
-              {/* =================================
-                  LEFT - PRODUCTS
-              ================================= */}
-
               <div className="cart-products">
-
                 {cartItems.map((item) => (
-                  <div
-                    className="cart-item"
-                    key={item.id}
-                  >
-
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="cart-item-image"
-                    />
+                  <div className="cart-item" key={item.id}>
+                    <img src={item.image} alt={item.name} className="cart-item-image" />
 
                     <div className="cart-item-main">
-
                       <div className="cart-item-top">
-
                         <div>
-
-                          <span className="cart-item-brand">
-                            {item.brand}
-                          </span>
-
-                          <h2>
-                            {item.name}
-                          </h2>
+                          <span className="cart-item-brand">{item.brand}</span>
+                          <h2>{item.name}</h2>
 
                           <div className="cart-item-options">
-                            <span>
-                              ● Màu: {item.color}
-                            </span>
-
-                            <span>
-                              Size: {item.size}
-                            </span>
+                            <span>● Màu: {item.color}</span>
+                            <span>Size: {item.size}</span>
                           </div>
-
                         </div>
 
                         <button
@@ -261,203 +388,145 @@ function Cart() {
                         >
                           <FiTrash2 />
                         </button>
-
                       </div>
 
                       <div className="cart-item-bottom">
-
                         <div className="cart-price">
-                          <strong>
-                            {item.price.toLocaleString("vi-VN")}đ
-                          </strong>
-
-                          <del>
-                            {item.oldPrice.toLocaleString("vi-VN")}đ
-                          </del>
+                          <strong>{formatPrice(item.price)}đ</strong>
+                          <del>{formatPrice(item.oldPrice)}đ</del>
                         </div>
 
                         <div className="cart-quantity">
-
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateQuantity(
-                                item.id,
-                                "decrease"
-                              )
-                            }
-                          >
+                          <button type="button" onClick={() => updateQuantity(item.id, "decrease")}>
                             <FiMinus />
                           </button>
 
-                          <span>
-                            {item.quantity}
-                          </span>
+                          <span>{item.quantity}</span>
 
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateQuantity(
-                                item.id,
-                                "increase"
-                              )
-                            }
-                          >
+                          <button type="button" onClick={() => updateQuantity(item.id, "increase")}>
                             <FiPlus />
                           </button>
-
                         </div>
-
                       </div>
 
                       <div className="cart-item-total">
-
-                        <span>
-                          Thành tiền
-                        </span>
-
-                        <strong>
-                          {(
-                            item.price * item.quantity
-                          ).toLocaleString("vi-VN")}đ
-                        </strong>
-
+                        <span>Thành tiền</span>
+                        <strong>{formatPrice(item.price * item.quantity)}đ</strong>
                       </div>
-
                     </div>
-
                   </div>
                 ))}
 
-                <Link
-                  to="/product"
-                  className="continue-shopping"
-                >
+                <Link to="/product" className="continue-shopping">
                   ← Tiếp tục mua sắm
                 </Link>
-
               </div>
 
-
-              {/* =================================
-                  RIGHT - SUMMARY
-              ================================= */}
-
               <aside className="cart-summary-column">
-
-                {/* COUPON */}
-
                 <div className="cart-coupon">
-
                   <h3>
                     <FiTag />
                     Bạn có mã giảm giá?
                   </h3>
 
                   <div className="coupon-row">
-
                     <input
                       type="text"
                       placeholder="Nhập mã giảm giá..."
                       value={coupon}
-                      onChange={(e) =>
-                        setCoupon(e.target.value)
-                      }
+                      onChange={(e) => setCoupon(e.target.value)}
                     />
 
-                    <button
-                      type="button"
-                    >
-                      Áp dụng
-                    </button>
+                    <button type="button" onClick={async () => {
+                      setPromoError('');
+                      try {
+                        const promoResp = await fetch(`${API_URL}/api/chuongtrinhgiamgia`, { method: 'GET' });
+                        const promos = promoResp.ok ? await promoResp.json() : [];
 
+                        const computeDiscount = (items, programs, couponFilter) => {
+                          let total = 0;
+                          items.forEach((it) => {
+                            let bestPercent = 0;
+                            (programs || []).forEach((p) => {
+                              const name = (p.ten_chuong_trinh || '').toString().toLowerCase();
+                              if (!name.includes(couponFilter.toLowerCase()) && String(p.id_giam_gia) !== couponFilter) return;
+
+                              const details = Array.isArray(p.chi_tiet_giam_gia) ? p.chi_tiet_giam_gia : [];
+                              details.forEach((d) => {
+                                if (
+                                  (d.id_san_pham && Number(d.id_san_pham) === Number(it.productId)) ||
+                                  (d.id_danh_muc && Number(d.id_danh_muc) === Number(it.categoryId))
+                                ) {
+                                  const pct = Number(p.phan_tram_giam || 0);
+                                  if (pct > bestPercent) bestPercent = pct;
+                                }
+                              });
+                            });
+
+                            if (bestPercent > 0) {
+                              total += (it.price * it.quantity * bestPercent) / 100;
+                            }
+                          });
+                          return Math.round(total);
+                        };
+
+                        const newDiscount = computeDiscount(cartItems, promos, coupon.trim());
+                        if (!newDiscount) {
+                          setPromoError('Mã giảm giá không hợp lệ hoặc không áp dụng cho sản phẩm trong giỏ');
+                        }
+                        setDiscountAmount(newDiscount || 0);
+                      } catch (err) {
+                        setPromoError('Lỗi khi áp dụng mã giảm giá');
+                      }
+                    }}>Áp dụng</button>
                   </div>
 
-                  <small>
-                    Thử: LUXE10, SUMMER20, SALE50K
-                  </small>
-
+                  <small>Thử: LUXE10, SUMMER20, SALE50K</small>
                 </div>
 
-
-                {/* SUMMARY */}
-
                 <div className="cart-summary">
-
-                  <h2>
-                    Tóm tắt đơn hàng
-                  </h2>
+                  <h2>Tóm tắt đơn hàng</h2>
 
                   <div className="summary-row">
-                    <span>
-                      Tạm tính
-                    </span>
-
-                    <strong>
-                      {subtotal.toLocaleString("vi-VN")}đ
-                    </strong>
+                    <span>Tạm tính</span>
+                    <strong>{formatPrice(subtotal)}đ</strong>
                   </div>
 
-                  {discount > 0 && (
+                  {discountAmount > 0 && (
                     <div className="summary-row discount">
-                      <span>
-                        Giảm giá
-                      </span>
-
-                      <strong>
-                        -{discount.toLocaleString("vi-VN")}đ
-                      </strong>
+                      <span>Giảm giá</span>
+                      <strong>-{formatPrice(discountAmount)}đ</strong>
                     </div>
                   )}
 
-                  <div className="summary-row">
-                    <span>
-                      Phí vận chuyển
-                    </span>
+                  {promoError && (
+                    <div className="summary-row" style={{ color: '#d9534f' }}>{promoError}</div>
+                  )}
 
+                  <div className="summary-row">
+                    <span>Phí vận chuyển</span>
                     <strong className="free">
-                      {shipping === 0
-                        ? "Miễn phí"
-                        : `${shipping.toLocaleString("vi-VN")}đ`}
+                      {shipping === 0 ? "Miễn phí" : `${formatPrice(shipping)}đ`}
                     </strong>
                   </div>
 
                   <div className="summary-divider" />
 
-                  {/* COD */}
-
                   <div className="payment-method">
-                    <span>
-                      Phương thức thanh toán
-                    </span>
-
-                    <strong>
-                      Thanh toán khi nhận hàng (COD)
-                    </strong>
+                    <span>Phương thức thanh toán</span>
+                    <strong>Thanh toán khi nhận hàng (COD)</strong>
                   </div>
 
                   <div className="summary-total">
-
-                    <span>
-                      Tổng cộng
-                    </span>
-
-                    <strong>
-                      {total.toLocaleString("vi-VN")}đ
-                    </strong>
-
+                    <span>Tổng cộng</span>
+                    <strong>{formatPrice(total)}đ</strong>
                   </div>
 
-                  <button
-                    type="button"
-                    className="place-order-button"
-                    onClick={handlePlaceOrder}
-                  >
+                  <button type="button" className="place-order-button" onClick={handlePlaceOrder}>
                     Đặt hàng →
                   </button>
 
                   <div className="cart-benefits">
-
                     <div>
                       <FiCheck />
                       Miễn phí giao hàng cho đơn từ 500.000đ
@@ -472,7 +541,6 @@ function Cart() {
                       <FiCheck />
                       Thanh toán an toàn
                     </div>
-
                   </div>
 
                   <div className="payment-icons">
@@ -482,19 +550,22 @@ function Cart() {
                     <span>COD</span>
                     <span>VNPAY</span>
                   </div>
-
                 </div>
-
               </aside>
-
             </div>
-
           </div>
         </section>
-
       </main>
 
       <Footer />
+      {showPurchaseModal && (
+        <PurchaseModal
+          items={cartItems}
+          onClose={() => setShowPurchaseModal(false)}
+          onSuccess={handlePurchaseSuccess}
+          clearCartAfter={true}
+        />
+      )}
     </>
   );
 }
