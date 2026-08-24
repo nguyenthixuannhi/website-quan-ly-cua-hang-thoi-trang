@@ -15,6 +15,7 @@ function Header() {
 
   const [cartCount, setCartCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const isAdmin = user && ['ADMIN', 'STAFF'].includes((user.vai_tro || '').toUpperCase());
 
   // Search state - auto expand if there's already a search query in the URL
   const [isSearchOpen, setIsSearchOpen] = useState(Boolean(queryParam));
@@ -30,6 +31,18 @@ function Header() {
   }, [searchParams]);
 
   useEffect(() => {
+    const handleAuthChanged = (e) => {
+      const detail = e?.detail;
+      if (detail && detail.user) {
+        setUser(detail.user);
+      } else if (detail && detail.token === null) {
+        setUser(null);
+        setCartCount(0);
+      }
+    };
+
+    window.addEventListener('auth-changed', handleAuthChanged);
+
     async function verifyAndFetchCart() {
       const token = localStorage.getItem("token");
 
@@ -81,6 +94,8 @@ function Header() {
     }
 
     verifyAndFetchCart();
+
+    return () => window.removeEventListener('auth-changed', handleAuthChanged);
   }, []);
 
   // focus search input when opened
@@ -95,6 +110,16 @@ function Header() {
     localStorage.removeItem("user");
     setUser(null);
     setCartCount(0);
+    try {
+      window.dispatchEvent(new CustomEvent('auth-changed', { detail: { token: null, user: null } }));
+    } catch (e) {
+      // ignore
+    }
+    try {
+      document.cookie = 'token=; path=/; max-age=0';
+    } catch (e) {
+      // ignore
+    }
     navigate("/login");
   };
 
@@ -212,6 +237,11 @@ function Header() {
                   <FiUser className="user-icon" />
                   {user.email}
                 </span>
+                {isAdmin && (
+                  <Link to="/admin" className="dashboard-btn">
+                    Dashboard
+                  </Link>
+                )}
                 <button onClick={handleLogout} className="logout-btn">
                   <FiLogOut /> Đăng xuất
                 </button>

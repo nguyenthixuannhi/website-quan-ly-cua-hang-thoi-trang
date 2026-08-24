@@ -46,6 +46,18 @@ function Login() {
       // store token and user
       if (data.token) localStorage.setItem("token", data.token);
       if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
+      // also set a cookie so full-page navigation to /admin can carry the token
+      try {
+        document.cookie = `token=${data.token}; path=/`;
+      } catch (e) {
+        // ignore if cookies not available
+      }
+      // notify other components (Header) about auth change
+      try {
+        window.dispatchEvent(new CustomEvent('auth-changed', { detail: { token: data.token, user: data.user } }));
+      } catch (e) {
+        // ignore in environments without window
+      }
 
       setSuccess("Đăng nhập thành công.");
       setLoading(false);

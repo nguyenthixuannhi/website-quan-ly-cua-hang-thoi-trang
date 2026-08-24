@@ -28,12 +28,16 @@ const chiTietGioHangRoutes = require('./src/routes/chiTietGioHangRoutes');
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors());
+const corsOptions = {
+  origin: true,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
-
-// Enable CORS for frontend dev server
-app.use(cors());
 
 initializeAdmin(app).catch((error) => {
   console.error('[AdminJS] failed to initialize:', error);

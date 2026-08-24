@@ -5,10 +5,18 @@ const ADMIN_ALLOWED_ROLES = new Set(['ADMIN', 'STAFF']);
 
 const requireAdminAccess = async (req, res, next) => {
   try {
+    // Accept token from Authorization header, cookie named 'token', or query param 'token'
+    let token;
     const authHeader = req.headers.authorization || '';
-    const [scheme, token] = authHeader.split(' ');
+    const [, headerToken] = authHeader.split(' ');
+    if (headerToken) token = headerToken;
+    if (!token && req.headers.cookie) {
+      const match = req.headers.cookie.match(/(?:^|; )token=([^;]+)/);
+      if (match) token = match[1];
+    }
+    if (!token && req.query && req.query.token) token = req.query.token;
 
-    if (scheme !== 'Bearer' || !token) {
+    if (!token) {
       return res.status(401).json({ message: 'Unauthorized: missing Bearer token' });
     }
 
