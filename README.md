@@ -3,14 +3,16 @@
 Mô tả ngắn
 -----------------
 
-<div style="display: flex; align-items: center; gap: 20px;">
-  <div style="flex: 1;">
-    Hệ thống quản lý cửa hàng thời trang full-stack, hỗ trợ quản lý sản phẩm, danh mục, đơn hàng, kho hàng, khuyến mãi và các tài nguyên giao diện cơ bản. Repository bao gồm backend Node.js/Express, frontend React + Vite và hỗ trợ Docker cho việc phát triển cục bộ.
-  </div>
-  <div style="flex: 1; text-align: center;">
-    <img src="https://i.pinimg.com/1200x/66/91/26/669126f00e39a19370e0eccc9835a6ad.jpg" alt="Fashion Store Preview" style="max-width: 80%; height: auto; border-radius: 8px;" />
-  </div>
-</div>
+<table>
+  <tr>
+    <td>
+      Hệ thống quản lý cửa hàng thời trang full-stack, hỗ trợ quản lý sản phẩm, danh mục, đơn hàng, kho hàng, khuyến mãi và các tài nguyên giao diện cơ bản. Repository bao gồm backend Node.js/Express, frontend React + Vite và hỗ trợ Docker cho việc phát triển cục bộ.
+    </td>
+    <td>
+      <img src="https://i.pinimg.com/1200x/66/91/26/669126f00e39a19370e0eccc9835a6ad.jpg" alt="Fashion Store Preview" width="400" />
+    </td>
+  </tr>
+</table>
 
 ## Tech Stack
 
