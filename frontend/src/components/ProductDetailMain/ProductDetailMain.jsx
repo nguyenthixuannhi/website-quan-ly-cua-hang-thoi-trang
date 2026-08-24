@@ -86,6 +86,20 @@ function ProductDetailMain() {
     }
 
     try {
+      const cartResponse = await fetch(`${API_URL}/api/giohang`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const cartData = await cartResponse.json().catch(() => ({}));
+
+      if (!cartResponse.ok) {
+        throw new Error(cartData.message || "Không thể lấy giỏ hàng của bạn");
+      }
+
       const response = await fetch(`${API_URL}/api/chitietgiohang`, {
         method: "POST",
         headers: {
@@ -93,8 +107,8 @@ function ProductDetailMain() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id_bien_the: selectedVariantId,
-          so_luong: quantity,
+          id_bien_the: Number(selectedVariantId),
+          so_luong: Number(quantity),
         }),
       });
 

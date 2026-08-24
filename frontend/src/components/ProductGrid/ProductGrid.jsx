@@ -218,6 +218,20 @@ function ProductGrid() {
     }
 
     try {
+      const cartResponse = await fetch(`${API_URL}/api/giohang`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const cartData = await cartResponse.json().catch(() => ({}));
+
+      if (!cartResponse.ok) {
+        throw new Error(cartData.message || "Không thể lấy giỏ hàng của bạn");
+      }
+
       const response = await fetch(`${API_URL}/api/chitietgiohang`, {
         method: "POST",
         headers: {
@@ -225,7 +239,7 @@ function ProductGrid() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id_bien_the: selectedVariant.id_bien_the,
+          id_bien_the: Number(selectedVariant.id_bien_the),
           so_luong: 1,
         }),
       });
@@ -237,6 +251,7 @@ function ProductGrid() {
       }
 
       window.dispatchEvent(new CustomEvent("cart-updated"));
+      alert("Đã thêm sản phẩm vào giỏ hàng");
     } catch (error) {
       alert(error.message || "Không thể thêm sản phẩm vào giỏ hàng");
     }
