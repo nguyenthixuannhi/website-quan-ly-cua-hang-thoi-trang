@@ -4,10 +4,14 @@ SET CHARACTER SET utf8mb4;
 
 -- 1. Thêm người dùng (NGUOIDUNG)
 INSERT INTO NGUOIDUNG (id_nguoi_dung, email, mat_khau, vai_tro) VALUES
-(1, 'admin@shop.com', '$2b$10$adminhashpassword', 'ADMIN'),
-(2, 'nhanvien@shop.com', '$2b$10$staffhashpassword', 'STAFF'),
-(3, 'nguyenvana@gmail.com', '$2b$10$user1hashpassword', 'CUSTOMER'),
-(4, 'tranthib@gmail.com', '$2b$10$user2hashpassword', 'CUSTOMER');
+-- admin123
+(1, 'admin@shop.com', '$2b$10$Dooy5inzhyes35oGFhqKt.zXxNMELqr2Ihx8bLGXy8IC6fw1DJZ2G', 'ADMIN'),
+-- staff123 
+(2, 'nhanvien@shop.com', '$2b$10$BvJXPWxPSE5d5bMqlhzfj.KHjnecqDfSJRMwgfWdxmFs0J3cPsxY.', 'STAFF'),
+-- user123
+(3, 'nguyenvana@gmail.com', '$2b$10$SIDZ6Etjajg3xC6pTxEbZ.F.E8grZWzc77dRB4Ir3KlOL4bUmRM2e', 'CUSTOMER'),
+-- user456
+(4, 'tranthib@gmail.com', '$2b$10$EpOLTW.EGla1cJOZoRQF5e5spuwgDX68KQtFmwYgvkYq/98FqB09C', 'CUSTOMER');
 
 -- 2. Thêm nhà cung cấp (NHACUNGCAP)
 INSERT INTO NHACUNGCAP (id_nha_cung_cap, ten_ncc) VALUES
