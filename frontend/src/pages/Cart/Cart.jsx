@@ -24,6 +24,8 @@ function Cart() {
   const [error, setError] = useState("");
   const [coupon, setCoupon] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [promoError, setPromoError] = useState("");
 
   const formatPrice = (value) => {
     const numericValue = Number(value || 0);
@@ -121,6 +123,8 @@ function Cart() {
             id: Number(item.id_ct_gio),
             cartId: Number(item.id_ct_gio),
             variantId: Number(item.id_bien_the),
+            productId: matchedProduct?.id_san_pham || null,
+            categoryId: matchedProduct?.danh_muc?.id_danh_muc || null,
             brand: matchedProduct?.danh_muc?.ten_danh_muc || "LUXEWEAR",
             name: matchedProduct?.ten_san_pham || "Sản phẩm",
             color: variant.mau_sac || "Không xác định",
@@ -135,6 +139,46 @@ function Cart() {
         .filter(Boolean);
 
       setCartItems(mappedItems);
+      // Fetch promotions and compute automatic discounts
+      try {
+        const promoResp = await fetch(`${API_URL}/api/chuongtrinhgiamgia`, { method: 'GET' });
+        const promos = promoResp.ok ? await promoResp.json() : [];
+
+        const computeDiscount = (items, programs, couponFilter) => {
+          let total = 0;
+          items.forEach((it) => {
+            let bestPercent = 0;
+            (programs || []).forEach((p) => {
+              // If couponFilter provided, only consider programs that match
+              if (couponFilter) {
+                const name = (p.ten_chuong_trinh || '').toString().toLowerCase();
+                if (!name.includes(couponFilter.toLowerCase()) && String(p.id_giam_gia) !== couponFilter) return;
+              }
+
+              const details = Array.isArray(p.chi_tiet_giam_gia) ? p.chi_tiet_giam_gia : [];
+              details.forEach((d) => {
+                if (
+                  (d.id_san_pham && Number(d.id_san_pham) === Number(it.productId)) ||
+                  (d.id_danh_muc && Number(d.id_danh_muc) === Number(it.categoryId))
+                ) {
+                  const pct = Number(p.phan_tram_giam || 0);
+                  if (pct > bestPercent) bestPercent = pct;
+                }
+              });
+            });
+
+            if (bestPercent > 0) {
+              total += (it.price * it.quantity * bestPercent) / 100;
+            }
+          });
+          return Math.round(total);
+        };
+
+        const initialDiscount = computeDiscount(mappedItems, promos, null);
+        setDiscountAmount(initialDiscount);
+      } catch (err) {
+        console.error('Failed to fetch promotions', err);
+      }
     } catch (err) {
       console.error("fetchCartData error:", err);
       setCartItems([]);
@@ -153,8 +197,7 @@ function Cart() {
   }, [cartItems]);
 
   const shipping = subtotal >= 500000 ? 0 : 30000;
-  const discount = coupon.trim() ? 0 : 0;
-  const total = subtotal - discount + shipping;
+  const total = subtotal - (discountAmount || 0) + shipping;
 
   const updateQuantity = async (id, type) => {
     const item = cartItems.find((entry) => entry.id === id);
@@ -394,7 +437,48 @@ function Cart() {
                       onChange={(e) => setCoupon(e.target.value)}
                     />
 
-                    <button type="button">Áp dụng</button>
+                    <button type="button" onClick={async () => {
+                      setPromoError('');
+                      try {
+                        const promoResp = await fetch(`${API_URL}/api/chuongtrinhgiamgia`, { method: 'GET' });
+                        const promos = promoResp.ok ? await promoResp.json() : [];
+
+                        const computeDiscount = (items, programs, couponFilter) => {
+                          let total = 0;
+                          items.forEach((it) => {
+                            let bestPercent = 0;
+                            (programs || []).forEach((p) => {
+                              const name = (p.ten_chuong_trinh || '').toString().toLowerCase();
+                              if (!name.includes(couponFilter.toLowerCase()) && String(p.id_giam_gia) !== couponFilter) return;
+
+                              const details = Array.isArray(p.chi_tiet_giam_gia) ? p.chi_tiet_giam_gia : [];
+                              details.forEach((d) => {
+                                if (
+                                  (d.id_san_pham && Number(d.id_san_pham) === Number(it.productId)) ||
+                                  (d.id_danh_muc && Number(d.id_danh_muc) === Number(it.categoryId))
+                                ) {
+                                  const pct = Number(p.phan_tram_giam || 0);
+                                  if (pct > bestPercent) bestPercent = pct;
+                                }
+                              });
+                            });
+
+                            if (bestPercent > 0) {
+                              total += (it.price * it.quantity * bestPercent) / 100;
+                            }
+                          });
+                          return Math.round(total);
+                        };
+
+                        const newDiscount = computeDiscount(cartItems, promos, coupon.trim());
+                        if (!newDiscount) {
+                          setPromoError('Mã giảm giá không hợp lệ hoặc không áp dụng cho sản phẩm trong giỏ');
+                        }
+                        setDiscountAmount(newDiscount || 0);
+                      } catch (err) {
+                        setPromoError('Lỗi khi áp dụng mã giảm giá');
+                      }
+                    }}>Áp dụng</button>
                   </div>
 
                   <small>Thử: LUXE10, SUMMER20, SALE50K</small>
@@ -408,11 +492,15 @@ function Cart() {
                     <strong>{formatPrice(subtotal)}đ</strong>
                   </div>
 
-                  {discount > 0 && (
+                  {discountAmount > 0 && (
                     <div className="summary-row discount">
                       <span>Giảm giá</span>
-                      <strong>-{formatPrice(discount)}đ</strong>
+                      <strong>-{formatPrice(discountAmount)}đ</strong>
                     </div>
+                  )}
+
+                  {promoError && (
+                    <div className="summary-row" style={{ color: '#d9534f' }}>{promoError}</div>
                   )}
 
                   <div className="summary-row">
