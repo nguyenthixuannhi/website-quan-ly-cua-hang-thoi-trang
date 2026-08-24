@@ -1,0 +1,10 @@
+.product-detail-page {
+  width: 100%;
+  min-height: 100vh;
+  background: #ffffff;
+  overflow-x: hidden;
+}
+
+.product-detail-page section {
+  box-sizing: border-box;
+}

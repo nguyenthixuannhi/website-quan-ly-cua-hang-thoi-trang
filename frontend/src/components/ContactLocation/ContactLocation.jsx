@@ -86,16 +86,18 @@ function ContactLocation() {
 
             </div>
 
-            <button
-              type="button"
-              className="contact-map-button"
-            >
-              <FiNavigation />
+           <a
+  href="https://www.google.com/maps/place/123+Nguy%C3%AA%CC%83n+Hu%C3%AA%CC%A3,+S%C3%A0i+G%C3%B2n,+H%E1%BB%93+Ch%C3%AD+Minh,+Vi%E1%BB%87t+Nam/@10.7743448,106.702848,17z/data=!4m15!1m8!3m7!1s0x31752f471fae0893:0x4a0c6395cc27f990!2zMTIzIE5ndXnDqsyDbiBIdcOqzKMsIFPDoGkgR8OybiwgSOG7kyBDaMOtIE1pbmgsIFZp4buHdCBOYW0!3b1!8m2!3d10.7743448!4d106.702848!16s%2Fg%2F11b8vfc96t!3m5!1s0x31752f471fae0893:0x4a0c6395cc27f990!8m2!3d10.7743448!4d106.702848!16s%2Fg%2F11b8vfc96t?entry=ttu&g_ep=EgoyMDI2MDgxMC4wIKXMDSoASAFQAw%3D%3D"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="contact-map-button"
+>
+  <span>
+    Xem trên Google Maps
+  </span>
 
-              <span>
-                Xem chỉ đường
-              </span>
-            </button>
+  <span>↗</span>
+</a>
 
           </div>
 

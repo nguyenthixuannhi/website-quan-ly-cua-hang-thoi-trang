@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FiHeart, FiShoppingCart } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 import "./ProductGrid.css";
 
