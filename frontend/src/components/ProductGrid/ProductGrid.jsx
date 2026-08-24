@@ -357,19 +357,6 @@ function ProductGrid() {
                       }
                     />
                   </Link>
-                  <span className="badge">
-                    Mới
-                  </span>
-
-                  {/* WISHLIST BUTTON  NO IDEA HOW TO CODE IT YET*/}
-                  <button
-                    className="wishlist"
-                    onClick={() =>
-                      console.log( "Wishlist:", item )
-                    }
-                  >
-                    <FiHeart />
-                  </button>
                 </div>
 
 

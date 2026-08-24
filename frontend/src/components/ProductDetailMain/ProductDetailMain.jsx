@@ -135,16 +135,6 @@ function ProductDetailMain() {
 
               <div className="product-detail-title-row">
                 <h1>{product.ten_san_pham}</h1>
-
-                <button type="button" className="product-detail-wishlist" aria-label="Yêu thích">
-                  <FiHeart />
-                </button>
-              </div>
-
-              <div className="product-detail-rating">
-                <span className="stars">★★★★★</span>
-                <strong>4.9</strong>
-                <span>(-- đánh giá)</span>
               </div>
 
               <div className="product-detail-price">{formatPrice(price)}</div>
