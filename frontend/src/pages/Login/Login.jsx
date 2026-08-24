@@ -30,7 +30,7 @@ function Login() {
 
     setLoading(true);
     try {
-      const resp = await fetch("http://localhost:3000/auth/login", {
+      const resp = await fetch("http://localhost:81/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, mat_khau: password }),
@@ -44,7 +44,11 @@ function Login() {
       }
 
       // store token and user
-      if (data.token) localStorage.setItem("token", data.token);
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        // Set cookie with explicit path and secure settings if needed
+        document.cookie = `token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
+      }
       if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
       // also set a cookie so full-page navigation to /admin can carry the token
       try {

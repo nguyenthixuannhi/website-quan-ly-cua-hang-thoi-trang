@@ -40,7 +40,7 @@ function Register() {
 			// generate a simple numeric id
 			const id_nguoi_dung = Math.floor(Date.now() / 1000);
 
-			const resp = await fetch("http://localhost:3000/auth/register", {
+			const resp = await fetch("http://localhost:81/auth/register", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ id_nguoi_dung, email, mat_khau: password }),

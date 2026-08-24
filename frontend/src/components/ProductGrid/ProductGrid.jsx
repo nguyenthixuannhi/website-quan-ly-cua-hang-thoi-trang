@@ -6,7 +6,7 @@ import "./ProductGrid.css";
 
 import { ProductPaginationContext } from "../../pages/Product/Product";
 
-const API_URL = "http://localhost:3000";
+const API_URL = "http://localhost:81";
 
 function ProductGrid() {
   const [searchParams, setSearchParams] = useSearchParams();
