@@ -27,6 +27,7 @@ CREATE TABLE SANPHAM (
     id_san_pham INT NOT NULL,
     id_danh_muc INT,
     ten_san_pham VARCHAR(200) NOT NULL,
+    mo_ta TEXT,
     anh_san_pham VARCHAR(255),
     PRIMARY KEY (id_san_pham)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

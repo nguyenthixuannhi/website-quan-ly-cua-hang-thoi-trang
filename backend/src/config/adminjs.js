@@ -101,6 +101,7 @@ const initializeAdmin = async (app) => {
       options: {
         properties: {
           anh_san_pham: { isVisible: { list: true, show: true, edit: false, filter: false } },
+          mo_ta: { isVisible: { list: true, show: true, edit: true, filter: false } },
         },
       },
       features: [

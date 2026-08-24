@@ -17,6 +17,10 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING(200),
         allowNull: false,
       },
+      mo_ta: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
       anh_san_pham: {
         type: DataTypes.STRING(255),
         allowNull: true,
