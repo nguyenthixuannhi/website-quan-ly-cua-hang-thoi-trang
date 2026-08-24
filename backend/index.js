@@ -12,6 +12,7 @@ const uiRoutes = require('./src/routes/uiRoutes');
 const nhaCungCapRoutes = require('./src/routes/nhaCungCapRoutes');
 const quangCaoRoutes = require('./src/routes/quangCaoRoutes');
 const donHangRoutes = require('./src/routes/donHangRoutes');
+const { initializeAdmin } = require('./src/config/adminjs');
 const chiTietDonHangRoutes = require('./src/routes/chiTietDonHangRoutes');
 const donNhapHangRoutes = require('./src/routes/donNhapHangRoutes');
 const chiTietPhieuNhapRoutes = require('./src/routes/chiTietPhieuNhapRoutes');
@@ -34,6 +35,9 @@ app.use(express.json());
 // Enable CORS for frontend dev server
 app.use(cors());
 
+initializeAdmin(app).catch((error) => {
+  console.error('[AdminJS] failed to initialize:', error);
+});
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
