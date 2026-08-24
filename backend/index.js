@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocs = require('./src/config/swagger-docs');
@@ -11,6 +12,7 @@ const uiRoutes = require('./src/routes/uiRoutes');
 const nhaCungCapRoutes = require('./src/routes/nhaCungCapRoutes');
 const quangCaoRoutes = require('./src/routes/quangCaoRoutes');
 const donHangRoutes = require('./src/routes/donHangRoutes');
+const { initializeAdmin } = require('./src/config/adminjs');
 const chiTietDonHangRoutes = require('./src/routes/chiTietDonHangRoutes');
 const donNhapHangRoutes = require('./src/routes/donNhapHangRoutes');
 const chiTietPhieuNhapRoutes = require('./src/routes/chiTietPhieuNhapRoutes');
@@ -20,12 +22,26 @@ const diaChiRoutes = require('./src/routes/diaChiRoutes');
 const traHangRoutes = require('./src/routes/traHangRoutes');
 const thanhToanRoutes = require('./src/routes/thanhToanRoutes');
 const phieuGiaoHangRoutes = require('./src/routes/phieuGiaoHangRoutes');
+const gioHangRoutes = require('./src/routes/gioHangRoutes');
+const chiTietGioHangRoutes = require('./src/routes/chiTietGioHangRoutes');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+const corsOptions = {
+  origin: true,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
+initializeAdmin(app).catch((error) => {
+  console.error('[AdminJS] failed to initialize:', error);
+});
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -49,6 +65,8 @@ app.use('/api/trahang', traHangRoutes);
 app.use('/api/thanhtoan', thanhToanRoutes);
 app.use('/api/phieugiaohang', phieuGiaoHangRoutes);
 app.use('/api/ui', uiRoutes);
+app.use('/api/giohang', gioHangRoutes);
+app.use('/api/chitietgiohang', chiTietGioHangRoutes);
 app.use('/auth', authRoutes);
 app.use('/test', testRoutes);
 

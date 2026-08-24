@@ -1,188 +1,406 @@
-import "./ProductGrid.css";
+import { useContext, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { FiHeart, FiShoppingCart } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
-import product1 from "../../assets/products/product1.jpg";
-import product2 from "../../assets/products/product2.jpg";
-import product3 from "../../assets/products/product3.jpg";
-import product4 from "../../assets/products/product4.jpg";
-import product5 from "../../assets/products/product5.jpg";
-import product6 from "../../assets/products/product6.jpg";
-import product7 from "../../assets/products/product7.jpg";
-import product8 from "../../assets/products/product8.jpg";
+import "./ProductGrid.css";
 
-const products = [
-  {
-    id: 1,
-    image: product1,
-    brand: "LUXEWEAR",
-    name: "Áo Vest Nam Premium",
-    price: "1.250.000đ",
-    badge: "Mới"
-  },
-  {
-    id: 2,
-    image: product2,
-    brand: "LUXEWEAR",
-    name: "Đầm Dạ Hội Cao Cấp",
-    price: "1.890.000đ",
-    badge: "Hot"
-  },
-  {
-    id: 3,
-    image: product3,
-    brand: "LUXEWEAR",
-    name: "Áo Polo Cotton",
-    price: "690.000đ",
-    badge: "Sale"
-  },
-  {
-    id: 4,
-    image: product4,
-    brand: "LUXEWEAR",
-    name: "Quần Tây Slim Fit",
-    price: "820.000đ",
-    badge: "Mới"
-  },
-  {
-    id: 5,
-    image: product5,
-    brand: "LUXEWEAR",
-    name: "Áo Hoodie Basic",
-    price: "750.000đ",
-    badge: "Hot"
-  },
-  {
-    id: 6,
-    image: product6,
-    brand: "LUXEWEAR",
-    name: "Áo Khoác Bomber",
-    price: "1.390.000đ",
-    badge: "Sale"
-  },
-  {
-    id: 7,
-    image: product7,
-    brand: "LUXEWEAR",
-    name: "Túi Da Cao Cấp",
-    price: "2.190.000đ",
-    badge: "New"
-  },
-  {
-    id: 8,
-    image: product8,
-    brand: "LUXEWEAR",
-    name: "Giày Sneaker Premium",
-    price: "1.650.000đ",
-    badge: "Hot"
-  }
-];
+import { ProductPaginationContext } from "../../pages/Product/Product";
+
+const API_URL = "http://localhost:81";
 
 function ProductGrid() {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const {
+    totalProducts,
+    setTotalProducts,
+    setTotalPages,
+  } = useContext(ProductPaginationContext);
+
+  const page = Number(searchParams.get("page")) || 1;
+
+  const getImageUrl = (image) => {
+    if (!image) {
+      return "/placeholder-product.jpg";
+    }
+
+    if (
+      image.startsWith("http://") ||
+      image.startsWith("https://")
+    ) {
+      return image;
+    }
+
+    if (image.startsWith("/")) {
+      return `${API_URL}${image}`;
+    }
+
+    return `${API_URL}/${image}`;
+  };
+
+  const formatPrice = (price) => {
+    if (price === null || price === undefined) {
+      return "Liên hệ";
+    }
+
+    return `${Number(price).toLocaleString("vi-VN")}đ`;
+  };
+
+
+  const getProductPrice = (product) => {
+    if (
+      !product.bien_the ||
+      product.bien_the.length === 0
+    ) {
+      return null;
+    }
+
+    const prices = product.bien_the
+      .map((variant) => Number(variant.gia_ban))
+      .filter((price) => !Number.isNaN(price));
+
+    if (prices.length === 0) {
+      return null;
+    }
+
+    return Math.min(...prices);
+  };
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const params = new URLSearchParams();
+
+        const keyword =
+          searchParams.get("keyword") ||
+          searchParams.get("search");
+
+        if (keyword) {
+          params.set("keyword", keyword);
+        }
+
+        const category =
+          searchParams.get("id_danh_muc");
+
+        if (category) {
+          params.set("id_danh_muc", category);
+        }
+
+        const minPrice =
+          searchParams.get("min_price");
+
+        const maxPrice =
+          searchParams.get("max_price");
+
+        if (minPrice) {
+          params.set("min_price", minPrice);
+        }
+
+        if (maxPrice) {
+          params.set("max_price", maxPrice);
+        }
+
+        const size = searchParams.get("size");
+
+        if (size) {
+          params.set("size", size);
+        }
+
+        const color =
+          searchParams.get("mau_sac");
+
+        if (color) {
+          params.set("mau_sac", color);
+        }
+
+        params.set("page", String(page));
+        params.set("limit", "12");
+
+        const sortBy =
+          searchParams.get("sortBy");
+
+        const order =
+          searchParams.get("order");
+
+        if (sortBy) {
+          params.set("sortBy", sortBy);
+        }
+
+        if (order) {
+          params.set("order", order);
+        }
+
+        const response = await fetch(
+          `${API_URL}/api/sanpham/search?${params.toString()}`
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            "Không thể tải danh sách sản phẩm"
+          );
+        }
+
+        const result = await response.json();
+
+
+        setProducts(result.data || []);
+
+        setTotalProducts(result.total || 0);
+        setTotalPages(result.totalPages || 0);
+
+      } catch (err) {
+        console.error(
+          "Lỗi khi tải sản phẩm:",
+          err
+        );
+
+        setError(
+          err.message ||
+            "Có lỗi xảy ra khi tải sản phẩm"
+        );
+
+        setProducts([]);
+
+        // Reset pagination if request fails
+        setTotalProducts(0);
+        setTotalPages(0);
+
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [
+    searchParams,
+    page,
+    setTotalProducts,
+    setTotalPages,
+  ]);
+
+  const handleSort = (sortBy, order) => {
+    const newParams =
+      new URLSearchParams(searchParams);
+
+    newParams.set("sortBy", sortBy);
+    newParams.set("order", order);
+
+    // Always return to page 1
+    // when changing sorting.
+    newParams.set("page", "1");
+    setSearchParams(newParams);
+  };
+
+  const activeKeyword =
+    searchParams.get("keyword") ||
+    searchParams.get("search");
+
+  if (loading) {
+    return (
+      <div className="product-area">
+
+        <div className="toolbar">
+          <div className="toolbar-left">
+            <h2>
+              Đang tải sản phẩm...
+            </h2>
+          </div>
+        </div>
+
+        <div className="product-grid">
+          {[1, 2, 3, 4, 5, 6].map(
+            (item) => (
+              <div
+                className="product-card"
+                key={item}
+              >
+                <div className="product-image">
+                  <div className="product-loading">
+                    Đang tải...
+                  </div>
+                </div>
+              </div>
+            )
+          )}
+        </div>
+
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="product-area">
+
+        <div className="toolbar">
+          <div className="toolbar-left">
+
+            <h2>
+              Có lỗi xảy ra
+            </h2>
+            <p>{error}</p>
+
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="product-area">
-
-      {/* Toolbar */}
 
       <div className="toolbar">
 
         <div className="toolbar-left">
 
-          <h2>24 Sản phẩm</h2>
+          <h2>
+            {totalProducts} Sản phẩm
+          </h2>
 
-          <p>Khám phá bộ sưu tập mới nhất</p>
+          <p>
+            {activeKeyword
+              ? `Kết quả tìm kiếm cho "${activeKeyword}"`
+              : "Khám phá bộ sưu tập mới nhất"}
+          </p>
 
         </div>
+
 
         <div className="toolbar-right">
 
-          <button className="active">
+          {/* MỚI NHẤT */}
+
+          <button
+            className={
+              searchParams.get("sortBy") ==="id_san_pham" &&
+              searchParams.get("order") === "DESC" ? "active" : ""
+            }
+            onClick={() =>
+              handleSort( "id_san_pham", "DESC")
+            }
+          >
             Mới nhất
           </button>
 
-          <button>
-            Bán chạy
+          {/* CŨ NHẤT */}
+
+          <button
+            className={ searchParams.get("sortBy") === "id_san_pham" &&
+              searchParams.get("order") === "ASC"  ? "active"  : ""
+            }
+            onClick={() =>
+              handleSort( "id_san_pham", "ASC" )
+            }
+          >
+            Cũ nhất
           </button>
 
-          <button>
+
+          <button
+            className={
+              searchParams.get("sortBy") === "gia_ban" &&
+              searchParams.get("order") === "ASC" ? "active":  ""
+            }
+            onClick={() =>
+              handleSort("gia_ban","ASC")
+            }>
             Giá ↑
           </button>
 
-          <button>
+          <button
+            className={
+              searchParams.get("sortBy") === "gia_ban" &&
+              searchParams.get("order") === "DESC" ? "active" : ""
+            }
+            onClick={() => handleSort( "gia_ban","DESC")
+            }>
             Giá ↓
           </button>
-
         </div>
-
       </div>
+      {products.length === 0 ? (
+        <div className="empty-products">
+          <h3>
+            Không tìm thấy sản phẩm
+          </h3>
+          <p>
+            Thử thay đổi bộ lọc hoặc
+            từ khóa tìm kiếm.
+          </p>
+        </div>
+      ) : (
+        <div className="product-grid">
+          {products.map((item) => {
+            const price =
+              getProductPrice(item);
+            return (
+              <div
+                className="product-card"
+                key={item.id_san_pham}
+              >
+                {/* PRODUCT IMAGE */}
+                <div className="product-image">
 
-      {/* Grid */}
+                  <img
+                    src={getImageUrl(
+                      item.anh_san_pham
+                    )}
+                    alt={
+                      item.ten_san_pham
+                    }
+                  />
+                  <span className="badge">
+                    Mới
+                  </span>
 
-      <div className="product-grid">
+                  {/* WISHLIST BUTTON  NO IDEA HOW TO CODE IT YET*/}
+                  <button
+                    className="wishlist"
+                    onClick={() =>
+                      console.log( "Wishlist:", item )
+                    }
+                  >
+                    <FiHeart />
+                  </button>
+                </div>
 
-        {products.map((item) => (
 
-         <Link
-  to={`/product/${item.id}`}
-  className="product-card"
-  key={item.id}
->
+                <div className="product-info">
 
-            <div className="product-image">
+                  <span className="brand">
+                    LUXEWEAR
+                  </span>
 
-              <img
-                src={item.image}
-                alt={item.name}
-              />
+                  <h3>
+                    {item.ten_san_pham}
+                  </h3>
 
-              <span className="badge">
-                {item.badge}
-              </span>
-
-              <button className="wishlist">
-
-                <FiHeart />
-
-              </button>
-
-            </div>
-
-            <div className="product-info">
-
-              <span className="brand">
-
-                {item.brand}
-
-              </span>
-
-              <h3>
-
-                {item.name}
-
-              </h3>
-
-              <h4>
-
-                {item.price}
-
-              </h4>
-
-              <button className="cart-btn">
-
-                <FiShoppingCart />
-
-                Thêm vào giỏ
-
-              </button>
-
-            </div>
-
-         </Link>
-
-        ))}
-
-      </div>
-
+                  <h4>
+                    {formatPrice(price)}
+                  </h4>
+                  {/* ADD TO CART BUTTON  NO IDEA */}
+                  <button
+                    className="cart-btn"
+                    onClick={() =>
+                      console.log( "Add to cart:", item )
+                    }
+                  >
+                    <FiShoppingCart />
+                    Thêm vào giỏ
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
