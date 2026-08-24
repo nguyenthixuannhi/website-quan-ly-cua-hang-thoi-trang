@@ -238,9 +238,9 @@ function Header() {
                   {user.email}
                 </span>
                 {isAdmin && (
-                  <Link to="/admin" className="dashboard-btn">
+                  <a href="http://localhost:81/admin" target="_blank" rel="noopener noreferrer" className="dashboard-btn">
                     Dashboard
-                  </Link>
+                  </a>
                 )}
                 <button onClick={handleLogout} className="logout-btn">
                   <FiLogOut /> Đăng xuất
