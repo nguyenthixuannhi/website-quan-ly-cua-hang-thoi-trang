@@ -26,7 +26,7 @@ function SidebarFilter() {
     async function fetchCategories() {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/danhmuc"
+          "http://localhost:81/api/danhmuc"
         );
 
         if (response.ok) {
