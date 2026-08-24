@@ -1,11 +1,11 @@
 const { verifyToken } = require('../config/jwt');
 const { models } = require('../models');
+const path = require('path');
 
 const ADMIN_ALLOWED_ROLES = new Set(['ADMIN', 'STAFF']);
 
 const requireAdminAccess = async (req, res, next) => {
   try {
-    // Accept token from Authorization header, cookie named 'token', or query param 'token'
     let token;
     const authHeader = req.headers.authorization || '';
     const [, headerToken] = authHeader.split(' ');
@@ -48,7 +48,11 @@ const requireAdminAccess = async (req, res, next) => {
 };
 
 const initializeAdmin = async (app) => {
-  const { AdminJS } = await import('adminjs');
+  // Import AdminJS and ComponentLoader correctly
+  const adminjsModule = await import('adminjs');
+  const AdminJS = adminjsModule.default || adminjsModule.AdminJS;
+  const { ComponentLoader } = adminjsModule;
+
   const { buildRouter } = await import('@adminjs/express');
   const AdminJSSequelize = await import('@adminjs/sequelize');
 
@@ -57,38 +61,77 @@ const initializeAdmin = async (app) => {
     Resource: AdminJSSequelize.Resource,
   });
 
-  const admin = new AdminJS({
-    resources: [
-      {
-        resource: models.NguoiDung,
-        options: {
-          properties: {
-            mat_khau: {
-              isVisible: { list: false, show: false, edit: true, filter: false },
-            },
+  const componentLoader = new ComponentLoader();
+
+  const uploadModule = await import('@adminjs/upload');
+  const uploadFeature = uploadModule.default || uploadModule;
+  const uploadBucket = path.join(__dirname, '../../uploads');
+
+  const resources = [
+    {
+      resource: models.NguoiDung,
+      options: {
+        properties: {
+          mat_khau: {
+            isVisible: { list: false, show: false, edit: true, filter: false },
           },
         },
       },
-      { resource: models.QuangCao },
-      { resource: models.NhaCungCap },
-      { resource: models.DanhMuc },
-      { resource: models.SanPham },
-      { resource: models.KieuSanPham },
-      { resource: models.ChuongTrinhGiamGia },
-      { resource: models.ChiTietGiamGia },
-      { resource: models.DonHang },
-      { resource: models.ChiTietDonHang },
-      { resource: models.GioHang },
-      { resource: models.ChiTietGioHang },
-      { resource: models.DonNhapHang },
-      { resource: models.ChiTietPhieuNhap },
-      { resource: models.TraHang },
-      { resource: models.ChiTietTraHang },
-      { resource: models.DiaChi },
-      { resource: models.LichSuKho },
-      { resource: models.PhieuGiaoHang },
-      { resource: models.ThanhToan },
-    ],
+    },
+    {
+      resource: models.QuangCao,
+      options: {
+        properties: {
+          url_hinh_anh: { isVisible: { list: true, show: true, edit: false, filter: false } },
+        },
+      },
+      features: [
+        uploadFeature({
+          componentLoader, 
+          provider: { local: { bucket: uploadBucket } },
+          properties: { key: 'url_hinh_anh' },
+          uploadPath: (record, filename) => `quangcao/${Date.now()}-${filename}`,
+        }),
+      ],
+    },
+    { resource: models.NhaCungCap },
+    { resource: models.DanhMuc },
+    {
+      resource: models.SanPham,
+      options: {
+        properties: {
+          anh_san_pham: { isVisible: { list: true, show: true, edit: false, filter: false } },
+        },
+      },
+      features: [
+        uploadFeature({
+          componentLoader, 
+          provider: { local: { bucket: uploadBucket } },
+          properties: { key: 'anh_san_pham' },
+          uploadPath: (record, filename) => `sanpham/${Date.now()}-${filename}`,
+        }),
+      ],
+    },
+    { resource: models.KieuSanPham },
+    { resource: models.ChuongTrinhGiamGia },
+    { resource: models.ChiTietGiamGia },
+    { resource: models.DonHang },
+    { resource: models.ChiTietDonHang },
+    { resource: models.GioHang },
+    { resource: models.ChiTietGioHang },
+    { resource: models.DonNhapHang },
+    { resource: models.ChiTietPhieuNhap },
+    { resource: models.TraHang },
+    { resource: models.ChiTietTraHang },
+    { resource: models.DiaChi },
+    { resource: models.LichSuKho },
+    { resource: models.PhieuGiaoHang },
+    { resource: models.ThanhToan },
+  ];
+
+  const admin = new AdminJS({
+    componentLoader,
+    resources,
     rootPath: '/admin',
     branding: {
       companyName: 'Store Admin',
