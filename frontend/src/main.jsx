@@ -19,6 +19,7 @@ import Product from "./pages/Product/Product";
 import About from "./pages/About/About";
 import Contact from "./pages/Contact/Contact";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
+import Cart from "./pages/Cart/Cart";
 
 import Login from "./pages/Login/Login";
 
@@ -50,6 +51,8 @@ element={<Home/>}
 path="/login"
 element={<Login/>}
 />
+
+<Route path="/cart" element={<Cart />} />
 
 <Route
 path="/register"

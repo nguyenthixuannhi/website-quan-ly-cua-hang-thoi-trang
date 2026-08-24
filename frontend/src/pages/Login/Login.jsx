@@ -65,7 +65,7 @@ function Login() {
 
       setSuccess("Đăng nhập thành công.");
       setLoading(false);
-      setTimeout(() => navigate("/"), 800);
+      setTimeout(() => navigate("/cart"), 800);
     } catch (err) {
       setError(err.message || "Lỗi kết nối");
       setLoading(false);

@@ -21,6 +21,8 @@ function ProductDetailMain() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedVariantId, setSelectedVariantId] = useState(null);
+  const [quantity, setQuantity] = useState(1);
 
   const getImageUrl = (image) => {
     if (!image) return "/placeholder-product.jpg";
@@ -53,6 +55,11 @@ function ProductDetailMain() {
         if (!res.ok) throw new Error("Không thể tải thông tin sản phẩm");
         const data = await res.json();
         setProduct(data || null);
+
+        const variants = Array.isArray(data?.bien_the) ? data.bien_the : [];
+        const firstAvailable = variants.filter((v) => Number(v.so_luong_ton) > 0)[0] || variants[0];
+        setSelectedVariantId(firstAvailable ? firstAvailable.id_bien_the : null);
+        setQuantity(1);
       } catch (err) {
         console.error(err);
         setError(err.message || "Có lỗi khi tải sản phẩm");
@@ -64,6 +71,45 @@ function ProductDetailMain() {
 
     fetchProduct();
   }, [id]);
+
+  const addToCart = async () => {
+    if (!selectedVariantId) {
+      alert("Sản phẩm hiện chưa có biến thể phù hợp để thêm vào giỏ hàng.");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      window.location.href = "/login";
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/api/chitietgiohang`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id_bien_the: selectedVariantId,
+          so_luong: quantity,
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.message || "Thêm sản phẩm vào giỏ hàng thất bại");
+      }
+
+      window.dispatchEvent(new CustomEvent("cart-updated"));
+      alert("Đã thêm sản phẩm vào giỏ hàng");
+    } catch (err) {
+      alert(err.message || "Không thể thêm sản phẩm vào giỏ hàng");
+    }
+  };
 
   if (loading) {
     return (
@@ -151,7 +197,12 @@ function ProductDetailMain() {
 
                   <div className="size-row">
                     {product.bien_the.map((v) => (
-                      <button key={v.id_bien_the} type="button" className={`size-item`}>
+                      <button
+                        key={v.id_bien_the}
+                        type="button"
+                        className={`size-item ${selectedVariantId === v.id_bien_the ? "selected" : ""}`}
+                        onClick={() => setSelectedVariantId(v.id_bien_the)}
+                      >
                         {v.size} {v.mau_sac ? `- ${v.mau_sac}` : ""}
                       </button>
                     ))}
@@ -162,15 +213,15 @@ function ProductDetailMain() {
               <div className="quantity-row">
                 <span className="quantity-label">Số lượng:</span>
                 <div className="quantity-control">
-                  <button type="button"><FiMinus /></button>
-                  <span>1</span>
-                  <button type="button"><FiPlus /></button>
+                  <button type="button" onClick={() => setQuantity((value) => Math.max(1, value - 1))}><FiMinus /></button>
+                  <span>{quantity}</span>
+                  <button type="button" onClick={() => setQuantity((value) => value + 1)}><FiPlus /></button>
                 </div>
                 <span className="stock-text">Còn {product.bien_the?.reduce((s, v) => s + (v.so_luong_ton || 0), 0) || 0} sản phẩm</span>
               </div>
 
               <div className="product-action-row">
-                <button type="button" className="add-cart-button">
+                <button type="button" className="add-cart-button" onClick={addToCart}>
                   <FiShoppingBag />
                   Thêm vào giỏ hàng
                 </button>

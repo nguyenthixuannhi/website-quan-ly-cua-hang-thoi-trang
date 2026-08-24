@@ -199,6 +199,49 @@ function ProductGrid() {
     setSearchParams(newParams);
   };
 
+  const addToCart = async (product) => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      window.location.href = "/login";
+      return;
+    }
+
+    const variants = Array.isArray(product?.bien_the) ? product.bien_the : [];
+    const selectedVariant = [...variants]
+      .filter((variant) => Number(variant.so_luong_ton) > 0)
+      .sort((a, b) => Number(a.gia_ban) - Number(b.gia_ban))[0] || variants[0];
+
+    if (!selectedVariant) {
+      alert("Sản phẩm này hiện chưa có biến thể để thêm vào giỏ hàng.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/api/chitietgiohang`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id_bien_the: selectedVariant.id_bien_the,
+          so_luong: 1,
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.message || "Thêm sản phẩm vào giỏ hàng thất bại");
+      }
+
+      window.dispatchEvent(new CustomEvent("cart-updated"));
+    } catch (error) {
+      alert(error.message || "Không thể thêm sản phẩm vào giỏ hàng");
+    }
+  };
+
   const activeKeyword =
     searchParams.get("keyword") ||
     searchParams.get("search");
@@ -368,8 +411,7 @@ function ProductGrid() {
 
                   <h3>
                     <Link to={`/product/${item.id_san_pham}`} className="product-title-link">
-                      {item.ten_san_pham}
-                    </Link>
+                      {item.ten_san_pham}</Link>
                   </h3>
 
                   <h4>
@@ -378,9 +420,7 @@ function ProductGrid() {
                   {/* ADD TO CART BUTTON  NO IDEA */}
                   <button
                     className="cart-btn"
-                    onClick={() =>
-                      console.log( "Add to cart:", item )
-                    }
+                    onClick={() => addToCart(item)}
                   >
                     <FiShoppingCart />
                     Thêm vào giỏ
