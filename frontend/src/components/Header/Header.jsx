@@ -1,5 +1,5 @@
 import "./Header.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { FiSearch, FiShoppingBag, FiUser, FiLogOut, FiX } from "react-icons/fi";
 import { useState, useEffect, useRef } from "react";
 
