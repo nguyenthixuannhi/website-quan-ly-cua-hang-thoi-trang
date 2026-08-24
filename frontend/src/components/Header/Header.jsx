@@ -5,14 +5,29 @@ import { useState, useEffect, useRef } from "react";
 
 function Header() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [user, setUser] = useState(null);
+  
+  // Get search query from URL params
+  const queryParam = searchParams.get("search") || "";
+  const [searchQuery, setSearchQuery] = useState(queryParam);
+
   const [cartCount, setCartCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  // Search state
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  // Search state - auto expand if there's already a search query in the URL
+  const [isSearchOpen, setIsSearchOpen] = useState(Boolean(queryParam));
   const searchInputRef = useRef(null);
+
+  // Sync search input state when URL search params change (e.g. navigation)
+  useEffect(() => {
+    const currentSearch = searchParams.get("search") || "";
+    setSearchQuery(currentSearch);
+    if (currentSearch) {
+      setIsSearchOpen(true);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     async function verifyAndFetchCart() {
@@ -68,7 +83,7 @@ function Header() {
     verifyAndFetchCart();
   }, []);
 
-  // Auto-focus search input when opened
+  // focus search input when opened
   useEffect(() => {
     if (isSearchOpen && searchInputRef.current) {
       searchInputRef.current.focus();
@@ -85,16 +100,44 @@ function Header() {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/product?search=${encodeURIComponent(searchQuery.trim())}`);
+    const trimmedQuery = searchQuery.trim();
+    const newParams = new URLSearchParams(searchParams);
+
+    if (trimmedQuery) {
+      newParams.set("search", trimmedQuery);
+    } else {
+      newParams.delete("search");
     }
+    
+    // Reset page to 1 when new search... become i am retarded
+    newParams.set("page", "1");
+    setSearchParams(newParams);
+    
+    // Navigate to product page with the search query if not already there
+    navigate(`/product?${newParams.toString()}`);
   };
 
   const toggleSearch = () => {
+    // if it has text, don't close it when clicking toggle unless the text is cleared
+    if (isSearchOpen && searchQuery.trim()) {
+      return;
+    }
+
     if (isSearchOpen) {
       setSearchQuery("");
+      const newParams = new URLSearchParams(searchParams);
+      newParams.delete("search");
+      setSearchParams(newParams);
     }
     setIsSearchOpen(!isSearchOpen);
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete("search");
+    setSearchParams(newParams);
+    setIsSearchOpen(false);
   };
 
   return (
@@ -126,13 +169,12 @@ function Header() {
       </nav>
 
       <div className="header-right">
-        {/* Animated Search Container */}
-        <div className={`search-wrapper ${isSearchOpen ? "expanded" : ""}`}>
+        <div className={`search-wrapper ${isSearchOpen || searchQuery ? "expanded" : ""}`}>
           <form onSubmit={handleSearchSubmit} className="search-form">
             <button
-              type="button"
+              type="submit"
               className="icon-btn search-toggle"
-              onClick={toggleSearch}
+              onClick={!isSearchOpen ? toggleSearch : undefined}
               aria-label="Toggle search"
             >
               <FiSearch />
@@ -145,11 +187,11 @@ function Header() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            {isSearchOpen && (
+            {(isSearchOpen || searchQuery) && (
               <button
                 type="button"
                 className="clear-search-btn"
-                onClick={toggleSearch}
+                onClick={handleClearSearch}
               >
                 <FiX />
               </button>
