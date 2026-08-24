@@ -4,7 +4,7 @@ import './User.css';
 
 import Header from "../../components/Header/Header";
 
-const API_URL = 'http://localhost:81';
+const API_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:81';
 
 export default function User() {
   const navigate = useNavigate();

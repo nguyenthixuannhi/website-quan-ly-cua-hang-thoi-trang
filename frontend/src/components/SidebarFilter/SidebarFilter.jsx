@@ -22,12 +22,12 @@ function SidebarFilter() {
 
   const [tempColor, setTempColor] = useState(appliedColor);
 
+  const API_URL = import.meta.env.VITE_BASE_URL || "http://localhost:81";
+
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const response = await fetch(
-          "http://localhost:81/api/danhmuc"
-        );
+        const response = await fetch(`${API_URL}/api/danhmuc`);
 
         if (response.ok) {
           const data = await response.json();

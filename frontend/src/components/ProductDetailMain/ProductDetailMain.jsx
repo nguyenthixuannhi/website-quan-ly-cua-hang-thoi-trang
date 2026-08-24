@@ -14,7 +14,7 @@ import {
 import RelatedProducts from "../RelatedProducts/RelatedProducts";
 import PurchaseModal from "../../components/PurchaseModal/PurchaseModal";
 
-const API_URL = "http://localhost:81";
+const API_URL = import.meta.env.VITE_BASE_URL || "http://localhost:81";
 
 function ProductDetailMain() {
   const { id } = useParams();

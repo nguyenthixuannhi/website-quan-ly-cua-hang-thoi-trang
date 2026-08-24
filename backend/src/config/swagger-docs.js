@@ -8,7 +8,7 @@ const swaggerDocs =
   },
   servers: [
     {
-      url: 'http://localhost:3000', // backend url
+      url: process.env.BASE_URL || 'http://localhost:3000', // backend url (from .env BASE_URL)
       description: 'Local server',
     },
   ],

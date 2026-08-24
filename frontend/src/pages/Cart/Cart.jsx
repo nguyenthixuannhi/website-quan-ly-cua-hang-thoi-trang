@@ -16,7 +16,7 @@ import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import PurchaseModal from "../../components/PurchaseModal/PurchaseModal";
 
-const API_URL = "http://localhost:81";
+const API_URL = import.meta.env.VITE_BASE_URL || "http://localhost:81";
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);

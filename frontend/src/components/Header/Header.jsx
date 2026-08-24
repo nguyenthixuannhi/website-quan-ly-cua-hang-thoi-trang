@@ -15,7 +15,7 @@ function Header() {
 
   const [cartCount, setCartCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const API_URL = "http://localhost:81";
+  const API_URL = import.meta.env.VITE_BASE_URL || "http://localhost:81";
   const isAdmin = user && ['ADMIN', 'STAFF'].includes((user.vai_tro || '').toUpperCase());
 
   // Search state - auto expand if there's already a search query in the URL
@@ -283,7 +283,7 @@ function Header() {
                   {user.email}
                 </Link>
                 {isAdmin && (
-                  <a href="http://localhost:81/admin" target="_blank" rel="noopener noreferrer" className="dashboard-btn">
+                  <a href={`${API_URL}/admin`} target="_blank" rel="noopener noreferrer" className="dashboard-btn">
                     Dashboard
                   </a>
                 )}

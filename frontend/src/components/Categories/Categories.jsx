@@ -43,13 +43,13 @@ function Categories() {
             <h2>Khám phá theo danh mục</h2>
           </div>
 
-          <a href="http://localhost:81/product">Xem tất cả →</a>
+          <a href="/product">Xem tất cả →</a>
         </div>
 
         <div className="category-grid">
           {categories.map((item) => (
             <a
-              href={`http://localhost:81/product?page=1&id_danh_muc=${item.id_danh_muc}`}
+              href={`/product?page=1&id_danh_muc=${item.id_danh_muc}`}
               className="category-card"
               key={item.id_danh_muc}
             >

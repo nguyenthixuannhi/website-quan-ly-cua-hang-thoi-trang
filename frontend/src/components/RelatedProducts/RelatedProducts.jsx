@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { FiHeart } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
-const API_URL = "http://localhost:81";
+const API_URL = import.meta.env.VITE_BASE_URL || "http://localhost:81";
 
 function RelatedProducts({ productId }) {
   const [products, setProducts] = useState([]);

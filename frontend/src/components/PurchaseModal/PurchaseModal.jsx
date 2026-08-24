@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './PurchaseModal.css';
 
-const API_URL = 'http://localhost:81';
+const API_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:81';
 
 function PurchaseModal({ items, onClose, onSuccess, clearCartAfter = false }) {
   const [addresses, setAddresses] = useState([]);
