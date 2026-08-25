@@ -25,6 +25,7 @@ const phieuGiaoHangRoutes = require('./src/routes/phieuGiaoHangRoutes');
 const gioHangRoutes = require('./src/routes/gioHangRoutes');
 const chiTietGioHangRoutes = require('./src/routes/chiTietGioHangRoutes');
 const chiTietGiamGiaRoutes = require('./src/routes/chiTietGiamGiaRoutes');
+const backupRoutes = require('./src/routes/backupRoutes');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -69,8 +70,11 @@ app.use('/api/ui', uiRoutes);
 app.use('/api/giohang', gioHangRoutes);
 app.use('/api/chitietgiohang', chiTietGioHangRoutes);
 app.use('/api/chitietgiamgia', chiTietGiamGiaRoutes);
+app.use('/api/backup', backupRoutes);
 app.use('/auth', authRoutes);
 app.use('/test', testRoutes);
+
+app.use('/backups', express.static(path.resolve(__dirname, '../backups')));
 
 
 
