@@ -2,8 +2,8 @@ import "./Home.css";
 
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import Categories from "../../components/Categories/Categories";
-import FeaturedProducts from "../../components/FeaturedProducts/FeaturedProducts";
+// import Categories from "../../components/Categories/Categories";
+// import FeaturedProducts from "../../components/FeaturedProducts/FeaturedProducts";
 import FlashSale from "../../components/FlashSale/FlashSale";
 
 import AboutSection from "../../components/AboutSection/AboutSection";
