@@ -9,27 +9,27 @@ const categories = [
   {
     id_danh_muc: 2,
     name: "Váy & Đầm",
-    image: "/src/assets/categories/vay.jpg",
+    image: "/src/assets/products/product2.jpg",
   },
   {
     id_danh_muc: 3,
     name: "Quần",
-    image: "/src/assets/categories/quan.jpg",
+    image: "/src/assets/products/product4.jpg",
   },
   {
     id_danh_muc: 4,
     name: "Giày",
-    image: "/src/assets/categories/giay.jpg",
+    image: "/src/assets/products/viewed1.jpg",
   },
   {
     id_danh_muc: 5,
     name: "Túi xách",
-    image: "/src/assets/categories/tui.jpg",
+    image: "/src/assets/products/product5.jpg",
   },
   {
     id_danh_muc: 6,
     name: "Phụ kiện",
-    image: "/src/assets/categories/phukien.jpg",
+    image: "/src/assets/products/product6.jpg",
   },
 ];
 
