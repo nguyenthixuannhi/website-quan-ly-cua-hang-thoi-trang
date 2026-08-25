@@ -1,135 +1,254 @@
-# Fashion Store Management (Website Quan Ly Cua Hang Thoi Trang)
+# <p align="center"> Fashion Store Management Website</p>
 
-Short description
------------------
+### Language
 
-<div style="display: flex; align-items: center; gap: 20px;">
-  <div style="flex: 1;">
-    A full-stack store management system for managing products, categories, orders, inventory, promotions and basic UI assets. The repository contains a Node.js/Express backend, a React + Vite frontend, and Docker support for local development.
-  </div>
-  <div style="flex: 1; text-align: center;">
-    <img src="https://i.pinimg.com/1200x/66/91/26/669126f00e39a19370e0eccc9835a6ad.jpg" alt="Fashion Store Preview" style="max-width: 80%; height: auto; border-radius: 8px;" />
-  </div>
+[![vietnamese](https://img.shields.io/badge/lang-vi-red.svg)](README.md)
+# <p align="center">Fashion Store Management Website</p>
+
+## 🎯 Project: BUILDING A FASHION STORE MANAGEMENT WEBSITE
+
+<div align="center">
+
+![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)
+![Node.Js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
+
 </div>
 
-## Tech Stack
+---
 
-**Client:** React, Vite  
-**Server:** Node.js, Express, Sequelize ORM, AdminJS  
-**Database:** MySQL  
-**DevOps:** Docker, Docker Compose, Nginx
+## 📑 Table of Contents
 
-Table of Contents
------------------
+- [👤 1. Project Information](#-1-project-information)
+- [📖 2. Project Introduction & Main Features](#-2-project-introduction--main-features)
+- [🧰 3. Technologies Used & Project Structure](#-3-technologies-used--project-structure)
+- [💻 4. System Requirements](#-4-system-requirements)
+- [⚙️ 5. Installation Guide](#️-5-installation-guide)
+- [🔐 6. Environment Variables Configuration (.env)](#-6-environment-variables-configuration-env)
+- [🔁 7. Startup & Testing Guide](#-7-startup--testing-guide)
+- [📚 8. API Documentation (Swagger)](#-8-api-documentation-swagger)
+- [🐳 9. Docker & Nginx](#-9-docker--nginx)
+- [🖼️ 10. Screenshots / Preview](#️-10-screenshots--preview)
 
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Settings (.env) explanation](#settings-env-explanation)
-- [Project structure (overview)](#project-structure-overview)
-- [API documentation (Swagger)](#api-documentation-swagger)
+---
 
-Features
---------
+## 👤 1. PROJECT INFORMATION
 
-- User authentication (register, login, JWT)
-- Product and category management
-- Orders, order details and returns
-- Inventory history and purchase orders
-- Promotions and discounts
-- Payments and delivery note management
-- Admin panel (AdminJS)
-- File upload endpoints (images/assets)
+### 👨‍🏫 Author Information
 
-Prerequisites
--------------
+- **Supervisor:** Dr. Nguyễn Bảo Ân
+- **Student:** Lê Trung Hiếu
+  + Student ID: `110123011`
+  + Class: `DA23TTA`
+- **Student:** Nguyễn Thị Xuân Nhi
+  + Student ID: `110123131`
+  + Class: `DA23TTB`
 
-- Node.js (>= 16) and npm
-- Docker & Docker Compose (optional, recommended for quick setup)
-- MySQL (if not using Docker)
+### ⚙️ Technical Information
 
-Installation
-------------
+- **🏷️ Project Name:** Fashion Store Management Website
+- **⚙️ Backend:** Node.js, Express.js
+- **🎨 Frontend:** React + Vite
+- **🗄️ Database:** MySQL
+- **🔗 ORM:** Sequelize
+- **🛠️ Admin Panel:** AdminJS
+- **🐳 DevOps:** Docker, Docker Compose, Nginx
 
-### Option A — Docker Compose (recommended)
+---
 
-```bash
-docker compose up --build
+## 📖 2. PROJECT INTRODUCTION & MAIN FEATURES
+
+### **📝 Brief Description:**
+
+Fashion Store Management is a full-stack fashion store management system that provides features for managing products, categories, orders, inventory, promotions, payments, and other store resources.
+
+The project consists of a backend built with Node.js/Express, Sequelize ORM, and MySQL, and a frontend built with React + Vite. The system supports Docker Compose and Nginx to simplify the deployment process.
+
+### **✨ Main Features:**
+
+- **🔐 User Authentication:** User registration, login, and JWT-based authentication.
+- **👕 Product Management:** Add, update, delete, and manage detailed product information.
+- **📂 Category Management:** Organize and classify product categories.
+- **📦 Order Management:** Track orders, order details, and order status updates.
+- **🔄 Return Management:** Process and track product returns and exchanges.
+- **📊 Inventory Management:** Track inventory history and changes in product quantities.
+- **📥 Purchase Management:** Manage purchase orders and inventory imports from suppliers.
+- **🎟️ Promotion Management:** Create and apply discount programs and voucher codes.
+- **💳 Payment Management:** Store and manage payment methods and payment information.
+- **🚚 Delivery Management:** Track shipping and order delivery information.
+- **🛠️ Admin Panel (AdminJS):** An intuitive administration interface for managing the entire database.
+- **📁 Resource Upload:** Provides APIs for uploading product images and system resources.
+- **📚 API Documentation:** Online API documentation based on the Swagger/OpenAPI standard.
+
+---
+
+## 🧰 3. TECHNOLOGIES USED & PROJECT STRUCTURE
+
+### **Tech Stack:**
+
+- **Frontend:** React, Vite, CSS/UI Libraries
+- **Backend:** Node.js, Express.js, Sequelize ORM, AdminJS, JWT
+- **Database:** MySQL
+- **Tools & DevOps:** Docker, Docker Compose, Nginx, Swagger/OpenAPI, npm
+
+### **📁 Main Project Structure:**
+
+```text
+.
+├── backend/                    # Node.js/Express backend
+│   ├── src/
+│   │   ├── config/             # AdminJS, JWT, Swagger configuration...
+│   │   ├── controllers/        # Business logic
+│   │   ├── models/             # Sequelize models and DB index
+│   │   └── routes/             # API routes
+│   ├── uploads/                # Uploaded resources (images, etc.)
+│   └── index.js                # Backend entry point
+│
+├── frontend/                   # React + Vite frontend
+│
+├── database/                   # Database configuration
+│   ├── Dockerfile
+│   └── sql/                    # SQL seed/migration scripts
+│
+├── nginx/                      # Nginx reverse proxy configuration
+│
+├── .env                        # Environment variables
+├── docker-compose.yml          # Docker Compose configuration
+└── thesis                      # Project thesis / report
 ```
 
-This will start the backend, database, and frontend (if configured in docker-compose.yml).
+## 💻 4. SYSTEM REQUIREMENTS
 
-### Option B — Manual (run backend and frontend separately)
+### **Software Requirements:**
+- Node.js >= 16
+- npm
+- MySQL (if running directly without Docker)
+- Docker and Docker Compose (recommended for containerized deployment)
 
-Backend
+---
 
-```bash
+## ⚙️ 5. INSTALLATION GUIDE
+
+### **Option A — Docker Compose (Recommended)**
+
+This option quickly sets up the entire environment (Backend, Frontend, and Database) without requiring manual installation.
+
+1. **Clone repository:**
+
+   ```bash
+   git clone [https://github.com/nguyenthixuannhi/website-quan-ly-cua-hang-thoi-trang](https://github.com/nguyenthixuannhi/website-quan-ly-cua-hang-thoi-trang)
+
+   cd website-quan-ly-cua-hang-thoi-trang
+   ```
+
+2. **Create the environment configuration file from the template:**
+
+  ```bash
+  cp .env.example .env
+  ```
+
+  *(Open the .env file and customize the password or other settings if necessary.)*
+
+3. **Grant permissions to the data directory (if necessary on Linux/macOS):**
+  ```bash
+  sudo chown -R $USER:$USER backend/uploads
+  chmod -R 775 backend/uploads
+  ```
+
+  For Windows (PowerShell):
+
+  ```bash
+  icacls .\backend\uploads /grant Users:(OI)(CI)M /T
+  ```
+4. **Start the system:**
+  ```bash
+  docker compose up --build -d
+  ```
+
+5. **Access the application:**
+
+Open a browser using the ports configured in `docker-compose.yml`.
+
+## Option B — Manual Setup
+### 1. Install and Configure the Database
+- Install MySQL and create a new database (for example: fashion_store).
+- Configure the connection information in the .env file.
+
+### 2. Install the Backend
+```Bash
 cd backend
 npm install
-npm run dev    # or `npm start` for production
 ```
+Run the development environment:
+```Bash
+npm run dev
+```
+Or run in production:
+```Bash
+npm start
+```
+### 3. Install the Frontend
 
-Frontend
-
-```bash
+Open a new terminal window:
+```Bash
 cd frontend
 npm install
 npm run dev
 ```
+## 🔐 6. ENVIRONMENT VARIABLES CONFIGURATION (.env)
 
-Usage
------
+The project uses a .env file in the root directory to configure the system.
 
-- Backend default port: `3000` (see `backend/package.json` and `backend/index.js`).
-- API base paths are prefixed with `/api` (for example `/api/sanpham`, `/api/danhmuc`).
-- Swagger UI (API docs) is available at: `http://<BACKEND_HOST>:<PORT>/api-docs` (see details below).
+Code snippet:
+```python
+MYSQL_ROOT_PASSWORD=your_secure_password
+MYSQL_DATABASE=fashion_store
 
-Settings (.env) explanation
----------------------------
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=your_secure_password
+DB_NAME=fashion_store
 
-The project uses an `.env` file at the repository root. Important variables:
-
-- `MYSQL_ROOT_PASSWORD` — root password for MySQL (used by local DB / Docker).
-- `MYSQL_DATABASE` — default database name created on MySQL start.
-- `DB_HOST` — database host (e.g. `localhost` or a Docker service name).
-- `DB_PORT` — database port (default `3306`).
-- `DB_USER` — database user (e.g. `root`).
-- `DB_PASSWORD` — database user password.
-- `DB_NAME` — database name used by the application.
-- `BASE_URL` — base URL used by the backend and Swagger docs (e.g. `http://localhost:3000`).
-
-The repository includes a sample `.env` with common values: [/.env](.env)
-
-Project structure (overview)
-----------------------------
-
-- [backend](backend) — Node.js backend
-  - [backend/index.js](backend/index.js) — server entrypoint and route mounting
-  - [backend/src/config](backend/src/config) — configuration (AdminJS, JWT, Swagger)
-  - [backend/src/controllers](backend/src/controllers) — express controllers
-  - [backend/src/models](backend/src/models) — Sequelize models and DB index
-  - [backend/src/routes](backend/src/routes) — express routes
-  - [backend/uploads](backend/uploads) — uploaded assets
-- [frontend](frontend) — React + Vite frontend
-- [database](database) — database Dockerfile and SQL seed/migration scripts
-- [nginx](nginx) — nginx configuration (reverse proxy) used by Docker setup
-- [docker-compose.yml] — compose setup for multi-container local development
-
-API documentation (Swagger)
---------------------------
-
-The backend exposes Swagger/OpenAPI documentation and a UI at the route `/api-docs`.
-
-- Swagger definition source: [backend/src/config/swagger-docs.js](backend/src/config/swagger-docs.js)
-- Swagger UI is mounted in: [backend/index.js](backend/index.js) (see the `/api-docs` mounting)
-
-Open the Swagger UI in your browser after starting the backend:
-
+BASE_URL=http://localhost:3000
 ```
-http://localhost:3000/api-docs
-```
+>  ⚠️ Note: Do not commit actual passwords or sensitive credentials to a public Git repository. Use the .env.example file as a reference template.
 
-If `BASE_URL` is set in `.env`, Swagger will use that URL in the `servers` section of the docs.
 
-## Screenshots / Preview
+## 🔁 7. STARTUP & TESTING GUIDE
+
+1. Start the Database: `docker compose up database` (or start the local MySQL service).
+2. Start the Backend: `cd backend && npm run dev` (runs on port 3000 by default).
+3. Start the Frontend: `cd frontend && npm run dev` (runs through the Vite development server).
+4. Test the API: All Backend API routes use the `/api` prefix (for example: `/api/sanpham`, `/api/danhmuc`).
+
+
+## 📚 8. API DOCUMENTATION (SWAGGER)
+
+The backend provides interactive API documentation through Swagger/OpenAPI.
+- Swagger UI URL: `http://localhost:3000/api-docs`
+- Configuration source: `backend/src/config/swagger-docs.js`
+
+## 🐳 9. DOCKER & NGINX
+
+The system includes a multi-container Docker configuration:
+
+- Backend Node.js/Express
+- Frontend React + Vite
+- Database MySQL
+- Nginx Reverse Proxy
+
+Related directories and files:
+- `docker-compose.yml` (Main configuration file)
+- `nginx/` (Proxy configuration)
+- `database/` (Database initialization configuration)
+
+## 🖼️ 10. SCREENSHOTS / PREVIEW
+
+<p align="center">
+  <img src="https://github.com/nguyenthixuannhi/website-quan-ly-cua-hang-thoi-trang/blob/main/docs/register.png" width="400" alt="register">
+  <img src="https://github.com/nguyenthixuannhi/website-quan-ly-cua-hang-thoi-trang/blob/main/docs/login.png" width="400" alt="login">
+  <img src="https://github.com/nguyenthixuannhi/website-quan-ly-cua-hang-thoi-trang/blob/main/docs/homepage.png" width="400" alt="homepage">
+  <img src="https://github.com/nguyenthixuannhi/website-quan-ly-cua-hang-thoi-trang/blob/main/docs/productdedtails.png" width="400" alt="product detail">
+</p>

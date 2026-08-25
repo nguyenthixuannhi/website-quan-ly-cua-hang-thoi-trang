@@ -2,9 +2,9 @@
 
 ### Language
 
-[![english](https://img.shields.io/badge/lang-en-blue.svg)](README.EN.md)
+[![english](https://img.shields.io/badge/lang-en-blue.svg)](README.en.md)
 
-## 🎯 Đề tài: Xây dựng Website Quản Lý Cửa Hàng Thời Trang
+## 🎯 Đề tài: XÂY DỰNG HỆ THỐNG WEBSITE QUẢN LÝ CỬA HÀNG THỜI TRANG
 
 <div align="center">
 
@@ -12,19 +12,19 @@
 ![Node.Js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 </div>
 
 ---
 
 ## 📑 Mục lục (Table of Contents)
+
 - [👤 1. Thông tin dự án](#-1-thông-tin-dự-án)
 - [📖 2. Giới thiệu đồ án & Chức năng chính](#-2-giới-thiệu-đồ-án--chức-năng-chính)
 - [🧰 3. Công nghệ sử dụng & Cấu trúc thư mục](#-3-công-nghệ-sử-dụng--cấu-trúc-thư-mục)
 - [💻 4. Yêu cầu hệ thống](#-4-yêu-cầu-hệ-thống)
 - [⚙️ 5. Hướng dẫn cài đặt (Installation Guide)](#️-5-hướng-dẫn-cài-đặt-installation-guide)
-- [🔐 6. Cấu hình biến môi trường (.env)](#-6-cấu-thịh-biến-môi-trường-env)
+- [🔐 6. Cấu hình biến môi trường (.env)](#-6-cấu-hình-biến-môi-trường-env)
 - [🔁 7. Hướng dẫn khởi động & Chạy thử](#-7-hướng-dẫn-khởi-động--chạy-thử)
 - [📚 8. Tài liệu API (Swagger)](#-8-tài-liệu-api-swagger)
 - [🐳 9. Docker & Nginx](#-9-docker--nginx)
@@ -32,10 +32,10 @@
 
 ---
 
-## 1. THÔNG TIN DỰ ÁN👤
+## 👤 1. THÔNG TIN DỰ ÁN
 
 ### 👨‍🏫 Thông tin tác giả
-- **Giảng viên hướng dẫn:** Phan Thị Phương Nam
+- **Giảng viên hướng dẫn:** TS.Nguyễn Bảo Ân
 - **Sinh viên thực hiện:** Lê Trung Hiếu
   + Mã số sinh viên: `110123011`
   + Mã lớp: `DA23TTA`
@@ -54,7 +54,7 @@
 
 ---
 
-## 2. GIỚI THIỆU ĐỒ ÁN & CHỨC NĂNG CHÍNH📖
+## 📖 2. GIỚI THIỆU ĐỒ ÁN & CHỨC NĂNG CHÍNH
 
 ### **📝 Mô tả ngắn:**
 Fashion Store Management là hệ thống quản lý cửa hàng thời trang được xây dựng theo mô hình Full-Stack, cung cấp các chức năng phục vụ việc quản lý sản phẩm, danh mục, đơn hàng, kho hàng, khuyến mãi, thanh toán và các tài nguyên của cửa hàng.
@@ -78,7 +78,7 @@ Dự án bao gồm Backend sử dụng Node.js/Express kết hợp Sequelize ORM
 
 ---
 
-## 3. CÔNG NGHỆ SỬ DỤNG & CẤU TRÚC THƯ MỤC🧰
+## 🧰 3. CÔNG NGHỆ SỬ DỤNG & CẤU TRÚC THƯ MỤC
 
 ### **Tech Stack:**
 - **Frontend:** React, Vite, CSS/UI Libraries
@@ -111,7 +111,7 @@ Dự án bao gồm Backend sử dụng Node.js/Express kết hợp Sequelize ORM
 └── thesis                      # Tài liệu đồ án / Báo cáo
 ```
 
-## 4. Yêu cầu hệ thống💻
+## 💻 4. YÊU CẦU HỆ THỐNG
 
 ### **Yêu cầu phần mềm:**
 - Node.js >= 16
@@ -121,7 +121,7 @@ Dự án bao gồm Backend sử dụng Node.js/Express kết hợp Sequelize ORM
 
 ---
 
-## 5. HƯỚNG DẪN CÀI ĐẶT (Installation Guide)⚙️
+## ⚙️ 5. HƯỚNG DẪN CÀI ĐẶT (Installation Guide)
 
 ### **Tùy chọn A — Docker Compose (Khuyên dùng)**
 
@@ -186,7 +186,7 @@ cd frontend
 npm install
 npm run dev
 ```
-## 6. CẤU HÌNH BIẾN MÔI TRƯỜNG (.env)🔐
+## 🔐 6. CẤU HÌNH BIẾN MÔI TRƯỜNG (.env)
 
 Dự án sử dụng file .env tại thư mục gốc để cấu hình hệ thống.
 Code snippet
@@ -204,7 +204,8 @@ BASE_URL=http://localhost:3000
 ```
 >  ⚠️ Lưu ý: Không commit thông tin mật khẩu thực tế lên Git công khai. Hãy sử dụng file .env.example làm khung tham khảo.
 
-## 7. HƯỚNG DẪN KHỞI ĐỘNG & CHẠY THỬ 🔁
+
+## 🔁 7. HƯỚNG DẪN KHỞI ĐỘNG & CHẠY THỬ
 
 1. Khởi động Database: `docker compose up database` (hoặc bật MySQL service cục bộ).
 
@@ -214,13 +215,14 @@ BASE_URL=http://localhost:3000
 
 4. Kiểm tra API: Các đường dẫn API Backend đều có tiền tố `/api` (Ví dụ: `/api/sanpham`, `/api/danhmuc`).
 
-## 8. TÀI LIỆU API (SWAGGER) 📚
+
+## 📚 8. TÀI LIỆU API (SWAGGER)
 
 Backend hỗ trợ tài liệu mô tả API trực quan thông qua Swagger/OpenAPI.
 - Swagger UI URL: `http://localhost:3000/api-docs`
 - Nguồn cấu hình: `backend/src/config/swagger-docs.js`
 
-## 9. DOCKER & NGINX 🐳
+## 🐳 9. DOCKER & NGINX
 
 Hệ thống tích hợp sẵn cấu hình Docker nhiều container:
 
@@ -234,4 +236,12 @@ Các thư mục liên quan:
 - `nginx/` (Cấu hình proxy)
 - `database/` (Cấu hình khởi tạo database)
 
-## 10. SCREENSHOTS / PREVIEW 🖼️
+
+## 🖼️ 10. SCREENSHOTS / PREVIEW
+
+<p align="center">
+  <img src="https://github.com/nguyenthixuannhi/website-quan-ly-cua-hang-thoi-trang/blob/main/docs/register.png" width="400" alt="register">
+  <img src="https://github.com/nguyenthixuannhi/website-quan-ly-cua-hang-thoi-trang/blob/main/docs/login.png" width="400" alt="login">
+  <img src="https://github.com/nguyenthixuannhi/website-quan-ly-cua-hang-thoi-trang/blob/main/docs/homepage.png" width="400" alt="homepage">
+  <img src="https://github.com/nguyenthixuannhi/website-quan-ly-cua-hang-thoi-trang/blob/main/docs/productdedtails.png" width="400" alt="product detail">
+</p>

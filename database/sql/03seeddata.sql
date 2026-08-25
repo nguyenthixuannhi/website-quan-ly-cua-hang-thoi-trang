@@ -262,3 +262,66 @@ INSERT INTO THANHTOAN (id_thanh_toan, id_don_hang, phuong_thuc, so_tien) VALUES
 -- 20. Thêm quảng cáo (QUANGCAO)
 INSERT INTO QUANGCAO (id, tieu_de, url_hinh_anh, url_dich, mua, danh_muc_trong_tam, ngay_bat_dau, ngay_ket_thuc, uu_tien, kich_hoat) VALUES
 (1, 'Bộ sưu tập mùa hè giảm giá cực sốc', 'https://placehold.net/main.svg', '/category/1', 'Summer', 'Áo', CURRENT_TIMESTAMP, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 30 DAY), 1, TRUE);
+
+
+-- ==========================================================
+-- Bổ sung Dữ liệu Giả lập phục vụ Thống kê (< 8 bản ghi mỗi bảng)
+-- ==========================================================
+
+-- 1. Thêm khách hàng mới (NGUOIDUNG - thêm 3 khách hàng)
+INSERT INTO NGUOIDUNG (id_nguoi_dung, email, mat_khau, vai_tro) VALUES
+(5, 'hoangvanc@gmail.com', '$2b$10$EpOLTW.EGla1cJOZoRQF5e5spuwgDX68KQtFmwYgvkYq/98FqB09C', 'CUSTOMER'),
+(6, 'lethid@gmail.com', '$2b$10$EpOLTW.EGla1cJOZoRQF5e5spuwgDX68KQtFmwYgvkYq/98FqB09C', 'CUSTOMER'),
+(7, 'hoangthieue@gmail.com', '$2b$10$EpOLTW.EGla1cJOZoRQF5e5spuwgDX68KQtFmwYgvkYq/98FqB09C', 'CUSTOMER');
+
+-- 2. Thêm nhà cung cấp mới (NHACUNGCAP - thêm 2 nhà cung cấp)
+INSERT INTO NHACUNGCAP (id_nha_cung_cap, ten_ncc) VALUES
+(3, 'Xưởng Giày Dép Miền Nam'),
+(4, 'Công ty Phụ Kiện Thời Trang Sài Gòn');
+
+-- 3. Thêm địa chỉ cho khách hàng mới (DIACHI)
+INSERT INTO DIACHI (id_dia_chi, id_nguoi_dung, dia_chi_chi_tiet) VALUES
+(3, 5, '789 Đường CMT8, Quận 3, TP. Hồ Chí Minh'),
+(4, 6, '12 Đường Lê Duẩn, Quận 1, TP. Hồ Chí Minh'),
+(5, 7, '55 Đường Trần Hưng Đạo, Quận 5, TP. Hồ Chí Minh');
+
+-- 4. Thêm đơn hàng mới (DONHANG - thêm 3 đơn hàng để thống kê doanh thu)
+INSERT INTO DONHANG (id_don_hang, id_nguoi_dung, loai_don, trang_thai, ngay_tao) VALUES
+(2, 5, 'ONLINE', 'HOAN_THANH', DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 2 DAY)),
+(3, 6, 'ONLINE', 'DANG_XU_LY', DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 1 DAY)),
+(4, 7, 'ONLINE', 'HOAN_THANH', CURRENT_TIMESTAMP);
+
+-- 5. Thêm chi tiết đơn hàng (CHITIETDONHANG)
+INSERT INTO CHITIETDONHANG (id_ct_don, id_don_hang, id_bien_the, so_luong, don_gia_thuc) VALUES
+(2, 2, 14, 1, 600000.00), -- Giày Sneaker White Classic
+(3, 3, 23, 2, 280000.00), -- Áo Sơ Mi Nam Công Sở
+(4, 4, 38, 1, 650000.00); -- Giày Thể Thao Chạy Bộ
+
+-- 6. Thêm đơn nhập hàng (DONNHAPHANG - thêm 2 đơn nhập từ NCC mới)
+INSERT INTO DONNHAPHANG (id_don_nhap, id_nha_cung_cap, id_nguoi_dung, ngay_nhap) VALUES
+(2, 3, 2, DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 5 DAY)),
+(3, 4, 2, DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 3 DAY));
+
+-- 7. Thêm chi tiết phiếu nhập (CHITIETPHIEUNHAP)
+INSERT INTO CHITIETPHIEUNHAP (id_chi_tiet_nhap, id_don_nhap, id_bien_the, so_luong) VALUES
+(2, 2, 14, 30),
+(3, 3, 21, 40);
+
+-- 8. Thêm lịch sử kho (LICHSUKHO - ghi nhận nhập/xuất kho)
+INSERT INTO LICHSUKHO (id_lich_su, id_bien_the, id_nguoi_dung, loai_thao_tac, so_luong_thay_doi) VALUES
+(2, 14, 2, 'NHAP_KHO', 30),
+(3, 21, 2, 'NHAP_KHO', 40),
+(4, 14, 2, 'XUAT_KHO', -1),
+(5, 23, 2, 'XUAT_KHO', -2);
+
+-- 9. Thêm phiếu giao hàng (PHIEUGIAOHANG)
+INSERT INTO PHIEUGIAOHANG (id_phieu_giao, id_don_hang, don_vi_van_chuyen, trang_thai) VALUES
+(2, 2, 'J&T Express', 'DA_GIAO'),
+(3, 3, 'SPX Express', 'DANG_GIAO'),
+(4, 4, 'Giao Hàng Nhanh (GHN)', 'DA_GIAO');
+
+-- 10. Thêm thanh toán (THANHTOAN)
+INSERT INTO THANHTOAN (id_thanh_toan, id_don_hang, phuong_thuc, so_tien) VALUES
+(2, 2, 'MOMO', 600000.00),
+(3, 3, 'COD', 560000.00),
+(4, 4, 'VNPAY', 650000.00);
