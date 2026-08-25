@@ -1,5 +1,5 @@
 const { verifyToken } = require('../config/jwt');
-const { models } = require('../models');
+const { models, sequelize, Op } = require('../models');
 const path = require('path');
 
 const ADMIN_ALLOWED_ROLES = new Set(['ADMIN', 'STAFF']);
@@ -62,6 +62,9 @@ const initializeAdmin = async (app) => {
   });
 
   const componentLoader = new ComponentLoader();
+
+  const analyticsComponentPath = path.join(__dirname, 'admin-components/Analytics');
+  const AnalyticsComponent = componentLoader.add('Analytics', analyticsComponentPath);
 
   const uploadModule = await import('@adminjs/upload');
   const uploadFeature = uploadModule.default || uploadModule;
@@ -321,9 +324,129 @@ const initializeAdmin = async (app) => {
       companyName: 'Store Admin',
       softwareBrothers: false,
     },
+    dashboard: {
+      component: AnalyticsComponent,
+    },
   });
   admin.watch();
   const adminRouter = buildRouter(admin);
+
+ // Analytics API used by the AdminJS dashboard component
+  app.get(`${admin.options.rootPath}/api/analytics`, requireAdminAccess, async (req, res) => {
+    try {
+      // 1. Top products by quantity sold
+      const topProductsRaw = await models.ChiTietDonHang.findAll({
+        attributes: [
+          'id_bien_the',
+          [sequelize.fn('SUM', sequelize.col('so_luong')), 'total_sold'],
+          [
+            sequelize.fn(
+              'SUM',
+              sequelize.literal('`CHITIETDONHANG`.`so_luong` * `CHITIETDONHANG`.`don_gia_thuc`')
+            ),
+            'total_revenue',
+          ],
+        ],
+        include: [
+          {
+            model: models.KieuSanPham,
+            as: 'bien_the',
+            attributes: ['id_bien_the'],
+            include: [
+              {
+                model: models.SanPham,
+                as: 'san_pham',
+                attributes: ['id_san_pham', 'ten_san_pham'],
+              },
+            ],
+          },
+        ],
+        group: [
+          'CHITIETDONHANG.id_bien_the',
+          'bien_the.id_bien_the',
+          'bien_the->san_pham.id_san_pham',
+          'bien_the->san_pham.ten_san_pham',
+        ],
+        order: [[sequelize.literal('total_sold'), 'DESC']],
+        limit: 10,
+        subQuery: false,
+        raw: false,
+      });
+
+      const topProducts = topProductsRaw.map((r) => ({
+        id_bien_the: r.id_bien_the,
+        ten_san_pham: r.bien_the?.san_pham?.ten_san_pham || null,
+        total_sold: Number(r.get('total_sold') || 0),
+        total_revenue: Number(r.get('total_revenue') || 0),
+      }));
+
+      // 2. Low stock variants
+      const lowStock = await models.KieuSanPham.findAll({
+        where: { so_luong_ton: { [Op.lt]: 10 } },
+        include: [{ model: models.SanPham, as: 'san_pham', attributes: ['ten_san_pham'] }],
+        order: [['so_luong_ton', 'ASC']],
+        limit: 20,
+      });
+
+      const lowStockFormatted = lowStock.map((k) => ({
+        id_bien_the: k.id_bien_the,
+        ten_san_pham: k.san_pham ? k.san_pham.ten_san_pham : null,
+        so_luong_ton: k.so_luong_ton,
+      }));
+
+      // 3. Revenue summary
+      const revenueRow = await models.ChiTietDonHang.findAll({
+        attributes: [
+          [
+            sequelize.fn(
+              'SUM',
+              sequelize.literal('`CHITIETDONHANG`.`so_luong` * `CHITIETDONHANG`.`don_gia_thuc`')
+            ),
+            'total_revenue',
+          ],
+        ],
+        raw: true,
+      });
+      const totalRevenue = Number(revenueRow[0]?.total_revenue || 0);
+
+      // 4. Staff performance
+      const staffCandidates = await models.NguoiDung.findAll({
+        where: { vai_tro: { [Op.in]: ['STAFF', 'NHAN_VIEN', 'ADMIN'] } },
+      });
+
+      const staffPerformance = [];
+      for (const user of staffCandidates) {
+        const donNhapCount = await models.DonNhapHang.count({
+          where: { id_nguoi_dung: user.id_nguoi_dung },
+        });
+        const lichSuCount = await models.LichSuKho.count({
+          where: { id_nguoi_dung: user.id_nguoi_dung },
+        });
+
+        staffPerformance.push({
+          id_nguoi_dung: user.id_nguoi_dung,
+          email: user.email,
+          vai_tro: user.vai_tro,
+          don_nhap_count: donNhapCount,
+          lich_su_count: lichSuCount,
+          activity_score: donNhapCount + lichSuCount,
+        });
+      }
+
+      staffPerformance.sort((a, b) => b.activity_score - a.activity_score);
+
+      return res.json({
+        topProducts,
+        lowStock: lowStockFormatted,
+        totalRevenue,
+        staffPerformance: staffPerformance.slice(0, 10),
+      });
+    } catch (error) {
+      console.error('[Analytics Error]:', error);
+      return res.status(500).json({ message: 'Failed to compute analytics', error: String(error) });
+    }
+  });
+
   app.use(admin.options.rootPath, requireAdminAccess, adminRouter);
 };
 

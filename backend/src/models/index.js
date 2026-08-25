@@ -1,5 +1,5 @@
 const { sequelize } = require('../../db/connection');
-
+const { Op } = require('sequelize');
 const NguoiDungModel = require('./NguoiDung');
 const QuangCaoModel = require('./QuangCao');
 const NhaCungCapModel = require('./NhaCungCap');
@@ -132,6 +132,6 @@ models.PhieuGiaoHang.belongsTo(models.DonHang, { foreignKey: 'id_don_hang', as: 
 // --- ThanhToan ---
 models.ThanhToan.belongsTo(models.DonHang, { foreignKey: 'id_don_hang', as: 'don_hang' });
 
-module.exports = { sequelize, models };
+module.exports = { sequelize, models, Op };
 
 
