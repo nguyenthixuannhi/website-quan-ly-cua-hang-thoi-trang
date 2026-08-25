@@ -71,8 +71,6 @@ function Home() {
 
         </section>
         <Categories />
-         <FeaturedProducts />
-         <FlashSale />
          <AboutSection />
          <WhyChooseUs />
          <Newsletter />
