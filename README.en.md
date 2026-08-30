@@ -38,12 +38,6 @@
 ### 👨‍🏫 Author Information
 
 - **Supervisor:** Dr. Nguyễn Bảo Ân
-- **Student:** Lê Trung Hiếu
-  + Student ID: `110123011`
-  + Class: `DA23TTA`
-- **Student:** Nguyễn Thị Xuân Nhi
-  + Student ID: `110123131`
-  + Class: `DA23TTB`
 
 ### ⚙️ Technical Information
 
