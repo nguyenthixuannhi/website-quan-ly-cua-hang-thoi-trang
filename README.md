@@ -41,7 +41,7 @@
   + Mã lớp: `DA23TTA`
 - **Sinh viên thực hiện:** Nguyễn Thị Xuân Nhi
   + Mã số sinh viên: `110123131`
-  + Mã lớp: `DA23TTB`
+  + Mã lớp: `DA22TTB`
 
 ### ⚙️ Thông tin kỹ thuật
 - **🏷️ Tên dự án:** Website Quản Lý Cửa Hàng Thời Trang
