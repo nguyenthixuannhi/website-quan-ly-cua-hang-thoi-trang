@@ -129,7 +129,7 @@ Phương án này giúp thiết lập toàn bộ môi trường (Backend, Fronte
 
 1. **Clone repository:**
    ```bash
-   git clone [https://github.com/nguyenthixuannhi/website-quan-ly-cua-hang-thoi-trang](https://github.com/nguyenthixuannhi/website-quan-ly-cua-hang-thoi-trang)
+   git clone https://github.com/nguyenthixuannhi/website-quan-ly-cua-hang-thoi-trang
    cd website-quan-ly-cua-hang-thoi-trang
    ```
 
